@@ -39,3 +39,10 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large video assets — serve from a CDN / Vercel Blob, not git
+/public/*.mp4
+
+# lead / contact data — sensitive, must never be committed
+/public/*.xls
+/public/*.xlsx
