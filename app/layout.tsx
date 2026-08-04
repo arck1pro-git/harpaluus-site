@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import { Playfair_Display, Raleway } from "next/font/google";
 import "./globals.css";
-import Header from "./components/header";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -30,9 +29,7 @@ export default function RootLayout({
       lang="pt-BR"
       className={`${playfair.variable} ${raleway.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col">
-        <Header />
-        {children}</body>
+      <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
 }
