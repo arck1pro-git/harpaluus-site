@@ -30,7 +30,7 @@ export default function BannerHeadline() {
   }, []);
 
   return (
-    <h2 className="relative z-10 text-center font-[family-name:var(--font-playfair)] text-[32px] font-normal tracking-[0.04em] text-[#0a0a0a]">
+    <h2 className="relative z-10 text-center font-[family-name:var(--font-playfair)] text-[32px] font-normal tracking-[0.04em] text-verde-escuro">
       <span>{FULL.slice(0, n)}</span>
       <span className="caret-blink text-[0.5em]">▍</span>
       <span className="text-transparent">{FULL.slice(n)}</span>

@@ -1,23 +1,89 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #f5f4f0;
+  --foreground: #14261c;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  /* --font-sans/--font-mono apontavam para variáveis do Geist que nunca foram
+     definidas neste projeto, o que fazia font-sans/font-mono saírem vazias.
+     Sem a sobrescrita, valem as pilhas padrão do Tailwind. */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* Paleta da marca.
+   Cada token vira utilitário do Tailwind automaticamente
+   (bg-verde, text-dourado, border-creme, from-dourado, ...)
+   e também fica disponível como var(--color-verde) em style={{ }}. */
+@theme {
+  --color-verde: #48654e;
+  --color-verde-escuro: #14261c;
+  --color-dourado: #bd924c;
+  --color-dourado-claro: #ffecba;
+  --color-creme: #fcf2db;
+  /* tom claro de fundo do site (o original, mantido) */
+  --color-fundo: #f5f4f0;
+  /* cinzas dos detalhes: bordas, vãos e listras diagonais */
+  --color-linha: #e8e6e0;
+  /* cinza um pouco mais forte: filetes de input e textos de rodapé */
+  --color-cinza: #b0aca4;
+
+  /* Paleta da landing institucional: 70% arquitetura de luxo, 20% editorial,
+     10% tecnologia. As seções claras usam --color-fundo (o mesmo tom do header
+     e da logo); o dourado da marca aparece só nos detalhes. */
+  --color-grafite: #111111;
+  --color-grafite-claro: #1b1b19;
+  --color-pedra: #8a857c;
+  --color-pedra-claro: #b6b1a8;
 }
+
+:root {
+  --gradiente-dourado: linear-gradient(
+    100deg,
+    var(--color-dourado) 0%,
+    var(--color-dourado-claro) 100%
+  );
+}
+
+/* Listras paralelas na diagonal, no verde com opacidade baixa. */
+@utility bg-listras {
+  background-image: repeating-linear-gradient(
+    45deg,
+    color-mix(in oklab, var(--color-verde) 30%, transparent) 0,
+    color-mix(in oklab, var(--color-verde) 30%, transparent) 1px,
+    transparent 1px,
+    transparent 11px
+  );
+}
+
+/* Gradiente dourado como fundo: <div className="bg-gradiente-dourado" /> */
+@utility bg-gradiente-dourado {
+  background-image: var(--gradiente-dourado);
+}
+
+/* Gradiente dourado no texto: <h1 className="text-gradiente-dourado" /> */
+@utility text-gradiente-dourado {
+  background-image: var(--gradiente-dourado);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+
+/* Borda com gradiente dourado (o fundo do elemento precisa vir junto,
+   ex.: <a className="border-gradiente-dourado bg-verde-escuro" />) */
+@utility border-gradiente-dourado {
+  border: 1px solid transparent;
+  background-image: linear-gradient(var(--color-verde-escuro), var(--color-verde-escuro)),
+    var(--gradiente-dourado);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Sem inversão no dark mode: a paleta da marca é fixa e clara, e o
+   fundo escuro do sistema aparecia por trás das seções creme. */
 
 body {
   background: var(--background);
@@ -52,6 +118,126 @@ body {
   35%,
   100% {
     background-position: -30% center;
+  }
+}
+
+/* Âncoras param abaixo do header fixo em vez de ficarem escondidas atrás dele. */
+html {
+  scroll-padding-top: 68px;
+}
+
+/* ---------------------------------------------------------------------------
+   Microinterações da landing.
+   Entrada dos elementos: fade + deslocamento curto (16px), sem exagero.
+   Tudo é desligado quando o sistema pede menos movimento.
+   ------------------------------------------------------------------------- */
+
+.reveal {
+  opacity: 0;
+  transform: translateY(16px);
+  transition:
+    opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
+    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.reveal[data-visible="true"] {
+  opacity: 1;
+  transform: none;
+}
+
+/* Filetes finos que se desenham progressivamente ao entrar na tela. */
+.linha-desenha {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.linha-desenha[data-visible="true"] {
+  transform: scaleX(1);
+}
+
+.linha-desenha-y {
+  transform: scaleY(0);
+  transform-origin: top center;
+  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+
+.linha-desenha-y[data-visible="true"] {
+  transform: scaleY(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .reveal,
+  .linha-desenha,
+  .linha-desenha-y {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* Indicador de rolagem: um filete claro percorre a linha continuamente. */
+@keyframes desce-filete {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  25%,
+  70% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
+
+.filete-rolagem::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  top: 0;
+  height: 45%;
+  background: linear-gradient(to bottom, transparent, currentColor);
+  animation: desce-filete 2.8s cubic-bezier(0.65, 0, 0.35, 1) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .filete-rolagem::after {
+    animation: none;
+    opacity: 0.6;
+  }
+}
+
+/* Numeração dos pilares: o brilho percorre um item de cada vez.
+   Cada número acende durante ~1/4 do ciclo; o atraso escalonado por item
+   (--pulso-delay) é o que faz a luz caminhar 01 → 02 → 03 → 04. */
+@keyframes acende-numero {
+  0%,
+  25%,
+  100% {
+    opacity: 0.4;
+    text-shadow: none;
+  }
+  8%,
+  17% {
+    opacity: 1;
+    text-shadow: 0 0 14px color-mix(in oklab, var(--color-dourado) 60%, transparent);
+  }
+}
+
+.numero-pulso {
+  animation: acende-numero 7.2s ease-in-out infinite;
+  animation-delay: var(--pulso-delay, 0ms);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .numero-pulso {
+    animation: none;
+    opacity: 1;
   }
 }
 

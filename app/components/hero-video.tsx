@@ -6,7 +6,7 @@ export default function HeroVideo() {
       muted
       loop
       playsInline
-      className="h-full w-full object-cover grayscale transition-[filter] duration-[2000ms] ease-out hover:grayscale-0"
+      className="h-full w-full object-cover"
     />
   );
 }

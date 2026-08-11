@@ -152,30 +152,30 @@ const PILARES: PilarData[] = [
 
 export default function PilaresSection() {
   return (
-    <div className="grid h-screen w-screen grid-cols-1 grid-rows-[repeat(4,1fr)] bg-[#e8e6e0] md:grid-cols-2 md:grid-rows-2">
+    <div className="grid h-screen w-screen grid-cols-1 grid-rows-[repeat(4,1fr)] bg-linha md:grid-cols-2 md:grid-rows-2">
       {PILARES.map((p) => (
         <div
           key={p.numero}
-          className="group relative overflow-hidden rounded-lg border border-[#e8e6e0] bg-[#f5f4f0]"
+          className="group relative overflow-hidden rounded-lg border border-linha bg-fundo"
         >
           {/* texto por baixo */}
           <div className="absolute inset-0 z-0 flex flex-col justify-center gap-3 px-12 py-10">
-            <p className="text-[10px] tracking-[0.25em] uppercase text-[#b0aca4]">
+            <p className="text-[10px] tracking-[0.25em] uppercase text-dourado">
               Pilar {p.numero}
             </p>
-            <h3 className="font-[family-name:var(--font-playfair)] text-[26px] font-normal leading-[1.15] text-[#0a0a0a]">
+            <h3 className="font-[family-name:var(--font-playfair)] text-[26px] font-normal leading-[1.15] text-verde-escuro">
               {p.titulo}
             </h3>
-            <p className="text-[12px] italic text-[#3a3835] leading-[1.6] max-w-[460px]">
+            <p className="text-[12px] italic text-verde leading-[1.6] max-w-[460px]">
               {p.frase}
             </p>
             <div className="mt-1 flex flex-col gap-2">
               {p.grupos.map((g) => (
                 <p
                   key={g.titulo}
-                  className="text-[11px] text-[#3a3835] leading-[1.6] max-w-[480px]"
+                  className="text-[11px] text-verde leading-[1.6] max-w-[480px]"
                 >
-                  <span className="font-semibold uppercase tracking-[0.08em] text-[#0a0a0a]">
+                  <span className="font-semibold uppercase tracking-[0.08em] text-verde-escuro">
                     {g.titulo}
                   </span>
                   {" — "}
@@ -192,13 +192,13 @@ export default function PilaresSection() {
               alt=""
               fill
               sizes="50vw"
-              className="object-cover grayscale"
+              className="object-cover"
             />
             <div className="absolute inset-0 bg-black/45" />
-            <p className="absolute top-10 left-10 text-[10px] tracking-[0.25em] uppercase text-[#f5f4f0]/70">
+            <p className="absolute top-10 left-10 text-[10px] tracking-[0.25em] uppercase text-dourado">
               Pilar {p.numero}
             </p>
-            <h3 className="absolute bottom-10 left-10 right-10 font-[family-name:var(--font-playfair)] text-[34px] font-normal leading-[1.15] text-[#f5f4f0]">
+            <h3 className="absolute bottom-10 left-10 right-10 font-[family-name:var(--font-playfair)] text-[34px] font-normal leading-[1.15] text-fundo">
               {p.titulo}
             </h3>
           </div>
