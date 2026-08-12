@@ -34,13 +34,13 @@ export function CtaLink({
     <a
       href={href}
       {...(external ? { target: "_blank", rel: "noopener noreferrer" } : {})}
-      className={`group inline-flex items-center gap-3.5 border px-8 py-[15px] text-[10px] font-medium tracking-[0.22em] uppercase no-underline transition-colors duration-500 ${tones[tone]} ${className}`}
+      className={`group tipo-label inline-flex items-center gap-4 border px-8 py-[17px] no-underline transition-[color,background-color,border-color] duration-300 ease-out ${tones[tone]} ${className}`}
     >
       {children}
       <ArrowUpRight
         size={16}
         strokeWidth={TRACO}
-        className="transition-transform duration-500 group-hover:-translate-y-0.5 group-hover:translate-x-0.5"
+        className="transition-transform duration-300 ease-out group-hover:translate-x-[3px] group-hover:-translate-y-[3px]"
       />
     </a>
   );

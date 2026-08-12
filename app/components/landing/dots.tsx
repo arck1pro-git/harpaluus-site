@@ -7,9 +7,11 @@ const cantos: Record<Canto, { posicao: string; origem: string }> = {
   "inferior-esquerdo": { posicao: "bottom-0 left-0", origem: "0% 100%" },
 };
 
+/* Baixas de propósito: a textura precisa ser sentida, não vista. Acima disso
+   ela disputa atenção com o texto que corre por cima. */
 const cores = {
-  claro: "rgba(255,255,255,0.26)",
-  escuro: "rgba(17,17,17,0.22)",
+  claro: "rgba(255,255,255,0.17)",
+  escuro: "rgba(17,17,17,0.14)",
 };
 
 /**

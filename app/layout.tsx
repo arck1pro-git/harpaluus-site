@@ -21,8 +21,9 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "PT Magazine – Tourmaline Tower",
-  description: "Tourmaline Tower — a arquitetura na era da inteligência.",
+  title: "Harpaluus Incorporadora",
+  description:
+    "Incorporadora de empreendimentos de alta performance no litoral catarinense.",
 };
 
 export default function RootLayout({
@@ -38,7 +39,7 @@ export default function RootLayout({
       <body className="min-h-full flex flex-col">
         {/* sem JS as microanimações não disparam: o conteúdo já nasce visível */}
         <noscript>
-          <style>{`.reveal,.linha-desenha,.linha-desenha-y{opacity:1!important;transform:none!important}`}</style>
+          <style>{`.reveal,.linha-desenha,.linha-desenha-y,.cena,.cena-filete,.cena-imagem{opacity:1!important;transform:none!important}`}</style>
         </noscript>
         {children}
       </body>

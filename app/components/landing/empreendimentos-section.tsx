@@ -71,9 +71,11 @@ export function EmpreendimentosSection() {
         <Reveal variant="linha-desenha" className="h-px w-[52px] bg-dourado" />
 
         {/* "EMPREENDIMENTOS" é uma palavra só e não cabe em meia coluna a 60px:
-            o título ocupa a linha inteira e o destaque vem abaixo, em duas colunas */}
+            o título ocupa a linha inteira e o destaque vem abaixo, em duas colunas.
+            No mobile a mesma palavra estoura a largura da tela a 36px — daí o
+            passo menor até sm */}
         <Reveal className="mt-9">
-          <h2 className="font-[family-name:var(--font-playfair)] text-4xl leading-[1.08] font-normal tracking-[0.04em] text-grafite md:text-6xl">
+          <h2 className="font-[family-name:var(--font-playfair)] text-[27px] leading-[1.08] font-normal tracking-[0.04em] text-grafite sm:text-4xl md:text-6xl">
             {titulo}
           </h2>
         </Reveal>

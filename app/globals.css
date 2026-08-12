@@ -35,6 +35,9 @@
      e da logo); o dourado da marca aparece só nos detalhes. */
   --color-grafite: #111111;
   --color-grafite-claro: #1b1b19;
+  /* Usado só nas seções Sobre e Empreendimentos. Contra --color-fundo este
+     tom dá 3.3:1 e reprova no AA para texto pequeno — #6f6a61 resolveria em
+     4.9:1 mantendo o mesmo cinza quente. */
   --color-pedra: #8a857c;
   --color-pedra-claro: #b6b1a8;
 }
@@ -45,6 +48,103 @@
     var(--color-dourado) 0%,
     var(--color-dourado-claro) 100%
   );
+
+  /* ---------------------------------------------------------------------
+     Sistema da landing institucional.
+     Um único grid, um único ritmo vertical e um único par de curvas de
+     animação para a página inteira: é isso que faz header, hero, seções e
+     rodapé compartilharem a mesma linha de margem e o mesmo tempo.
+     ------------------------------------------------------------------- */
+
+  /* margem lateral e largura máxima — todo conteúdo alinha por aqui */
+  --gutter: clamp(1.5rem, 4vw, 2.5rem);
+  --medida: 1240px;
+  /* respiro vertical das seções */
+  --ritmo: clamp(7rem, 11vw, 10.5rem);
+  /* altura do header em cada estado */
+  --header-alto: 76px;
+  --header-baixo: 58px;
+
+  /* saída lenta, sem elástico: tudo desacelera no fim do movimento */
+  --ease-editorial: cubic-bezier(0.22, 0.61, 0.36, 1);
+  /* mais cinematográfica, para entradas longas (hero, imagens) */
+  --ease-cena: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* Faixa de conteúdo: mesma linha de margem em toda a página. */
+@utility faixa {
+  margin-inline: auto;
+  width: 100%;
+  max-width: var(--medida);
+  padding-inline: var(--gutter);
+}
+
+/* Ritmo vertical padrão das seções. */
+@utility ritmo-secao {
+  padding-block: var(--ritmo);
+}
+
+/* ---------------------------------------------------------------------------
+   Escala tipográfica.
+   Fluida por clamp: sem saltos de breakpoint e sem texto pequeno demais no
+   mobile — o mínimo de corpo é 15px e o de label, 11px.
+   ------------------------------------------------------------------------- */
+
+/* headline do hero */
+@utility tipo-display {
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(2.4rem, 1.15rem + 5vw, 4rem);
+  line-height: 1.08;
+  font-weight: 400;
+  letter-spacing: -0.005em;
+}
+
+/* títulos de seção */
+@utility tipo-secao {
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(2.1rem, 1.15rem + 3.8vw, 3.5rem);
+  line-height: 1.1;
+  font-weight: 400;
+  letter-spacing: 0.03em;
+}
+
+/* frase de abertura de cada bloco editorial */
+@utility tipo-lead {
+  font-size: clamp(1.25rem, 1.05rem + 0.85vw, 1.625rem);
+  line-height: 1.35;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+}
+
+/* corpo de texto */
+@utility tipo-corpo {
+  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  line-height: 1.8;
+  font-weight: 300;
+}
+
+/* corpo curto (descrições de item) */
+@utility tipo-corpo-curto {
+  font-size: clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem);
+  line-height: 1.7;
+  font-weight: 300;
+}
+
+/* label em caixa alta: seções, metadados, CTA */
+@utility tipo-label {
+  font-size: 0.6875rem;
+  line-height: 1;
+  font-weight: 500;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+}
+
+/* numeração e coordenadas — sempre monoespaçada */
+@utility tipo-numero {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.6875rem;
+  line-height: 1;
+  letter-spacing: 0.16em;
 }
 
 /* Listras paralelas na diagonal, no verde com opacidade baixa. */
@@ -121,9 +221,24 @@ body {
   }
 }
 
-/* Âncoras param abaixo do header fixo em vez de ficarem escondidas atrás dele. */
+/* Âncoras param abaixo do header fixo, com respiro — em vez de encostarem nele. */
 html {
-  scroll-padding-top: 68px;
+  scroll-padding-top: calc(var(--header-baixo) + 2.5rem);
+}
+
+/* A rolagem suave das âncoras é conforto, não identidade: quem pede menos
+   movimento recebe o salto direto. */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+/* Foco visível discreto e consistente: filete dourado, nunca o anel do sistema. */
+:focus-visible {
+  outline: 1px solid var(--color-dourado);
+  outline-offset: 4px;
+  border-radius: 1px;
 }
 
 /* ---------------------------------------------------------------------------
@@ -134,10 +249,10 @@ html {
 
 .reveal {
   opacity: 0;
-  transform: translateY(16px);
+  transform: translateY(18px);
   transition:
-    opacity 0.9s cubic-bezier(0.22, 0.61, 0.36, 1),
-    transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+    opacity 1s var(--ease-editorial),
+    transform 1s var(--ease-editorial);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -150,7 +265,7 @@ html {
 .linha-desenha {
   transform: scaleX(0);
   transform-origin: left center;
-  transition: transform 1.2s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform 1.2s var(--ease-editorial);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -161,7 +276,7 @@ html {
 .linha-desenha-y {
   transform: scaleY(0);
   transform-origin: top center;
-  transition: transform 0.9s cubic-bezier(0.22, 0.61, 0.36, 1);
+  transition: transform 1.1s var(--ease-editorial);
   transition-delay: var(--reveal-delay, 0ms);
 }
 
@@ -177,6 +292,130 @@ html {
     transform: none;
     transition: none;
   }
+}
+
+/* ---------------------------------------------------------------------------
+   Entrada do hero.
+   Sequência cinematográfica em cascata: filete → headline → texto → CTA.
+   O atraso de cada peça vem do próprio elemento (--cena-delay), então a
+   coreografia é legível no JSX e não depende de JavaScript por quadro.
+   ------------------------------------------------------------------------- */
+
+.cena {
+  opacity: 0;
+  transform: translateY(22px);
+  transition:
+    opacity 1.2s var(--ease-cena),
+    transform 1.2s var(--ease-cena);
+  transition-delay: var(--cena-delay, 0ms);
+}
+
+[data-cena="true"] .cena {
+  opacity: 1;
+  transform: none;
+}
+
+/* o filete dourado se desenha em vez de deslizar */
+.cena-filete {
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 1.1s var(--ease-cena);
+  transition-delay: var(--cena-delay, 0ms);
+}
+
+[data-cena="true"] .cena-filete {
+  transform: scaleX(1);
+}
+
+/* a foto assenta lentamente enquanto o texto entra */
+.cena-imagem {
+  transform: scale(1.045);
+  transition: transform 2.4s var(--ease-cena);
+}
+
+[data-cena="true"] .cena-imagem {
+  transform: scale(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cena,
+  .cena-filete,
+  .cena-imagem {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Links do menu: filete que cresce da esquerda no hover.
+   O item da seção em que o usuário está fica com o filete dourado permanente.
+   ------------------------------------------------------------------------- */
+
+.link-nav {
+  position: relative;
+}
+
+.link-nav::after {
+  content: "";
+  position: absolute;
+  inset-inline: 0;
+  bottom: -7px;
+  height: 1px;
+  background: currentColor;
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform 0.55s var(--ease-editorial);
+}
+
+.link-nav:hover::after,
+.link-nav:focus-visible::after {
+  transform: scaleX(1);
+}
+
+.link-nav[data-ativo="true"]::after {
+  background: var(--color-dourado);
+  transform: scaleX(1);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .link-nav::after {
+    transition: none;
+  }
+}
+
+/* ---------------------------------------------------------------------------
+   Lista dos pilares.
+   Regra do bloco: ao apontar um item, os outros recuam. O sistema aparece
+   porque a atenção é exclusiva — não porque o item ativo brilha.
+   ------------------------------------------------------------------------- */
+
+.lista-pilares > li {
+  transition: opacity 0.6s var(--ease-editorial);
+}
+
+@media (hover: hover) {
+  .lista-pilares:hover > li:not(:hover) {
+    opacity: 0.4;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lista-pilares > li {
+    transition: none;
+  }
+}
+
+/* Trama técnica: a mesma diagonal da marca, quase invisível, revelada
+   no fundo do pilar apontado. Sugere planta/corte sem virar ilustração. */
+@utility trama-tecnica {
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.5) 0,
+    rgba(255, 255, 255, 0.5) 1px,
+    transparent 1px,
+    transparent 9px
+  );
 }
 
 /* Indicador de rolagem: um filete claro percorre a linha continuamente. */
@@ -212,34 +451,9 @@ html {
   }
 }
 
-/* Numeração dos pilares: o brilho percorre um item de cada vez.
-   Cada número acende durante ~1/4 do ciclo; o atraso escalonado por item
-   (--pulso-delay) é o que faz a luz caminhar 01 → 02 → 03 → 04. */
-@keyframes acende-numero {
-  0%,
-  25%,
-  100% {
-    opacity: 0.4;
-    text-shadow: none;
-  }
-  8%,
-  17% {
-    opacity: 1;
-    text-shadow: 0 0 14px color-mix(in oklab, var(--color-dourado) 60%, transparent);
-  }
-}
-
-.numero-pulso {
-  animation: acende-numero 7.2s ease-in-out infinite;
-  animation-delay: var(--pulso-delay, 0ms);
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .numero-pulso {
-    animation: none;
-    opacity: 1;
-  }
-}
+/* A numeração dos pilares tinha um brilho pulsante em loop. Saiu: animação
+   infinita puxa o olho para si, e o brilho é o oposto do luxo silencioso.
+   O destaque do número agora acontece só sob o cursor. */
 
 /* Cursor piscando (máquina de escrever) */
 @keyframes caret-blink {
