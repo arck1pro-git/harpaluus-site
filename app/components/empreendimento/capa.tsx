@@ -14,7 +14,7 @@ export function Capa() {
   const { capa, nome, local, status, coordenadas, chamada } = tourmaline;
 
   return (
-    <section className="relative flex h-[78svh] max-h-[760px] min-h-[520px] w-full items-end overflow-hidden bg-verde-escuro">
+    <section className="relative flex h-[78svh] max-h-[760px] min-h-[520px] w-full items-end overflow-hidden bg-azul-escuro">
       <Image
         src={capa.src}
         alt={capa.alt}
@@ -25,15 +25,11 @@ export function Capa() {
         style={{ objectPosition: capa.position }}
       />
 
-      <div className="absolute inset-0 bg-linear-to-t from-verde-escuro/85 via-verde-escuro/25 to-verde-escuro/40" />
+      <div className="absolute inset-0 bg-linear-to-t from-azul-escuro/85 via-azul-escuro/25 to-azul-escuro/40" />
 
       <div className="faixa relative z-10 pb-[clamp(56px,9vh,88px)]">
         <Reveal>
-          <p className="tipo-label text-dourado">Empreendimento em destaque</p>
-        </Reveal>
-
-        <Reveal delay={120}>
-          <h1 className="tipo-display mt-6 text-white">{nome}</h1>
+          <h1 className="tipo-display text-white">{nome}</h1>
         </Reveal>
 
         {/* linha de identificação do ativo: lugar, estágio e coordenada */}

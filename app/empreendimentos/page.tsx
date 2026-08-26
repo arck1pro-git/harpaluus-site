@@ -9,9 +9,9 @@ import { Header } from "../components/landing/header";
 import { tourmaline } from "../components/landing/site-config";
 
 export const metadata: Metadata = {
-  title: `${tourmaline.nome} — Harpaluus Incorporadora`,
+  title: `${tourmaline.nome} · Amaan Incorporadora`,
   description:
-    "Trinta e um pavimentos na Vila Nova, em Porto Belo/SC, com rooftop no ponto mais alto da região. O primeiro ativo da cidade totalmente ativado por um sistema operacional predial.",
+    "Trinta e um pavimentos na Vila Nova, em Porto Belo/SC, com rooftop no ponto mais alto da região. Um Empreendimento Vivo: um prédio em que a operação foi desenhada junto com a planta.",
 };
 
 export default function Empreendimentos() {

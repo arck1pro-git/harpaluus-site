@@ -17,12 +17,12 @@ export function Footer() {
   return (
     <footer
       id="contato"
-      className="relative overflow-hidden bg-linear-to-b from-verde-escuro to-zinc-950 text-white"
+      className="relative overflow-hidden bg-linear-to-b from-azul-escuro to-zinc-950 text-white"
     >
       <Dots
         canto="superior-direito"
         tone="claro"
-        tamanho="h-[1040px] w-[1040px]"
+        tamanho="h-[560px] w-[560px] md:h-[1040px] md:w-[1040px]"
       />
 
       <div className="relative mx-auto max-w-[1080px] px-6 pt-[110px] pb-[36px] md:px-10 md:pt-[150px]">
@@ -32,7 +32,8 @@ export function Footer() {
           <h2 className="mt-6 font-[family-name:var(--font-playfair)] text-3xl leading-[1.1] font-normal tracking-[0.06em] md:text-[42px]">
             {rodape.titulo}
           </h2>
-          <p className="mt-4 text-[15px] leading-[1.45] font-normal tracking-[-0.01em] text-white/75 md:text-[17px]">
+          <p className="tipo-label mt-4 text-dourado">{rodape.assinatura}</p>
+          <p className="mt-5 text-base leading-[1.45] font-normal tracking-[-0.01em] text-white/75 md:text-[17px]">
             {rodape.frase}
           </p>
 

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display, Raleway } from "next/font/google";
 import "./globals.css";
+import { ScrollSuave } from "./components/landing/scroll-suave";
 
 const playfair = Playfair_Display({
   variable: "--font-playfair",
@@ -21,9 +22,9 @@ const raleway = Raleway({
 });
 
 export const metadata: Metadata = {
-  title: "Harpaluus Incorporadora",
+  title: "Amaan Incorporadora · Empreendimentos Vivos",
   description:
-    "Incorporadora de empreendimentos de alta performance no litoral catarinense.",
+    "A Amaan concebe, desenvolve e opera Empreendimentos Vivos em Santa Catarina: prédios que continuam evoluindo e produzindo valor depois de prontos.",
 };
 
 export default function RootLayout({
@@ -41,6 +42,7 @@ export default function RootLayout({
         <noscript>
           <style>{`.reveal,.linha-desenha,.linha-desenha-y,.cena,.cena-filete,.cena-imagem{opacity:1!important;transform:none!important}`}</style>
         </noscript>
+        <ScrollSuave />
         {children}
       </body>
     </html>

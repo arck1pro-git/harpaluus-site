@@ -163,19 +163,19 @@ export default function PilaresSection() {
             <p className="text-[10px] tracking-[0.25em] uppercase text-dourado">
               Pilar {p.numero}
             </p>
-            <h3 className="font-[family-name:var(--font-playfair)] text-[26px] font-normal leading-[1.15] text-verde-escuro">
+            <h3 className="font-[family-name:var(--font-playfair)] text-[26px] font-normal leading-[1.15] text-azul-escuro">
               {p.titulo}
             </h3>
-            <p className="text-[12px] italic text-verde leading-[1.6] max-w-[460px]">
+            <p className="text-[12px] italic text-azul leading-[1.6] max-w-[460px]">
               {p.frase}
             </p>
             <div className="mt-1 flex flex-col gap-2">
               {p.grupos.map((g) => (
                 <p
                   key={g.titulo}
-                  className="text-[11px] text-verde leading-[1.6] max-w-[480px]"
+                  className="text-[11px] text-azul leading-[1.6] max-w-[480px]"
                 >
-                  <span className="font-semibold uppercase tracking-[0.08em] text-verde-escuro">
+                  <span className="font-semibold uppercase tracking-[0.08em] text-azul-escuro">
                     {g.titulo}
                   </span>
                   {" — "}

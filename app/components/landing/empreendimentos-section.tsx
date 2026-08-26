@@ -92,11 +92,12 @@ export function EmpreendimentosSection() {
           </Reveal>
 
           <Reveal delay={120}>
-            <p className="max-w-[500px] text-[13.5px] leading-[1.85] font-light text-pedra">
+            {/* no mobile o tile fica no nome, na localização e no CTA */}
+            <p className="hidden max-w-[500px] text-base leading-[1.85] font-light text-pedra md:block">
               {destaque.texto}
             </p>
 
-            <CtaLink href={destaque.cta.href} tone="escuro" external className="mt-9">
+            <CtaLink href={destaque.cta.href} tone="escuro" className="mt-9">
               {destaque.cta.label}
             </CtaLink>
           </Reveal>

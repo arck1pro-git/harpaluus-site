@@ -16,8 +16,11 @@ const cores = {
 
 /**
  * Textura de bolinhas muito discreta, ancorada num canto e dissolvida por uma
- * máscara radial. Puramente decorativa — some no mobile e é ignorada por
- * leitores de tela.
+ * máscara radial. Puramente decorativa e ignorada por leitores de tela.
+ *
+ * Aparece em todos os tamanhos de tela. Como o campo é ancorado no canto e o
+ * raio da máscara é proporcional a ele, cada seção passa um `tamanho` menor
+ * para o mobile: o campo de 1040px numa tela de 390px cobriria tudo.
  */
 export function Dots({
   canto,
@@ -36,7 +39,7 @@ export function Dots({
   return (
     <div
       aria-hidden
-      className={`pointer-events-none absolute hidden md:block ${tamanho} ${posicao} ${className}`}
+      className={`pointer-events-none absolute ${tamanho} ${posicao} ${className}`}
       style={{
         backgroundImage: `radial-gradient(${cores[tone]} 1.2px, transparent 1.2px)`,
         backgroundSize: "18px 18px",

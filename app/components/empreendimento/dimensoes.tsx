@@ -3,11 +3,11 @@ import { Reveal } from "../landing/reveal";
 import { tourmaline } from "../landing/site-config";
 
 /**
- * Os quatro pilares da incorporadora, traduzidos em decisão de projeto.
+ * As seis camadas do Empreendimento Vivo, traduzidas em decisão de projeto.
  *
- * Na home os pilares são o método, em uma linha cada. Aqui eles abrem: cada
- * pilar mostra seus três grupos de decisão e o que existe de concreto dentro
- * do edifício. É a seção que sustenta a promessa da home.
+ * Na home as camadas são a tese, em uma linha cada. Aqui elas abrem: cada
+ * camada mostra seus grupos de decisão e o que existe de concreto dentro do
+ * edifício. É a seção que prova a promessa da home.
  */
 export function Dimensoes() {
   const { dimensoes } = tourmaline;
@@ -17,12 +17,12 @@ export function Dimensoes() {
       id="dimensoes"
       // overflow-clip e não hidden: hidden cria contexto de rolagem e
       // quebraria o sticky da identificação de cada pilar
-      className="ritmo-secao relative overflow-clip bg-linear-to-b from-verde-escuro to-zinc-950 text-white"
+      className="ritmo-secao relative overflow-clip bg-linear-to-b from-azul-escuro to-zinc-950 text-white"
     >
       <Dots
         canto="inferior-esquerdo"
         tone="claro"
-        tamanho="h-[900px] w-[900px]"
+        tamanho="h-[520px] w-[520px] md:h-[900px] md:w-[900px]"
       />
 
       <div className="faixa relative">
@@ -49,7 +49,7 @@ export function Dimensoes() {
               <Reveal>
                 <div className="grid gap-x-16 gap-y-8 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
                   {/* identificação do pilar */}
-                  <div className="flex items-baseline gap-5 md:sticky md:top-[calc(var(--header-baixo)+3rem)] md:self-start">
+                  <div className="flex items-baseline gap-5 md:sticky md:top-[calc(var(--header-altura)+3rem)] md:self-start">
                     <span className="tipo-numero text-dourado">
                       {String(i + 1).padStart(2, "0")}
                     </span>

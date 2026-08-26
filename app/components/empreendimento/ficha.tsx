@@ -28,7 +28,7 @@ export function Ficha() {
                 <span className="block font-[family-name:var(--font-playfair)] text-[clamp(1.75rem,1.2rem+2vw,2.75rem)] leading-none font-normal text-grafite">
                   {dado.valor}
                 </span>
-                <span className="mt-3 block text-[12px] leading-[1.5] font-light tracking-[0.06em] text-pedra">
+                <span className="mt-3 block text-base leading-[1.5] font-light tracking-[0.06em] text-pedra">
                   {dado.rotulo}
                 </span>
               </dd>

@@ -1,8 +1,12 @@
 @import "tailwindcss";
+/* regras do Lenis (html.lenis, [data-lenis-prevent], ...) — a rolagem suave
+   é montada em components/landing/scroll-suave.tsx */
+@import "lenis/dist/lenis.css";
 
 :root {
-  --background: #f5f4f0;
-  --foreground: #14261c;
+  /* branco puro: o off-white anterior (#f7f5f3) puxava para o sépia */
+  --background: #ffffff;
+  --foreground: #111729;
 }
 
 @theme inline {
@@ -13,40 +17,57 @@
      Sem a sobrescrita, valem as pilhas padrão do Tailwind. */
 }
 
-/* Paleta da marca.
+/* Paleta da marca Amaan.
    Cada token vira utilitário do Tailwind automaticamente
-   (bg-verde, text-dourado, border-creme, from-dourado, ...)
-   e também fica disponível como var(--color-verde) em style={{ }}. */
+   (bg-azul, text-dourado, border-creme, from-dourado, ...)
+   e também fica disponível como var(--color-azul) em style={{ }}.
+
+   Três azuis (escuro → médio) e quatro dourados (bronze → pálido) formam a
+   paleta fechada; os cinzas abaixo são derivados dela para que bordas e
+   textos secundários fiquem na mesma família fria. */
 @theme {
-  --color-verde: #48654e;
-  --color-verde-escuro: #14261c;
-  --color-dourado: #bd924c;
-  --color-dourado-claro: #ffecba;
-  --color-creme: #fcf2db;
-  /* tom claro de fundo do site (o original, mantido) */
-  --color-fundo: #f5f4f0;
+  /* azuis: o azul-escuro é o preto da marca; o médio é o tom de texto/apoio */
+  --color-azul-escuro: #111729;
+  --color-azul-profundo: #1f2e50;
+  --color-azul: #2f4268;
+  /* dourados: bronze (o único com contraste AA sobre fundo claro) → pálido */
+  --color-dourado-escuro: #8d6936;
+  --color-dourado: #af8951;
+  --color-dourado-medio: #caa063;
+  --color-dourado-claro: #f0c991;
+  /* creme: lavado do dourado pálido, para fundos e vãos quentes */
+  --color-creme: #f5e7d2;
+  /* tom claro de fundo do site — o mesmo de --background, para header,
+     seções claras e body ficarem em um único branco */
+  --color-fundo: #ffffff;
   /* cinzas dos detalhes: bordas, vãos e listras diagonais */
-  --color-linha: #e8e6e0;
+  --color-linha: #e3e6ec;
   /* cinza um pouco mais forte: filetes de input e textos de rodapé */
-  --color-cinza: #b0aca4;
+  --color-cinza: #a3aaba;
 
   /* Paleta da landing institucional: 70% arquitetura de luxo, 20% editorial,
      10% tecnologia. As seções claras usam --color-fundo (o mesmo tom do header
-     e da logo); o dourado da marca aparece só nos detalhes. */
-  --color-grafite: #111111;
-  --color-grafite-claro: #1b1b19;
-  /* Usado só nas seções Sobre e Empreendimentos. Contra --color-fundo este
-     tom dá 3.3:1 e reprova no AA para texto pequeno — #6f6a61 resolveria em
-     4.9:1 mantendo o mesmo cinza quente. */
-  --color-pedra: #8a857c;
-  --color-pedra-claro: #b6b1a8;
+     e do body); o dourado da marca aparece só nos detalhes.
+     `grafite` deixou de ser preto neutro: é o azul-escuro da paleta, para que
+     títulos e fundos escuros fiquem na mesma família do resto do site. */
+  --color-grafite: #111729;
+  --color-grafite-claro: #1f2e50;
+  /* Usado só nas seções Sobre e Empreendimentos. Ardósia azulada em 4.9:1
+     contra --color-fundo — o cinza quente anterior (#8a857c) dava 3.4:1 e
+     reprovava no AA para texto pequeno. */
+  --color-pedra: #606b84;
+  /* par claro do anterior, para texto sobre as seções em azul-escuro (8.8:1) */
+  --color-pedra-claro: #aeb7c7;
 }
 
 :root {
+  /* claro na esquerda, fechando no dourado da marca à direita — a parada
+     do meio evita a faixa lavada que dois stops deixam no centro */
   --gradiente-dourado: linear-gradient(
-    100deg,
-    var(--color-dourado) 0%,
-    var(--color-dourado-claro) 100%
+    to right,
+    var(--color-dourado-claro) 0%,
+    var(--color-dourado-medio) 48%,
+    var(--color-dourado) 100%
   );
 
   /* ---------------------------------------------------------------------
@@ -61,9 +82,9 @@
   --medida: 1240px;
   /* respiro vertical das seções */
   --ritmo: clamp(7rem, 11vw, 10.5rem);
-  /* altura do header em cada estado */
-  --header-alto: 76px;
-  --header-baixo: 58px;
+  /* altura do header: uma só, em qualquer posição da página. Piso prático,
+     porque os alvos de toque de 36px dos ícones precisam caber dentro dela. */
+  --header-altura: 52px;
 
   /* saída lenta, sem elástico: tudo desacelera no fim do movimento */
   --ease-editorial: cubic-bezier(0.22, 0.61, 0.36, 1);
@@ -118,14 +139,15 @@
 
 /* corpo de texto */
 @utility tipo-corpo {
-  font-size: clamp(0.9375rem, 0.9rem + 0.2vw, 1rem);
+  font-size: 1rem;
   line-height: 1.8;
   font-weight: 300;
 }
 
-/* corpo curto (descrições de item) */
+/* corpo curto (descrições de item) — mesmo tamanho do corpo, entrelinha
+   mais fechada: o que separa os dois é o ritmo, não a escala */
 @utility tipo-corpo-curto {
-  font-size: clamp(0.875rem, 0.85rem + 0.15vw, 0.9375rem);
+  font-size: 1rem;
   line-height: 1.7;
   font-weight: 300;
 }
@@ -147,15 +169,32 @@
   letter-spacing: 0.16em;
 }
 
-/* Listras paralelas na diagonal, no verde com opacidade baixa. */
+/* Listras paralelas na diagonal, no azul com opacidade baixa. */
 @utility bg-listras {
   background-image: repeating-linear-gradient(
     45deg,
-    color-mix(in oklab, var(--color-verde) 30%, transparent) 0,
-    color-mix(in oklab, var(--color-verde) 30%, transparent) 1px,
+    color-mix(in oklab, var(--color-azul) 30%, transparent) 0,
+    color-mix(in oklab, var(--color-azul) 30%, transparent) 1px,
     transparent 1px,
     transparent 11px
   );
+}
+
+/* A mesma rampa, deslocada para baixo na escala, para texto sobre fundo claro.
+   Mantém claro à esquerda e escuro à direita, mas dentro da faixa que se lê
+   sobre branco: o dourado pálido dá 1.8:1 e some, enquanto esta vai do dourado
+   da marca ao bronze. Segue a convenção de `tone` do projeto — "escuro" é a
+   versão de marcas escuras, para superfície clara. */
+@utility text-gradiente-dourado-escuro {
+  background-image: linear-gradient(
+    to right,
+    var(--color-dourado) 0%,
+    var(--color-dourado-escuro) 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
 }
 
 /* Gradiente dourado como fundo: <div className="bg-gradiente-dourado" /> */
@@ -173,10 +212,10 @@
 }
 
 /* Borda com gradiente dourado (o fundo do elemento precisa vir junto,
-   ex.: <a className="border-gradiente-dourado bg-verde-escuro" />) */
+   ex.: <a className="border-gradiente-dourado bg-azul-escuro" />) */
 @utility border-gradiente-dourado {
   border: 1px solid transparent;
-  background-image: linear-gradient(var(--color-verde-escuro), var(--color-verde-escuro)),
+  background-image: linear-gradient(var(--color-azul-escuro), var(--color-azul-escuro)),
     var(--gradiente-dourado);
   background-origin: border-box;
   background-clip: padding-box, border-box;
@@ -223,7 +262,7 @@ body {
 
 /* Âncoras param abaixo do header fixo, com respiro — em vez de encostarem nele. */
 html {
-  scroll-padding-top: calc(var(--header-baixo) + 2.5rem);
+  scroll-padding-top: calc(var(--header-altura) + 2.5rem);
 }
 
 /* A rolagem suave das âncoras é conforto, não identidade: quem pede menos
@@ -385,23 +424,81 @@ html {
 }
 
 /* ---------------------------------------------------------------------------
-   Lista dos pilares.
-   Regra do bloco: ao apontar um item, os outros recuam. O sistema aparece
-   porque a atenção é exclusiva — não porque o item ativo brilha.
+   Carrossel dos pilares.
+   As sete camadas sobem em loop contínuo: um sistema não tem primeiro item.
+   O trilho carrega duas cópias idênticas da lista e anda -50% da própria
+   altura — exatamente uma cópia —, então a volta fecha sem emenda.
+   Regra do bloco: ao apontar um item o carrossel para e os outros recuam. O
+   sistema aparece porque a atenção é exclusiva, não porque o item brilha.
    ------------------------------------------------------------------------- */
 
-.lista-pilares > li {
+@keyframes sobe-pilares {
+  from {
+    transform: translateY(0);
+  }
+  to {
+    transform: translateY(-50%);
+  }
+}
+
+.trilho-pilares {
+  animation: sobe-pilares var(--pilares-volta, 44s) linear infinite;
+  will-change: transform;
+}
+
+/* ler exige parar: o cursor (ou o foco de teclado) congela a volta */
+.trilho-pilares:hover,
+.trilho-pilares:focus-within {
+  animation-play-state: paused;
+}
+
+.trilho-pilares li {
   transition: opacity 0.6s var(--ease-editorial);
 }
 
 @media (hover: hover) {
-  .lista-pilares:hover > li:not(:hover) {
+  .trilho-pilares:hover li:not(:hover) {
     opacity: 0.4;
   }
 }
 
+/* A janela recorta o loop; as bordas somem em vez de cortar o texto. */
+@utility janela-pilares {
+  -webkit-mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 13%,
+    #000 87%,
+    transparent 100%
+  );
+  mask-image: linear-gradient(
+    to bottom,
+    transparent 0,
+    #000 13%,
+    #000 87%,
+    transparent 100%
+  );
+}
+
+/* Sem movimento, a lista volta a ser uma lista: altura livre, uma cópia só. */
 @media (prefers-reduced-motion: reduce) {
-  .lista-pilares > li {
+  .janela-pilares {
+    height: auto;
+    overflow: visible;
+    -webkit-mask-image: none;
+    mask-image: none;
+  }
+
+  .trilho-pilares {
+    position: static;
+    animation: none;
+  }
+
+  .trilho-pilares > [data-copia="2"] {
+    display: none;
+  }
+
+  .trilho-pilares li {
     transition: none;
   }
 }

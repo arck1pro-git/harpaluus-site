@@ -8,7 +8,7 @@
  */
 
 const tramas = {
-  escuro: "color-mix(in oklab, var(--color-verde) 34%, transparent)",
+  escuro: "color-mix(in oklab, var(--color-azul) 34%, transparent)",
   claro: "rgba(255,255,255,0.14)",
 } as const;
 

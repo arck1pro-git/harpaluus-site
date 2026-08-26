@@ -7,14 +7,14 @@ import PilaresSection from "../components/pilares";
 
 export default function Home() {
   return (
-    <div className="scroll-smooth bg-fundo text-verde-escuro text-[14px] leading-[1.6] font-[family-name:var(--font-raleway)]">
+    <div className="scroll-smooth bg-fundo text-azul-escuro text-[14px] leading-[1.6] font-[family-name:var(--font-raleway)]">
       {/* LINHA LATERAL ESQUERDA */}
 
       {/* NAV */}
       <Header />
 
       {/* HERO */}
-      <div className="relative h-screen w-full overflow-hidden bg-verde-escuro">
+      <div className="relative h-screen w-full overflow-hidden bg-azul-escuro">
         <Image
           src="/site6.JPG"
           alt=""
@@ -47,7 +47,7 @@ export default function Home() {
             <div className="h-72 w-[55%] rounded-full bg-white opacity-95 blur-3xl" />
             <div className="absolute h-44 w-[35%] rounded-full bg-white opacity-90 blur-2xl" />
           </div>
-          <p className="relative z-10 max-w-[760px] text-center text-[16px] leading-[1.8] text-verde">
+          <p className="relative z-10 max-w-[760px] text-center text-[16px] leading-[1.8] text-azul">
             Uma leitura sobre arquitetura, tecnologia e o futuro de morar em prédios inteligentes. Aqui exploramos como a gestão preditiva, a automação predial e a neuroarquitetura estão redefinindo a forma como habitamos, investimos e cuidamos do patrimônio. Edição após edição, reunimos ideias, projetos e visões de quem está construindo a cidade que vem aí — onde cada edifício pensa, aprende e se adapta às pessoas que vivem nele.
           </p>
         </div>
@@ -73,28 +73,28 @@ export default function Home() {
       {/* ARQUITETURA INTELIGENTE */}
       <div className="flex flex-col bg-linha">
         <div className="rounded-lg border border-linha bg-fundo text-center py-12 px-10">
-          <h3 className="font-[family-name:var(--font-playfair)] text-[28px] font-normal tracking-[0.06em] text-verde-escuro">
+          <h3 className="font-[family-name:var(--font-playfair)] text-[28px] font-normal tracking-[0.06em] text-azul-escuro">
             Arquitetura Inteligente
           </h3>
         </div>
 
         <div className="grid grid-cols-4 h-[320px]">
-          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-verde-escuro">
+          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
             <Image src="/site4.JPG" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Imobiliário Digital</span>
           </div>
-          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-verde-escuro">
+          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
             <Image src="/site5.JPG" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Residência</span>
           </div>
-          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-verde-escuro">
+          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
             <Image src="/site6.JPG" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Lucratividade Estruturada</span>
           </div>
-          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-verde-escuro">
+          <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
             <Image src="/site7.JPG" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Blindagem Imaterial</span>
@@ -104,7 +104,7 @@ export default function Home() {
 
       {/* PARTNER STRIP */}
       <div className="bg-linha">
-        <div className="flex items-center justify-center rounded-lg border border-linha bg-verde-escuro py-6 px-10">
+        <div className="flex items-center justify-center rounded-lg border border-linha bg-azul-escuro py-6 px-10">
           <span className="font-[family-name:var(--font-playfair)] text-[13px] tracking-[0.3em] uppercase text-fundo">
             Bayview Easy Driving Rentals
           </span>
@@ -113,7 +113,7 @@ export default function Home() {
 
       {/* SUNSET BLOCK */}
       <div className="bg-linha">
-        <div className="relative overflow-hidden rounded-lg border border-linha bg-verde-escuro h-[360px]">
+        <div className="relative overflow-hidden rounded-lg border border-linha bg-azul-escuro h-[360px]">
           <Image src="/site6.JPG" alt="" fill sizes="100vw" className="object-cover" />
         </div>
       </div>
@@ -122,17 +122,17 @@ export default function Home() {
       <footer className="bg-fundo border-t border-linha pt-[72px] px-10 pb-12">
         <div className="grid grid-cols-2 gap-20 max-w-[1000px] mx-auto">
           <div>
-            <h4 className="font-[family-name:var(--font-playfair)] text-[22px] font-normal mb-9 text-verde-escuro">fale conosco</h4>
+            <h4 className="font-[family-name:var(--font-playfair)] text-[22px] font-normal mb-9 text-azul-escuro">fale conosco</h4>
             <div className="flex flex-col gap-2.5">
-              <p className="text-[12px] text-verde tracking-[0.04em] leading-[1.7]">(47) 98888-0000</p>
-              <p className="text-[12px] text-verde tracking-[0.04em] leading-[1.7]">contato@contato.com</p>
-              <p className="text-[12px] text-verde tracking-[0.04em] leading-[1.7]">R. Dorvalino Voltolini, 179<br />Perequê - Porto Belo/SC</p>
-              <p className="text-[12px] text-verde tracking-[0.04em] leading-[1.7]">CNPJ: 50.550.515/0001-33</p>
+              <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">(47) 98888-0000</p>
+              <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">contato@contato.com</p>
+              <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">R. Dorvalino Voltolini, 179<br />Perequê - Porto Belo/SC</p>
+              <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">CNPJ: 50.550.515/0001-33</p>
             </div>
             <div className="flex gap-4 mt-7">
-              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full border border-dourado text-[12px] text-verde no-underline transition-colors hover:border-verde-escuro hover:text-verde-escuro">IG</a>
-              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full border border-dourado text-[12px] text-verde no-underline transition-colors hover:border-verde-escuro hover:text-verde-escuro">𝕏</a>
-              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full border border-dourado text-[12px] text-verde no-underline transition-colors hover:border-verde-escuro hover:text-verde-escuro">in</a>
+              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full border border-dourado text-[12px] text-azul no-underline transition-colors hover:border-azul-escuro hover:text-azul-escuro">IG</a>
+              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full border border-dourado text-[12px] text-azul no-underline transition-colors hover:border-azul-escuro hover:text-azul-escuro">𝕏</a>
+              <a href="#" className="flex items-center justify-center w-8 h-8 rounded-full border border-dourado text-[12px] text-azul no-underline transition-colors hover:border-azul-escuro hover:text-azul-escuro">in</a>
             </div>
           </div>
           <div>
@@ -140,20 +140,20 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Name"
-                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-verde-escuro outline-none transition-colors focus:border-verde-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
+                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none transition-colors focus:border-azul-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
               />
               <input
                 type="email"
                 placeholder="Email address"
-                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-verde-escuro outline-none transition-colors focus:border-verde-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
+                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none transition-colors focus:border-azul-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
               />
               <textarea
                 placeholder="Leave a message"
-                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-verde-escuro outline-none resize-none min-h-[80px] transition-colors focus:border-verde-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
+                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none resize-none min-h-[80px] transition-colors focus:border-azul-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
               />
               <button
                 type="button"
-                className="self-start bg-verde-escuro text-fundo border-none py-[13px] px-10 text-[10px] tracking-[0.22em] uppercase cursor-pointer transition-colors hover:bg-dourado"
+                className="self-start bg-azul-escuro text-fundo border-none py-[13px] px-10 text-[10px] tracking-[0.22em] uppercase cursor-pointer transition-colors hover:bg-dourado"
               >
                 Submit
               </button>

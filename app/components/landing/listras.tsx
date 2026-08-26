@@ -2,7 +2,7 @@
  * Mesma geometria do utilitário `bg-listras` do projeto: 45°, 1px, a cada 11px.
  * A cor vem do token da marca, para acompanhar mudanças na paleta.
  */
-const COR = "color-mix(in oklab, var(--color-verde) 26%, transparent)";
+const COR = "color-mix(in oklab, var(--color-azul) 26%, transparent)";
 const TRAMA = `repeating-linear-gradient(45deg, ${COR} 0, ${COR} 1px, transparent 1px, transparent 11px)`;
 
 /**

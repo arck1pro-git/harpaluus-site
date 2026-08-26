@@ -67,7 +67,7 @@ export function Hero() {
     <section
       id="hero"
       data-cena={emCena}
-      className="relative h-[92svh] max-h-[900px] min-h-[600px] w-full overflow-hidden bg-verde-escuro"
+      className="relative h-screen w-full overflow-hidden rounded-b-4xl bg-azul-escuro"
     >
       <div ref={imagem} className="absolute inset-0 will-change-transform">
         <div className="cena-imagem h-full w-full">
@@ -83,10 +83,14 @@ export function Hero() {
         </div>
       </div>
 
-      {/* véu discreto: só o suficiente para o texto branco respirar */}
-      <div className="absolute inset-0 bg-linear-to-t from-verde-escuro/80 via-verde-escuro/20 to-verde-escuro/35" />
+      {/* sombra preta sobre a foto inteira: baixa o brilho do pôr do sol e
+          assenta a imagem antes de qualquer texto entrar */}
+      <div className="absolute inset-0 bg-black/55" />
 
-      <div className="faixa relative z-10 flex h-full flex-col justify-end pb-[clamp(120px,17vh,168px)]">
+      {/* véu discreto: só o suficiente para o texto branco respirar */}
+      <div className="absolute inset-0 bg-linear-to-t from-azul-escuro/80 via-azul-escuro/20 to-azul-escuro/35" />
+
+      <div className="faixa relative z-10 flex h-full flex-col justify-end pb-[clamp(168px,24vh,240px)]">
         <div className="max-w-[640px]">
           <span className="cena-filete block h-px w-[52px] bg-dourado/70" />
 
@@ -98,7 +102,7 @@ export function Hero() {
           </h1>
 
           <p
-            className="cena tipo-corpo mt-7 max-w-[480px] text-white/70"
+            className="cena tipo-corpo mt-7 max-w-[480px] text-white"
             style={{ "--cena-delay": "480ms" } as React.CSSProperties}
           >
             {hero.texto}

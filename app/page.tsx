@@ -4,13 +4,14 @@ import { EmpreendimentosSection } from "./components/landing/empreendimentos-sec
 import { Footer } from "./components/landing/footer";
 import { Header } from "./components/landing/header";
 import { Hero } from "./components/landing/hero";
+import { InvestSection } from "./components/landing/invest-section";
 import { PilaresSection } from "./components/landing/pilares-section";
 import { SobreSection } from "./components/landing/sobre-section";
 
 export const metadata: Metadata = {
-  title: "Harpaluus Incorporadora",
+  title: "Amaan Incorporadora · Empreendimentos Vivos",
   description:
-    "Incorporadora de empreendimentos de alta performance no litoral catarinense. Arquitetura, tecnologia e eficiência operacional em Porto Belo/SC.",
+    "A Amaan concebe, desenvolve e opera Empreendimentos Vivos em Santa Catarina: prédios que continuam evoluindo e produzindo valor depois de prontos.",
 };
 
 export default function Home() {
@@ -19,6 +20,7 @@ export default function Home() {
       <Header />
 
       <Hero />
+      <InvestSection />
       <SobreSection />
       <PilaresSection />
       <EmpreendimentosSection />

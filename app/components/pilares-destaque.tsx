@@ -40,7 +40,7 @@ export default function PilaresDestaque() {
           {DESTAQUES.map((d) => (
             <article
               key={d.numero}
-              className="group relative overflow-hidden rounded-lg border border-linha bg-verde-escuro"
+              className="group relative overflow-hidden rounded-lg border border-linha bg-azul-escuro"
             >
               <Image
                 src={d.img}

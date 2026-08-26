@@ -7,7 +7,14 @@ import { usePathname } from "next/navigation";
 import { Menu, X } from "lucide-react";
 
 import { InstagramIcon, TRACO, WhatsAppIcon } from "./icones";
-import { INSTAGRAM, logo, nav, WHATSAPP, type NavItem } from "./site-config";
+import {
+  INSTAGRAM,
+  logo,
+  logoClaro,
+  nav,
+  WHATSAPP,
+  type NavItem,
+} from "./site-config";
 
 /** Rolagem (px) a partir da qual o header troca de estado. */
 const LIMITE_SCROLL = 24;
@@ -84,10 +91,12 @@ const ancoras = nav
   .filter((id): id is string => id !== null);
 
 /**
- * Header fixo em dois estados.
- * No topo: barra sólida no tom da marca, alta, sem divisor — discreta.
- * Ao rolar: encolhe, ganha translucidez com blur e um divisor de 1px. Os
- * links continuam em contraste pleno; nada de sombra.
+ * Header fixo, de altura única.
+ * A barra não muda de tamanho ao rolar — o que muda é a superfície. No topo
+ * ela é transparente e flutua sobre a foto do hero, então marca, links e
+ * ícones vão para o claro; a partir de 24px de rolagem ela fica branca, ganha
+ * um divisor de 1px e tudo volta para o azul-escuro. O menu aberto conta como
+ * rolado: precisa de fundo próprio para o conteúdo ser legível.
  */
 export function Header() {
   const [aberto, setAberto] = useState(false);
@@ -161,46 +170,71 @@ export function Header() {
     return () => window.removeEventListener("keydown", aoTeclar);
   }, [aberto]);
 
-  // O menu aberto vira uma superfície própria: precisa ser opaco mesmo no topo.
-  const superficie =
-    rolou || aberto
-      ? "bg-fundo/80 backdrop-blur-xl border-grafite/10"
-      : "bg-fundo border-transparent";
+  // No topo o header é só um vidro sem fundo sobre a foto; o menu aberto conta
+  // como rolado, porque precisa de superfície própria para ser legível.
+  const sobreFoto = !rolou && !aberto;
+  const superficie = sobreFoto
+    ? "bg-transparent border-transparent"
+    : "bg-fundo border-grafite/10";
 
   return (
     <header
-      className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,backdrop-filter,border-color] duration-700 ease-out ${superficie}`}
+      className={`fixed inset-x-0 top-0 z-50 border-b transition-[background-color,border-color] duration-700 ease-out ${superficie}`}
     >
       <div
-        className="faixa flex items-center justify-between transition-[height] duration-700 ease-out"
-        style={{
-          height: rolou ? "var(--header-baixo)" : "var(--header-alto)",
-        }}
+        className="faixa flex items-center justify-between"
+        style={{ height: "var(--header-altura)" }}
       >
         {/* a marca leva para a home, não para a âncora do hero: em
             /empreendimentos o #hero não existe e o clique não fazia nada */}
-        <Link href="/" className="block shrink-0 no-underline" aria-label={logo.alt}>
+        {/* as duas versões empilhadas: trocar o src faria a marca piscar,
+            então elas se cruzam por opacidade no mesmo tempo da barra */}
+        <Link
+          href="/"
+          className="relative block shrink-0 no-underline"
+          aria-label={logo.alt}
+        >
           <Image
             src={logo.src}
             alt={logo.alt}
             width={logo.width}
             height={logo.height}
             loading="eager"
-            className="w-auto transition-[height] duration-700 ease-out"
-            style={{ height: rolou ? "26px" : "30px" }}
+            sizes="88px"
+            className={`w-auto transition-opacity duration-700 ease-out ${
+              sobreFoto ? "opacity-0" : "opacity-100"
+            }`}
+            style={{ height: "22px" }}
+          />
+          <Image
+            src={logoClaro.src}
+            alt=""
+            aria-hidden
+            width={logoClaro.width}
+            height={logoClaro.height}
+            loading="eager"
+            sizes="88px"
+            className={`absolute inset-0 w-auto transition-opacity duration-700 ease-out ${
+              sobreFoto ? "opacity-100" : "opacity-0"
+            }`}
+            style={{ height: "22px" }}
           />
         </Link>
 
         {/* -mr compensa o padding dos ícones: eles ficam alinhados à borda do
-            conteúdo, mas cada um mantém 40px de alvo de toque */}
-        <div className="-mr-2.5 flex items-center gap-1 md:gap-8">
+            conteúdo, mas cada um mantém 36px de alvo de toque */}
+        <div className="-mr-2 flex items-center gap-1 md:gap-8">
           <nav className="hidden items-center gap-8 md:flex">
             {nav.map((item) => (
               <LinkNav
                 key={item.label}
                 item={item}
                 ativo={ativo(item.href)}
-                className="link-nav tipo-label text-grafite/65 no-underline transition-colors duration-500 hover:text-grafite data-[ativo=true]:text-grafite"
+                className={`link-nav tipo-label no-underline transition-colors duration-500 ${
+                  sobreFoto
+                    ? "text-white/75 hover:text-white data-[ativo=true]:text-white"
+                    : "text-grafite/65 hover:text-grafite data-[ativo=true]:text-grafite"
+                }`}
               >
                 {item.label}
               </LinkNav>
@@ -215,7 +249,11 @@ export function Header() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className="flex h-10 w-10 items-center justify-center text-grafite/60 no-underline transition-colors duration-500 hover:text-grafite"
+                  className={`flex h-9 w-9 items-center justify-center no-underline transition-colors duration-500 ${
+                    sobreFoto
+                      ? "text-white/70 hover:text-white"
+                      : "text-grafite/60 hover:text-grafite"
+                  }`}
                 >
                   {/* traço mais encorpado que o TRACO padrão: nesse tamanho os
                       ícones sumiriam ao lado do peso do logo */}
@@ -231,7 +269,9 @@ export function Header() {
             aria-expanded={aberto}
             aria-controls="menu-mobile"
             aria-label={aberto ? "Fechar menu" : "Abrir menu"}
-            className="flex h-10 w-10 items-center justify-center text-grafite transition-colors duration-500 md:hidden"
+            className={`flex h-9 w-9 items-center justify-center transition-colors duration-500 md:hidden ${
+              sobreFoto ? "text-white" : "text-grafite"
+            }`}
           >
             {aberto ? (
               <X size={19} strokeWidth={TRACO} />

@@ -49,13 +49,13 @@ export default function Header() {
 
             {/* container do logo (largura reduzida) */}
             <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-linha bg-fundo px-10">
-                <Image src="/logo.png" alt="Logo" width={120} height={40} className="h-9 w-auto object-contain" priority />
+                <Image src="/logo-amaan-name-03.png" alt="Amaan Incorporadora" width={1410} height={352} className="h-9 w-auto object-contain" priority />
             </div>
 
             <ul className="flex w-auto items-center gap-9 rounded-lg border border-linha bg-fundo px-7">
-                <li><a href="#" className="text-[11px]  uppercase text-verde-escuro font-medium no-underline transition-colors hover:text-dourado">Sobre</a></li>
-                <li><a href="#" className="text-[11px]  uppercase text-verde-escuro font-medium no-underline transition-colors hover:text-dourado">Parceiros</a></li>
-                <li><a href="#" className="text-[11px]  uppercase text-verde-escuro font-medium no-underline transition-colors hover:text-dourado">Lançamento</a></li>
+                <li><a href="#" className="text-[11px]  uppercase text-azul-escuro font-medium no-underline transition-colors hover:text-dourado">Sobre</a></li>
+                <li><a href="#" className="text-[11px]  uppercase text-azul-escuro font-medium no-underline transition-colors hover:text-dourado">Parceiros</a></li>
+                <li><a href="#" className="text-[11px]  uppercase text-azul-escuro font-medium no-underline transition-colors hover:text-dourado">Lançamento</a></li>
             </ul>
 
             {/* espacinho que sobra na direita */}
