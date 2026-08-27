@@ -425,31 +425,18 @@ html {
 
 /* ---------------------------------------------------------------------------
    Carrossel dos pilares.
-   As sete camadas sobem em loop contínuo: um sistema não tem primeiro item.
-   O trilho carrega duas cópias idênticas da lista e anda -50% da própria
-   altura — exatamente uma cópia —, então a volta fecha sem emenda.
+   As seis camadas sobem em loop contínuo: um sistema não tem primeiro item.
+   O trilho carrega duas cópias idênticas da lista e anda uma cópia inteira,
+   então a volta fecha sem emenda.
+   O transform vem do JS (pilares-section.tsx), que também para a volta no
+   hover e entrega o comando ao scroll do mouse — uma animação CSS aqui
+   venceria o estilo inline e travaria o giro manual.
    Regra do bloco: ao apontar um item o carrossel para e os outros recuam. O
    sistema aparece porque a atenção é exclusiva, não porque o item brilha.
    ------------------------------------------------------------------------- */
 
-@keyframes sobe-pilares {
-  from {
-    transform: translateY(0);
-  }
-  to {
-    transform: translateY(-50%);
-  }
-}
-
 .trilho-pilares {
-  animation: sobe-pilares var(--pilares-volta, 44s) linear infinite;
   will-change: transform;
-}
-
-/* ler exige parar: o cursor (ou o foco de teclado) congela a volta */
-.trilho-pilares:hover,
-.trilho-pilares:focus-within {
-  animation-play-state: paused;
 }
 
 .trilho-pilares li {
@@ -491,7 +478,6 @@ html {
 
   .trilho-pilares {
     position: static;
-    animation: none;
   }
 
   .trilho-pilares > [data-copia="2"] {

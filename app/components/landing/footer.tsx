@@ -8,9 +8,9 @@ import { rodape } from "./site-config";
 
 /** Ícones vazados ao lado dos links da coluna Contato. */
 const iconesLink = {
-  whatsapp: () => <WhatsAppIcon size={14} />,
-  instagram: () => <InstagramIcon size={14} />,
-  local: () => <MapPin size={14} strokeWidth={TRACO} aria-hidden />,
+  whatsapp: () => <WhatsAppIcon size={18} />,
+  instagram: () => <InstagramIcon size={18} />,
+  local: () => <MapPin size={18} strokeWidth={TRACO} aria-hidden />,
 } as const;
 
 export function Footer() {

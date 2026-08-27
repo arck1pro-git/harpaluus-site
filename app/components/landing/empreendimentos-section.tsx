@@ -5,28 +5,25 @@ import { CtaLink } from "./cta-link";
 import { TRACO } from "./icones";
 import { Listras } from "./listras";
 import { Reveal } from "./reveal";
-import { empreendimentos } from "./site-config";
+import { empreendimentos, type SiteImage } from "./site-config";
 
-const { destaque, galeria, titulo } = empreendimentos;
-const total = String(galeria.length).padStart(2, "0");
+const { destaque, imagens, titulo } = empreendimentos;
+const [principal, lado] = imagens;
 
-/** Tile da galeria: recorte fixo, zoom discreto no hover e numeração. */
+/** Tile da galeria: recorte fixo e zoom discreto no hover. */
 function Tile({
-  indice,
+  imagem,
   className,
   sizes,
-  tag,
 }: {
-  indice: number;
+  imagem: SiteImage;
   className: string;
   sizes: string;
-  /** etiqueta técnica no topo, só no tile principal */
-  tag?: string;
 }) {
-  const imagem = galeria[indice];
-
   return (
-    <figure className={`group relative overflow-hidden rounded-[3px] bg-grafite ${className}`}>
+    <figure
+      className={`group relative overflow-hidden rounded-[3px] bg-grafite ${className}`}
+    >
       <Image
         src={imagem.src}
         alt={imagem.alt}
@@ -36,28 +33,12 @@ function Tile({
         style={{ objectPosition: imagem.position }}
       />
 
-      {tag ? (
-        <>
-          <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-linear-to-b from-grafite/45 to-transparent" />
-          <span className="pointer-events-none absolute top-4 left-4 font-mono text-[10px] tracking-[0.14em] text-white/70 uppercase">
-            {tag}
-          </span>
-        </>
-      ) : null}
-
       <div className="pointer-events-none absolute inset-x-0 bottom-0 h-24 bg-linear-to-t from-grafite/55 to-transparent opacity-0 transition-opacity duration-700 group-hover:opacity-100" />
-
-      <figcaption className="pointer-events-none absolute bottom-4 left-4 flex items-baseline gap-2 font-mono text-[10px] tracking-[0.16em] text-white/0 transition-colors duration-700 group-hover:text-white/75">
-        <span className="text-dourado/0 transition-colors duration-700 group-hover:text-dourado">
-          {String(indice + 1).padStart(2, "0")}
-        </span>
-        <span>/ {total}</span>
-      </figcaption>
     </figure>
   );
 }
 
-/** Empreendimento em destaque da incorporadora, com a galeria. */
+/** Empreendimento em destaque da incorporadora, em duas imagens. */
 export function EmpreendimentosSection() {
   return (
     <section
@@ -97,30 +78,29 @@ export function EmpreendimentosSection() {
               {destaque.texto}
             </p>
 
-            <CtaLink href={destaque.cta.href} tone="escuro" className="mt-9">
+            <CtaLink href={destaque.cta.href} tone="escuro" external className="mt-9">
               {destaque.cta.label}
             </CtaLink>
           </Reveal>
         </div>
 
+        {/* duas imagens: a principal manda na largura, a torre acompanha ao
+            lado na mesma altura */}
         <Reveal
           delay={80}
-          className="mt-[72px] grid gap-4 md:h-[640px] md:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]"
+          className="mt-[72px] grid gap-4 md:h-[680px] md:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]"
         >
           <Tile
-            indice={0}
+            imagem={principal}
             className="h-[420px] md:h-full"
-            sizes="(max-width: 768px) 100vw, 640px"
-            tag={destaque.coordenadas}
+            sizes="(max-width: 768px) 100vw, 660px"
           />
-
-          <div className="grid grid-cols-3 gap-4 md:grid-cols-1 md:grid-rows-3">
-            <Tile indice={1} className="h-[150px] md:h-full" sizes="(max-width: 768px) 33vw, 420px" />
-            <Tile indice={2} className="h-[150px] md:h-full" sizes="(max-width: 768px) 33vw, 420px" />
-            <Tile indice={3} className="h-[150px] md:h-full" sizes="(max-width: 768px) 33vw, 420px" />
-          </div>
+          <Tile
+            imagem={lado}
+            className="h-[280px] md:h-full"
+            sizes="(max-width: 768px) 100vw, 420px"
+          />
         </Reveal>
-
       </div>
     </section>
   );

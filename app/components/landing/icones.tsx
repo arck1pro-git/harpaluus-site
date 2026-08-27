@@ -43,10 +43,10 @@ export function InstagramIcon({ size = 15, strokeWidth = TRACO }: IconeProps) {
 export function WhatsAppIcon({ size = 15, strokeWidth = TRACO }: IconeProps) {
   return (
     <svg {...base(size, strokeWidth)}>
-      <path d="M3 21l1.9-4.3A8.6 8.6 0 1 1 8.4 20.1L3 21z" />
-      <path d="M9 9.5c0 3 2.5 5.5 5.5 5.5" />
-      <path d="M9 9.5h1.4l.9 2-1 1" />
-      <path d="M14.5 15v-1.4l2-.9 1 1" />
+      {/* balão com a cauda na base e o fone dentro: o desenho antigo somava
+          quatro traços soltos que, no tamanho do header, viravam um borrão */}
+      <path d="M3 21l1.65-3.8a9 9 0 1 1 3.4 2.9L3 21z" />
+      <path d="M9 10a.5.5 0 0 0 1 0V9a.5.5 0 0 0-1 0v1a5 5 0 0 0 5 5h1a.5.5 0 0 0 0-1h-1a.5.5 0 0 0 0 1" />
     </svg>
   );
 }

@@ -1,7 +1,8 @@
 /**
  * Conteúdo e imagens da home institucional da Amaan Incorporadora.
  * A página fala da empresa; o Tourmaline Tower aparece como o empreendimento
- * em destaque, não como assunto da home.
+ * em destaque, não como assunto da home — e nunca como oferta: nada de
+ * reserva, venda ou chamada para o comercial.
  *
  * Todas as imagens ficam concentradas aqui: para trocar qualquer foto basta
  * alterar `src` (arquivo em /public) e, se necessário, `position`, que define
@@ -63,9 +64,9 @@ export const logoClaro = {
 };
 
 /**
- * As âncoras da home levam `/#`: assim o mesmo menu funciona na home (rola
- * até a seção) e em /empreendimentos (volta para a home e rola). `#contato`
- * fica sem a barra de propósito — o rodapé existe em todas as páginas.
+ * As âncoras levam `/#`: o mesmo menu funciona a partir de qualquer rota
+ * futura (volta para a home e rola). `#contato` fica sem a barra de
+ * propósito — o rodapé existe em todas as páginas.
  */
 export const nav: NavItem[] = [
   { label: "Sobre", href: "/#sobre" },
@@ -165,8 +166,6 @@ export const pilares = {
         "O prédio avisa que um sistema vai falhar antes de ele falhar, e o morador acompanha o reparo pelo aplicativo. Quem aluga entrega a operação para a gestão.",
     },
   ] satisfies { icone: PilarIcone; titulo: string; descricao: string }[],
-  /** fecha a lista — é a consequência que amarra as seis camadas */
-  fecho: "Dez anos depois da entrega, são elas que mantêm o prédio funcionando e o valor em pé.",
 };
 
 /* ----------------------------------------------------------------- INVEST */
@@ -196,229 +195,14 @@ export const empreendimentos = {
   titulo: "EMPREENDIMENTOS",
   destaque: {
     nome: "Tourmaline Tower",
-    meta: "Porto Belo / SC · Em lançamento",
-    /** coordenadas de Porto Belo/SC (-27.1578, -48.5528) */
-    coordenadas: "27°09′S 48°33′W",
+    meta: "Porto Belo / SC · Futuro Lançamento",
     texto:
-      "Trinta e um pavimentos na Vila Nova, com rooftop no ponto mais alto da região. É o primeiro Empreendimento Vivo da Amaan: um prédio em que a operação foi desenhada junto com a planta.",
-    cta: { label: "Conheça o empreendimento", href: "/empreendimentos" },
+      "Trinta e um pavimentos no bairro Vila Nova em Porto Belo SC, com rooftop no ponto mais alto da região. É o primeiro Empreendimento Vivo da Amaan: um prédio em que a operação foi desenhada junto com a planta.",
+    /* nenhuma chamada comercial: o convite é para a conversa, e só */
+    cta: { label: "Fale com a Amaan", href: WHATSAPP },
   },
-  /** A primeira imagem é a grande; as outras três formam a coluna menor. */
-  galeria: [
-    {
-      src: "/tourmaline2.png",
-      alt: "Lounge gourmet do Tourmaline Tower, com vista panorâmica para o mar",
-      position: "38% center",
-    },
-    {
-      src: "/tourmaline perspectiva.png",
-      alt: "Fachada em pele de vidro com elementos metálicos dourados",
-      position: "68% 60%",
-    },
-    {
-      src: "/tourmaline3.png",
-      alt: "Torre iluminada ao entardecer",
-      position: "center 40%",
-    },
-    {
-      src: "/tourmaline5.png",
-      alt: "Área de convivência externa com lareira e pergolado",
-      position: "70% center",
-    },
-  ] satisfies SiteImage[],
-};
-
-/* --------------------------------------------- PÁGINA DO EMPREENDIMENTO */
-
-/**
- * Conteúdo da página /empreendimentos.
- *
- * Os números e as listas vêm do material do próprio projeto (os mesmos que
- * alimentam `app/components/pilares.tsx`): 31 pavimentos, unidades de 42 a
- * 64 m², rooftop, implantação em cota elevada. Nada aqui é estimado — se um
- * dado novo entrar (preço, prazo, número de unidades), ele precisa vir do
- * material comercial, não deste arquivo.
- */
-export const tourmaline = {
-  nome: "Tourmaline Tower",
-  local: "Porto Belo / SC",
-  status: "Em lançamento",
-  /** coordenadas de Porto Belo/SC (-27.1578, -48.5528) */
-  coordenadas: "27°09′S 48°33′W",
-  chamada:
-    "O primeiro Empreendimento Vivo da Amaan: um prédio pensado para funcionar bem no dia em que estiver cheio.",
-
-  capa: {
-    src: "/tourmaline.png",
-    alt: "Rooftop do Tourmaline Tower ao pôr do sol: piscina, pérgola iluminada e o emblema dourado da marca sobre a orla de Porto Belo",
-    position: "center 58%",
-  } satisfies SiteImage,
-
-  /** faixa de dados logo abaixo da capa */
-  ficha: [
-    { valor: "31", rotulo: "pavimentos" },
-    { valor: "42–64", rotulo: "m² por unidade" },
-    { valor: "Rooftop", rotulo: "no ponto mais alto da região" },
-    { valor: "Vila Nova", rotulo: "Porto Belo / SC" },
-  ],
-
-  apresentacao: {
-    titulo: "PROJETADA DE TRÁS PARA FRENTE.",
-    lead: "A operação foi decidida antes da forma.",
-    paragrafos: [
-      "Antes de desenhar a fachada, decidimos como a torre seria acessada, medida, mantida e operada. A planta veio atender essas decisões.",
-      "As unidades entre 42 e 64 m² servem a públicos bem diferentes: executivo, agro, tecnologia, sucessão. A demanda fica distribuída entre eles, e essa é a ideia.",
-      "A implantação em cota elevada, a uma distância equilibrada da praia, segue a mesma lógica. Vista e relação com a orla não se corrigem depois que a obra sobe.",
-    ],
-    imagem: {
-      src: "/tourmaline perspectiva.png",
-      alt: "Perspectiva do Tourmaline Tower: torre de pele de vidro com elementos metálicos dourados vista de baixo, contra o céu",
-      position: "center",
-    } satisfies SiteImage,
-  },
-
-  /**
-   * As seis camadas do Empreendimento Vivo, materializadas neste edifício.
-   *
-   * Só entra aqui o que é decisão de projeto tomada ou contratada. Claims de
-   * mercado (absorção, liquidez, taxa de ocupação) saíram: são projeção, não
-   * fato, e o livro da marca pede fato e projeção separados.
-   */
-  dimensoes: {
-    titulo: "AS SEIS CAMADAS, APLICADAS.",
-    texto:
-      "Camada por camada, o que já está decidido dentro do Tourmaline Tower.",
-    itens: [
-      {
-        titulo: "Arquitetura",
-        grupos: [
-          {
-            titulo: "Implantação",
-            itens: [
-              "Implantação em cota elevada",
-              "Distância equilibrada da praia",
-              "Torre de 31 pavimentos na Vila Nova",
-            ],
-          },
-          {
-            titulo: "Tipologia",
-            itens: [
-              "Unidades entre 42 m² e 64 m²",
-              "Público amplo: executivo, agro, tecnologia e sucessão",
-              "Flexibilidade de uso",
-            ],
-          },
-          {
-            titulo: "Neuroarquitetura aplicada",
-            itens: [
-              "Design biofílico",
-              "Iluminação estratégica",
-              "Integração com a paisagem e áreas de descompressão",
-            ],
-          },
-        ],
-      },
-      {
-        titulo: "Tecnologia",
-        grupos: [
-          {
-            titulo: "Acesso sem chave",
-            itens: [
-              "Biometria facial e QR Code dinâmico",
-              "Eliminação da chave física",
-              "Gestão remota de acesso",
-            ],
-          },
-          {
-            titulo: "Infraestrutura integrada",
-            itens: [
-              "Controle inteligente de elevadores",
-              "Infraestrutura tecnológica integrada às áreas comuns",
-              "Controle do apartamento por aplicativo",
-            ],
-          },
-        ],
-      },
-      {
-        titulo: "Sustentabilidade",
-        grupos: [
-          {
-            titulo: "Medição individual",
-            itens: [
-              "Telemetria individual de água, gás e energia",
-              "Redução de desperdício e justiça no rateio",
-            ],
-          },
-          {
-            titulo: "Menos manutenção",
-            itens: [
-              "Gestão preventiva de sistemas hidráulicos e elétricos",
-              "Manutenção programada por sistema",
-            ],
-          },
-        ],
-      },
-      {
-        titulo: "Serviços",
-        grupos: [
-          {
-            titulo: "Rotina resolvida no edifício",
-            itens: ["Lavanderia inteligente", "Minimarket interno"],
-          },
-          {
-            titulo: "Trabalho e estadia",
-            itens: [
-              "Coworking integrado",
-              "Preparado para short stay e locação executiva",
-            ],
-          },
-        ],
-      },
-      {
-        titulo: "Experiências",
-        grupos: [
-          {
-            titulo: "Rooftop",
-            itens: [
-              "Rooftop panorâmico no ponto mais alto da região",
-              "Presença vertical dominante na Vila Nova",
-            ],
-          },
-          {
-            titulo: "Convivência",
-            itens: [
-              "Lounge gourmet com vista para o mar",
-              "Área externa com lareira e pergolado",
-              "Áreas comuns dimensionadas para uso frequente",
-            ],
-          },
-        ],
-      },
-      {
-        titulo: "Gestão",
-        grupos: [
-          {
-            titulo: "Operação monitorada",
-            itens: [
-              "Monitoramento técnico contínuo",
-              "Alertas automatizados de manutenção",
-              "Transparência operacional via aplicativo",
-            ],
-          },
-          {
-            titulo: "Patrimônio produtivo",
-            itens: [
-              "Gestão das plataformas de locação",
-              "Precificação dinâmica e otimização de ocupação",
-              "Hospedagem operada pela gestão do edifício",
-            ],
-          },
-        ],
-      },
-    ],
-  },
-
-  galeria: [
+  /** a principal, maior, e a torre ao lado */
+  imagens: [
     {
       src: "/tourmaline2.png",
       alt: "Lounge gourmet do Tourmaline Tower, com vista panorâmica para o mar",
@@ -429,25 +213,7 @@ export const tourmaline = {
       alt: "Torre iluminada ao entardecer",
       position: "center 40%",
     },
-    {
-      src: "/tourmaline5.png",
-      alt: "Área de convivência externa com lareira e pergolado",
-      position: "70% center",
-    },
-    {
-      src: "/tourmaline4.png",
-      alt: "Rooftop com a cidade e o mar ao fundo, ao pôr do sol",
-      position: "center 55%",
-    },
   ] satisfies SiteImage[],
-
-  cta: {
-    titulo: "Vamos falar sobre o Tourmaline.",
-    texto:
-      "O time comercial apresenta a tipologia, a operação e as condições do lançamento.",
-    label: "Fale com nosso time",
-    href: WHATSAPP,
-  },
 };
 
 /* ----------------------------------------------------------------- RODAPÉ */
@@ -468,7 +234,7 @@ export const rodape = {
     },
     {
       titulo: "Empreendimentos",
-      links: [{ label: "Tourmaline Tower", href: "/empreendimentos" }],
+      links: [{ label: "Tourmaline Tower", href: "/#empreendimentos" }],
     },
     {
       titulo: "Contato",
@@ -485,7 +251,7 @@ export const rodape = {
     },
   ],
   legais: [
-    "Incorporadora Amaan · CNPJ 50.550.515/0001-33",
+    "Amaan Incorporadora · CNPJ 50.550.515/0001-33",
     "R. Dorvalino Voltolini, 179 · Perequê, Porto Belo/SC",
     "2026. Todos os direitos reservados.",
   ],

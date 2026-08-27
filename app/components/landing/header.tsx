@@ -249,7 +249,7 @@ export function Header() {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={label}
-                  className={`flex h-9 w-9 items-center justify-center no-underline transition-colors duration-500 ${
+                  className={`flex h-10 w-10 items-center justify-center no-underline transition-colors duration-500 ${
                     sobreFoto
                       ? "text-white/70 hover:text-white"
                       : "text-grafite/60 hover:text-grafite"
@@ -257,7 +257,7 @@ export function Header() {
                 >
                   {/* traço mais encorpado que o TRACO padrão: nesse tamanho os
                       ícones sumiriam ao lado do peso do logo */}
-                  <Icon size={20} strokeWidth={1.9} />
+                  <Icon size={24} strokeWidth={1.7} />
                 </a>
               </li>
             ))}

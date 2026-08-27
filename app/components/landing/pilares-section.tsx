@@ -1,3 +1,6 @@
+"use client";
+
+import { useEffect, useRef } from "react";
 import {
   Activity,
   ConciergeBell,
@@ -26,17 +29,105 @@ const icones: Record<PilarIcone, typeof DraftingCompass> = {
   gestao: Activity,
 };
 
+/** Tempo de uma volta completa da lista, em ms — a cadência que vinha do CSS. */
+const VOLTA_MS = 44000;
+
+/** deltaMode=1 vem em linhas; 16px é a altura de linha assumida pelos browsers. */
+const LINHA = 16;
+
 /**
  * O método da incorporadora, em seção escura.
  *
  * A lista não é um cardápio de benefícios: é um sistema de decisão — e um
  * sistema não tem primeiro item. Por isso as seis camadas sobem em loop
  * contínuo dentro de uma janela: duas cópias empilhadas e um deslocamento de
- * -50% fecham a volta sem emenda (regras em `.trilho-pilares`). Ao apontar um
- * pilar o carrossel para, os outros recuam, a guia lateral se desenha e a
- * trama técnica aparece no fundo da linha. Tudo no limite do perceptível.
+ * uma cópia inteira fecham a volta sem emenda. Ao apontar um pilar o giro
+ * automático para, os outros recuam, a guia lateral se desenha e a trama
+ * técnica aparece no fundo da linha — e o scroll do mouse passa a comandar a
+ * volta, para frente e para trás, no ritmo de quem está lendo.
  */
 export function PilaresSection() {
+  const janela = useRef<HTMLDivElement>(null);
+  const trilho = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const janelaEl = janela.current;
+    const trilhoEl = trilho.current;
+    if (!janelaEl || !trilhoEl) return;
+    // sem movimento a lista volta a ser uma lista (regras em globals.css)
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    /** Altura de uma cópia da lista: é nela que a volta fecha. */
+    function volta() {
+      const copia = trilhoEl!.firstElementChild as HTMLElement | null;
+      return copia?.offsetHeight ?? 0;
+    }
+
+    let deslocamento = 0;
+    let parado = false;
+    let anterior = 0;
+    let frame = 0;
+
+    function aplicar() {
+      const altura = volta();
+      if (!altura) return;
+      // resto sempre positivo: a volta continua fechada nos dois sentidos
+      deslocamento = ((deslocamento % altura) + altura) % altura;
+      trilhoEl!.style.transform = `translate3d(0, ${-deslocamento}px, 0)`;
+    }
+
+    function quadro(agora: number) {
+      // o primeiro quadro não anda, e um passo longo (aba em segundo plano)
+      // não pode virar um salto
+      const passo = anterior ? Math.min(agora - anterior, 64) : 0;
+      anterior = agora;
+
+      if (!parado) {
+        deslocamento += (volta() / VOLTA_MS) * passo;
+        aplicar();
+      }
+
+      frame = requestAnimationFrame(quadro);
+    }
+
+    /** Delta do wheel em pixels, qualquer que seja a unidade do dispositivo. */
+    function pixels(evento: WheelEvent) {
+      if (evento.deltaMode === 1) return evento.deltaY * LINHA;
+      if (evento.deltaMode === 2) return evento.deltaY * janelaEl!.clientHeight;
+      return evento.deltaY;
+    }
+
+    function aoGirar(evento: WheelEvent) {
+      // com o cursor sobre a lista, o giro é dela; a página fica parada
+      evento.preventDefault();
+      deslocamento += pixels(evento);
+      aplicar();
+    }
+
+    const pausar = () => {
+      parado = true;
+    };
+    const seguir = () => {
+      parado = false;
+    };
+
+    frame = requestAnimationFrame(quadro);
+    janelaEl.addEventListener("wheel", aoGirar, { passive: false });
+    janelaEl.addEventListener("pointerenter", pausar);
+    janelaEl.addEventListener("pointerleave", seguir);
+    janelaEl.addEventListener("focusin", pausar);
+    janelaEl.addEventListener("focusout", seguir);
+
+    return () => {
+      cancelAnimationFrame(frame);
+      janelaEl.removeEventListener("wheel", aoGirar);
+      janelaEl.removeEventListener("pointerenter", pausar);
+      janelaEl.removeEventListener("pointerleave", seguir);
+      janelaEl.removeEventListener("focusin", pausar);
+      janelaEl.removeEventListener("focusout", seguir);
+    };
+  }, []);
+
   return (
     <section
       id="pilares"
@@ -65,8 +156,11 @@ export function PilaresSection() {
 
         {/* a janela recorta o loop; as bordas somem em vez de cortar o texto */}
         <Reveal delay={120}>
-          <div className="janela-pilares relative h-[clamp(26rem,62vh,38rem)] overflow-hidden">
-            <div className="trilho-pilares absolute inset-x-0 top-0">
+          <div
+            ref={janela}
+            className="janela-pilares relative h-[clamp(26rem,62vh,38rem)] overflow-hidden"
+          >
+            <div ref={trilho} className="trilho-pilares absolute inset-x-0 top-0">
               {[1, 2].map((copia) => (
                 <ol
                   key={copia}
@@ -135,15 +229,6 @@ export function PilaresSection() {
               ))}
             </div>
           </div>
-        </Reveal>
-
-        {/* o fecho é a consequência das seis camadas: atravessa as duas
-            colunas e fecha centrado, depois de a lista ter passado */}
-        <Reveal delay={160} className="text-center md:col-span-2">
-          <span className="mx-auto block h-px w-[52px] bg-dourado" />
-          <p className="tipo-lead mx-auto mt-7 max-w-[560px] text-white/90">
-            {pilares.fecho}
-          </p>
         </Reveal>
       </div>
     </section>
