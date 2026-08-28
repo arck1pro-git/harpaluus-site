@@ -200,11 +200,11 @@ export function Header() {
             width={logo.width}
             height={logo.height}
             loading="eager"
-            sizes="88px"
+            sizes="112px"
             className={`w-auto transition-opacity duration-700 ease-out ${
               sobreFoto ? "opacity-0" : "opacity-100"
             }`}
-            style={{ height: "22px" }}
+            style={{ height: "28px" }}
           />
           <Image
             src={logoClaro.src}
@@ -213,11 +213,11 @@ export function Header() {
             width={logoClaro.width}
             height={logoClaro.height}
             loading="eager"
-            sizes="88px"
+            sizes="112px"
             className={`absolute inset-0 w-auto transition-opacity duration-700 ease-out ${
               sobreFoto ? "opacity-100" : "opacity-0"
             }`}
-            style={{ height: "22px" }}
+            style={{ height: "28px" }}
           />
         </Link>
 

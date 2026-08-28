@@ -1,7 +1,6 @@
 import Image from "next/image";
 import { MapPin } from "lucide-react";
 
-import { CtaLink } from "./cta-link";
 import { TRACO } from "./icones";
 import { Listras } from "./listras";
 import { Reveal } from "./reveal";
@@ -73,14 +72,10 @@ export function EmpreendimentosSection() {
           </Reveal>
 
           <Reveal delay={120}>
-            {/* no mobile o tile fica no nome, na localização e no CTA */}
+            {/* no mobile o tile fica no nome e na localização */}
             <p className="hidden max-w-[500px] text-base leading-[1.85] font-light text-pedra md:block">
               {destaque.texto}
             </p>
-
-            <CtaLink href={destaque.cta.href} tone="escuro" external className="mt-9">
-              {destaque.cta.label}
-            </CtaLink>
           </Reveal>
         </div>
 

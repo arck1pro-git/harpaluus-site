@@ -34,7 +34,9 @@ export type SiteImage = {
 
 export const marca = "Amaan Incorporadora";
 
-export const WHATSAPP = "https://wa.me/554792399626";
+/** Conversa já aberta com a mensagem de origem preenchida. */
+export const WHATSAPP =
+  "https://wa.me/554792006498?text=oi%20eu%20vim%20pelo%20site%20da%20Amaan%20incorporadora";
 /** Portal onde o investidor da SCP acompanha o próprio capital. */
 export const PORTAL = "https://meuari.vercel.app";
 /** Handle ainda no nome antigo: trocar quando o perfil da Amaan existir. */
@@ -197,9 +199,7 @@ export const empreendimentos = {
     nome: "Tourmaline Tower",
     meta: "Porto Belo / SC · Futuro Lançamento",
     texto:
-      "Trinta e um pavimentos no bairro Vila Nova em Porto Belo SC, com rooftop no ponto mais alto da região. É o primeiro Empreendimento Vivo da Amaan: um prédio em que a operação foi desenhada junto com a planta.",
-    /* nenhuma chamada comercial: o convite é para a conversa, e só */
-    cta: { label: "Fale com a Amaan", href: WHATSAPP },
+      "Trinta e um pavimentos no bairro Vila Nova em Porto Belo SC, com rooftop no ponto mais alto da região.",
   },
   /** a principal, maior, e a torre ao lado */
   imagens: [
