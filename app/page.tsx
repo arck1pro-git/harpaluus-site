@@ -40,7 +40,6 @@ export const metadata: Metadata = {
  * mesma entidade. Entra assim que o perfil da Amaan existir.
  */
 const dadosDaEmpresa = {
-  "@context": "https://schema.org",
   "@type": "Organization",
   "@id": `${SITE_URL}/#organizacao`,
   name: marca,
@@ -63,14 +62,47 @@ const dadosDaEmpresa = {
   },
 };
 
+/**
+ * O nome do *site* — que não é a mesma declaração que o nome da empresa.
+ *
+ * A linha em negrito do resultado de busca sai do "site name", e o Google diz
+ * ler para isso, nesta ordem: `WebSite.name` no JSON-LD, `og:site_name`, o
+ * `<title>` da home. Só os dois últimos existiam aqui; o primeiro, que é o
+ * sinal mais forte, faltava — e enquanto falta o buscador fica livre para
+ * manter o nome que aprendeu antes.
+ *
+ * `alternateName` é a forma curta, a que ele costuma preferir quando o nome
+ * completo não cabe. Nenhum dos dois campos aceita o nome antigo: declarar a
+ * marca extinta aqui seria pedir para ela continuar aparecendo.
+ */
+const dadosDoSite = {
+  "@type": "WebSite",
+  "@id": `${SITE_URL}/#site`,
+  name: marca,
+  alternateName: "Amaan",
+  url: SITE_URL,
+  inLanguage: "pt-BR",
+  /* amarra o site à empresa acima, em vez de repetir os dados dela */
+  publisher: { "@id": `${SITE_URL}/#organizacao` },
+};
+
+/** Os dois registros num bloco só: é como o Schema.org liga entidades. */
+const dadosEstruturados = {
+  "@context": "https://schema.org",
+  "@graph": [dadosDaEmpresa, dadosDoSite],
+};
+
 export default function Home() {
   return (
     <main className="relative w-full bg-fundo font-[family-name:var(--font-inter)]">
       {/* JSON-LD: dado para o buscador, invisível na página */}
       <script
         type="application/ld+json"
-        // o objeto é nosso, não vem de fora — não há entrada de usuário aqui
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(dadosDaEmpresa) }}
+        // o objeto é nosso, não vem de fora — não há entrada de usuário aqui;
+        // o escape de "<" é o que o guia do Next pede mesmo assim
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify(dadosEstruturados).replace(/</g, "\\u003c"),
+        }}
       />
 
       <Header />

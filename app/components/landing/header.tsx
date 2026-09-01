@@ -12,6 +12,7 @@ import {
   logo,
   logoClaro,
   nav,
+  relDoLink,
   WHATSAPP,
   type NavItem,
 } from "./site-config";
@@ -247,7 +248,7 @@ export function Header() {
                 <a
                   href={href}
                   target="_blank"
-                  rel="noopener noreferrer"
+                  rel={relDoLink(href, "noopener noreferrer")}
                   aria-label={label}
                   className={`flex h-10 w-10 items-center justify-center no-underline transition-colors duration-500 ${
                     sobreFoto

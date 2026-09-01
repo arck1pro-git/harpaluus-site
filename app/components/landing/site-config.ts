@@ -67,8 +67,27 @@ export const WHATSAPP =
   "https://wa.me/554792006498?text=oi%20eu%20vim%20pelo%20site%20da%20Amaan%20incorporadora";
 /** Portal onde o investidor da SCP acompanha o próprio capital. */
 export const PORTAL = "https://meuari.vercel.app";
-/** Handle ainda no nome antigo: trocar quando o perfil da Amaan existir. */
+/**
+ * Handle ainda no nome antigo: trocar quando o perfil da Amaan existir.
+ *
+ * É a última vez que a palavra do nome velho sai no HTML publicado — e um
+ * link seguido é justamente o sinal que o `sameAs` do JSON-LD evita de
+ * propósito (ver `page.tsx`): diria ao Google que a Amaan e a marca extinta
+ * são a mesma entidade. Daí `relDoLink` abaixo.
+ */
 export const INSTAGRAM = "https://www.instagram.com/harpaluus/";
+
+/**
+ * `rel` de um link do menu/rodapé. Só o perfil antigo recebe `nofollow`; o
+ * resto fica com o `base` que o componente já usava.
+ *
+ * Some junto com o handle antigo: quando `INSTAGRAM` apontar para o perfil da
+ * Amaan, esta função vira uma linha só e pode sair.
+ */
+export function relDoLink(href: string, base = "") {
+  const partes = [base, href === INSTAGRAM ? "nofollow" : ""].filter(Boolean);
+  return partes.length ? partes.join(" ") : undefined;
+}
 
 /**
  * Lettering da Amaan, nas duas versões, já sem as margens vazias do arquivo
