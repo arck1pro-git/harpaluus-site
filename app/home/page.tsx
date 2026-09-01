@@ -1,8 +1,21 @@
+import type { Metadata } from "next";
 import Image from "next/image";
 import { ArrowUpRight } from "lucide-react";
 import Header from "../components/header";
 import PilaresDestaque from "../components/pilares-destaque";
 import PilaresSection from "../components/pilares";
+
+/**
+ * Rascunho antigo, fora da navegação: ainda traz telefone e e-mail de exemplo
+ * e um rodapé com o nome de outra marca. Fica no repositório como referência,
+ * mas não pode ser indexado — enquanto estava aberto, era mais uma página
+ * competindo pela identidade do site na busca.
+ *
+ * Continua acessível em /home no navegador; o `noindex` só fala com robôs.
+ */
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 
 export default function Home() {

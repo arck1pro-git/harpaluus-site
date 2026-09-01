@@ -34,6 +34,34 @@ export type SiteImage = {
 
 export const marca = "Amaan Incorporadora";
 
+/**
+ * Domínio de produção — a raiz de tudo que o Google lê: canonical, sitemap,
+ * robots e as URLs absolutas do Open Graph saem daqui. É o único lugar do
+ * projeto onde o endereço do site aparece; trocar aqui muda todos.
+ *
+ * Sem barra no fim: as URLs são montadas como `${SITE_URL}/caminho`.
+ */
+export const SITE_URL = "https://amaan.com.br";
+
+/** Uma frase só, reaproveitada no <meta description> e no card de link. */
+export const descricao =
+  "A Amaan concebe, desenvolve e opera Empreendimentos Vivos em Santa Catarina: prédios que continuam evoluindo e produzindo valor depois de prontos.";
+
+/**
+ * Os mesmos dados que já aparecem no rodapé, aqui em campos separados porque
+ * o JSON-LD da home (ver `page.tsx`) precisa deles estruturados — é assim que
+ * o Google liga o site à empresa certa, e não ao nome antigo.
+ */
+export const CNPJ = "50.550.515/0001-33";
+
+export const endereco = {
+  rua: "R. Dorvalino Voltolini, 179",
+  bairro: "Perequê",
+  cidade: "Porto Belo",
+  uf: "SC",
+  pais: "BR",
+};
+
 /** Conversa já aberta com a mensagem de origem preenchida. */
 export const WHATSAPP =
   "https://wa.me/554792006498?text=oi%20eu%20vim%20pelo%20site%20da%20Amaan%20incorporadora";
