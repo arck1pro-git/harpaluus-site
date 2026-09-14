@@ -79,6 +79,11 @@ export default function RootLayout({
   return (
     <html
       lang="pt-BR"
+      /* O site declara `scroll-behavior: smooth` no CSS, e a partir do Next 16
+         o roteador deixou de neutralizá-lo durante a navegação — sem este
+         atributo, ir da home para uma LP passa a rolar a página inteira até o
+         topo em vez de trocar de rota instantaneamente. */
+      data-scroll-behavior="smooth"
       className={`${playfair.variable} ${inter.variable} ${raleway.variable} h-full scroll-smooth antialiased`}
     >
       <body className="min-h-full flex flex-col">

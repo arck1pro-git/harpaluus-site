@@ -1,4 +1,4 @@
-type Canto = "superior-direito" | "superior-esquerdo" | "inferior-direito" | "inferior-esquerdo";
+export type Canto = "superior-direito" | "superior-esquerdo" | "inferior-direito" | "inferior-esquerdo";
 
 const cantos: Record<Canto, { posicao: string; origem: string }> = {
   "superior-direito": { posicao: "top-0 right-0", origem: "100% 0%" },

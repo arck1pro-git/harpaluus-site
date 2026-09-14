@@ -129,6 +129,20 @@
   letter-spacing: 0.03em;
 }
 
+/* headline das landing pages.
+   A do hero da home é curta e em caixa mista larga; as das LPs são frases
+   inteiras ("Antes de participar de uma SCP imobiliária, existem 7 perguntas
+   que você deveria saber responder"), e no corpo de `tipo-display` uma frase
+   dessas ocuparia a tela toda no celular. Daí o teto mais baixo e o
+   entreletras negativo, que fecha o texto longo sem apertar a leitura. */
+@utility tipo-headline {
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(1.95rem, 1.1rem + 2.8vw, 3.1rem);
+  line-height: 1.14;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+}
+
 /* frase de abertura de cada bloco editorial */
 @utility tipo-lead {
   font-size: clamp(1.25rem, 1.05rem + 0.85vw, 1.625rem);
