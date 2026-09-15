@@ -14,9 +14,9 @@ import { lp1 } from "./lp-config";
  * Duas folhas: a de trás inclinada, a da frente reta. É o que dá a leitura de
  * "documento de várias páginas" sem sombra pesada nem perspectiva 3D.
  *
- * `aria-hidden` na peça inteira: as sete perguntas estão escritas em texto de
- * verdade logo abaixo, na seção 03, e repeti-las aqui só faria o leitor de
- * tela ler a lista duas vezes.
+ * `aria-hidden` na peça inteira: é a capa de um material que ainda não foi
+ * entregue, não conteúdo da página. Quem usa leitor de tela ouve a promessa do
+ * hero e o convite — que é tudo o que esta peça ilustra.
  */
 export function ChecklistMockup({ className = "" }: { className?: string }) {
   return (

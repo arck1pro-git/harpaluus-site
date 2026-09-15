@@ -11,7 +11,7 @@ import {
   type EstadoLead,
   type OrigemLead,
 } from "./lead";
-import { EXPERIENCIA_SCP, FAIXAS_CAPITAL } from "./lp-config";
+import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
 import { ERRO_WHATSAPP, normalizarWhatsApp } from "./validar";
 
 /**
@@ -19,8 +19,10 @@ import { ERRO_WHATSAPP, normalizarWhatsApp } from "./validar";
  *
  * A LP01 pede só Nome, WhatsApp e E-mail — o brief proíbe qualificação
  * naquela página, porque a troca ali é por um material gratuito e cada campo
- * a mais custa cadastro. A LP02 acrescenta experiência em SCP e faixa de
- * capital, que é o que o Comercial precisa para priorizar o contato.
+ * a mais custa cadastro. A LP02 acrescenta os dois campos que o modelo
+ * completo define, nesta ordem: faixa de capital disponível e "já participou
+ * de SCP?". Lá o custo do campo compensa — quem preenche está pedindo para
+ * conhecer uma operação real, e é isso que o Comercial usa para priorizar.
  *
  * Funciona sem JavaScript: é um `<form>` de verdade apontando para uma Server
  * Action, e o que a pessoa digitou volta pelos `defaultValue` quando a
@@ -403,17 +405,17 @@ export function Formulario({
         {qualifica && (
           <>
             <Selecao
-              nome="experiencia"
-              rotulo="Já conhece ou participou de uma SCP?"
-              opcoes={EXPERIENCIA_SCP}
+              nome="faixaCapital"
+              rotulo="Faixa de capital disponível"
+              opcoes={FAIXAS_CAPITAL}
               tom={tom}
               estado={estado}
             />
 
             <Selecao
-              nome="faixaCapital"
-              rotulo="Faixa de capital que considera"
-              opcoes={FAIXAS_CAPITAL}
+              nome="experiencia"
+              rotulo="Já participou de SCP?"
+              opcoes={PARTICIPOU_SCP}
               tom={tom}
               estado={estado}
             />

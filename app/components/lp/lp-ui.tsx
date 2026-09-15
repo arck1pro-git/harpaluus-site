@@ -8,8 +8,8 @@ import { Reveal } from "../landing/reveal";
 /**
  * Peças de composição das duas LPs do Funil 1.
  *
- * O sistema é o mesmo da home — mesma faixa, mesmo ritmo, mesma escala
- * tipográfica de `globals.css` —, mas o repertório aqui é menor de propósito:
+ * O sistema é o mesmo da home (mesma faixa, mesmo ritmo, mesma escala
+ * tipográfica de `globals.css`), mas o repertório aqui é menor de propósito:
  * os briefs pedem "clareza, espaço, leitura rápida" e proíbem excesso de
  * efeitos, contadores e selos. Cada bloco abre direto no título, sem etiqueta
  * de seção por cima, e se compõe com três elementos: título, texto e tese.
@@ -150,6 +150,56 @@ export function Tese({
   );
 }
 
+/* ------------------------------------------------------------ POTENCIAL */
+
+/**
+ * A nota que acompanha o potencial projetado da LP02.
+ *
+ * Duas regras do modelo se encontram aqui, e são a razão de isto ser um
+ * componente em vez de dois parágrafos soltos na página: "sempre manter «até»
+ * + potencial/projetado + asterisco/disclaimer visualmente próximo, nunca
+ * isolar o número como se fosse taxa contratada" (regra 3) e "no celular,
+ * número + qualificador + disclaimer precisam permanecer juntos" (regra 9).
+ *
+ * O número em si fica na frase ao lado, que termina em asterisco: o título do
+ * hero. Esta peça é onde o asterisco aterrissa, e ela carrega qualificador e
+ * disclaimer grudados, de forma que nenhuma quebra de coluna no celular
+ * consiga separar um do outro. O texto vem de `POTENCIAL`, em
+ * `lp-config.ts`, onde também está a validação documental pendente.
+ */
+export function Potencial({
+  qualificador,
+  disclaimer,
+  tom = "claro",
+  className = "",
+}: {
+  qualificador: string;
+  disclaimer: string;
+  tom?: Tom;
+  className?: string;
+}) {
+  const escuro = tom === "escuro";
+
+  return (
+    <Reveal
+      className={`border-l ${escuro ? "border-white/20" : "border-linha"} pl-5 ${className}`}
+    >
+      <p className={`tipo-label ${escuro ? "text-dourado-claro" : "text-dourado-escuro"}`}>
+        {qualificador}
+      </p>
+
+      <p
+        className={`mt-3 text-[13px] leading-[1.7] font-light ${
+          escuro ? "text-pedra-claro" : "text-pedra"
+        }`}
+      >
+        <span aria-hidden>* </span>
+        {disclaimer}
+      </p>
+    </Reveal>
+  );
+}
+
 /* ------------------------------------------------------------------- CTA */
 
 /**
@@ -192,28 +242,5 @@ export function BotaoLP({
         className="shrink-0 transition-transform duration-300 ease-out group-hover:translate-x-[3px]"
       />
     </a>
-  );
-}
-
-/* --------------------------------------------------------------- APOIOS */
-
-/**
- * Etiquetas curtas do hero ("Material gratuito · Leitura rápida"),
- * separadas por um ponto médio em vez de barra: menos ruído.
- */
-export function Apoios({ itens, tom = "claro" }: { itens: string[]; tom?: Tom }) {
-  const cor = tom === "escuro" ? "text-pedra-claro" : "text-pedra";
-
-  return (
-    <ul className={`tipo-label flex flex-wrap items-center gap-x-3 gap-y-2 ${cor}`}>
-      {itens.map((item, i) => (
-        <li key={item} className="flex items-center gap-3">
-          {i > 0 && (
-            <span aria-hidden className="h-[3px] w-[3px] rounded-full bg-dourado" />
-          )}
-          {item}
-        </li>
-      ))}
-    </ul>
   );
 }

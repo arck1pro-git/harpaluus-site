@@ -1,5 +1,5 @@
 import type { CampoLead, EstadoLead, OrigemLead } from "./lead";
-import { EXPERIENCIA_SCP, FAIXAS_CAPITAL } from "./lp-config";
+import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
 
 /**
  * Regras de validação e normalização do lead.
@@ -102,7 +102,7 @@ export type Resultado =
 /**
  * Valida o que veio do formulário.
  *
- * A LP01 não manda `experiencia` nem `faixaCapital` — o brief proíbe
+ * A LP01 não manda `faixaCapital` nem `experiencia` — o brief proíbe
  * qualificação naquela página —, e os dois só são exigidos quando a origem é
  * a LP02. Os selects são conferidos contra a lista de opções, e não apenas
  * "não vazio": o campo chega pelo cliente e pode trazer qualquer string.
@@ -132,7 +132,7 @@ export function validarLead(
   }
 
   if (origem === "lp2-interesse") {
-    if (!daLista(experiencia, EXPERIENCIA_SCP)) {
+    if (!daLista(experiencia, PARTICIPOU_SCP)) {
       erros.experiencia = "Selecione uma opção.";
     }
     if (!daLista(faixaCapital, FAIXAS_CAPITAL)) {

@@ -11,11 +11,11 @@ import { CNPJ, endereco, marca } from "../landing/site-config";
  * - "Sem CTA novo concorrente": nenhum botão aqui. A conversão da página é
  *   uma só, e ela ficou no formulário logo acima.
  * - "Rodapé institucional e jurídico discreto": sem colunas de navegação,
- *   sem redes sociais, sem WhatsApp — nada que tire o visitante do funil.
- * - O aviso de risco fica legível, não em letra de 10px. Nos dois briefs a
- *   transparência é argumento de confiança, então ela é lida, não escondida.
+ *   sem redes sociais, sem WhatsApp, nada que tire o visitante do funil.
+ * - Quando existe aviso de risco, ele fica legível e não em letra de 10px:
+ *   transparência é argumento de confiança, então é lida, não escondida.
  *
- * CNPJ e endereço fecham a identificação de quem fala — a mesma pergunta que
+ * CNPJ e endereço fecham a identificação de quem fala: a mesma pergunta que
  * a marca no topo responde, agora com a pessoa jurídica por extenso.
  */
 export function LpFooter({
@@ -27,8 +27,8 @@ export function LpFooter({
   titulo: string;
   /** a tese central do funil, que a página inteira construiu */
   tese: string;
-  /** aviso de risco da página */
-  aviso: string;
+  /** aviso de risco da página. A LP02 fecha sem nenhum. */
+  aviso?: string;
 }) {
   return (
     <footer className="relative overflow-clip bg-azul-escuro text-white">
@@ -53,12 +53,19 @@ export function LpFooter({
 
         <Reveal
           delay={140}
-          className="mt-12 border-t border-white/10 pt-9 md:mt-16 md:flex md:items-start md:justify-between md:gap-12"
+          /* sem aviso, o endereço fica sozinho na linha: `justify-end` o
+             mantém encostado à direita, onde ele já estava — `between` com
+             um filho só o jogaria para a esquerda, embaixo da assinatura */
+          className={`mt-12 border-t border-white/10 pt-9 md:mt-16 md:flex md:items-start md:gap-12 ${
+            aviso ? "md:justify-between" : "md:justify-end"
+          }`}
         >
           {/* o aviso vem primeiro na ordem de leitura: é o que importa */}
-          <p className="max-w-[620px] text-[13px] leading-[1.75] font-light text-pedra-claro">
-            {aviso}
-          </p>
+          {aviso && (
+            <p className="max-w-[620px] text-[13px] leading-[1.75] font-light text-pedra-claro">
+              {aviso}
+            </p>
+          )}
 
           <address className="mt-7 text-[13px] leading-[1.75] font-light text-pedra-claro not-italic md:mt-0 md:shrink-0 md:text-right">
             <span className="block">{marca}</span>

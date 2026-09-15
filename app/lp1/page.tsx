@@ -14,7 +14,7 @@ import type { TextosSucesso } from "../components/lp/formulario";
 import { lp1, marca, ROTA_LP1 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
-import { Apoios, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
+import { Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
  * LP 01 — Checklist (Funil 1 · SCP).
@@ -95,9 +95,7 @@ export default function Lp1() {
         <section className="relative overflow-hidden bg-fundo">
           <div className="faixa grid items-center gap-x-16 gap-y-12 pt-[clamp(3rem,6vw,5rem)] pb-[clamp(4rem,8vw,6.5rem)] lg:grid-cols-[1.04fr_0.96fr]">
             <div className="max-w-[620px]">
-              <Apoios itens={lp1.hero.apoio} />
-
-              <h1 className="tipo-headline mt-7 text-azul-escuro">{lp1.hero.titulo}</h1>
+              <h1 className="tipo-headline text-azul-escuro">{lp1.hero.titulo}</h1>
 
               <p className="tipo-corpo mt-7 max-w-[560px] text-pedra">{lp1.hero.texto}</p>
 
@@ -123,74 +121,66 @@ export default function Lp1() {
           </div>
         </Secao>
 
-        {/* -------------------------------------------------- 03 AS 7 PERGUNTAS
-            Lista numerada, sem ícone nenhum — o brief pede exatamente isso. O
-            fundo escuro marca que este é o miolo da página. */}
+        {/* ------------------------------------------------------- 03 PARA QUEM
+            O miolo da página, e por isso o fundo escuro: sem a lista das 7
+            perguntas, é aqui que quem lê se reconhece e decide continuar. É
+            também onde fica o CTA do meio, que antes vivia naquela lista.
+
+            Três colunas em vez de três linhas soltas: separadas, cada frase
+            vira uma pessoa diferente. No celular voltam a ser uma coluna. */}
         <Secao tom="escuro">
           <div className="max-w-[760px]">
-            <Titulo tom="escuro">{lp1.perguntas.titulo}</Titulo>
-            <Paragrafo
-              tom="escuro"
-              texto={lp1.perguntas.texto}
-              className="mt-6 max-w-[560px]"
-            />
+            <Titulo tom="escuro">{lp1.paraQuem.titulo}</Titulo>
           </div>
 
-          <ol className="mt-14 flex flex-col">
-            {lp1.perguntas.itens.map((item, i) => (
+          {/* o filete entre as colunas é o próprio `gap` deixando o fundo
+              aparecer: mesma peça da LP02, sem borda em cada card */}
+          <ul className="mt-12 grid gap-px bg-white/12 md:grid-cols-3">
+            {lp1.paraQuem.itens.map((item, i) => (
               <Reveal
-                key={item.pergunta}
                 as="li"
-                delay={i * 70}
-                className="grid grid-cols-[auto_1fr] gap-x-6 gap-y-2 border-t border-white/12 py-7 last:border-b sm:grid-cols-[auto_minmax(0,26rem)_1fr] sm:gap-x-10"
+                key={item.slice(0, 24)}
+                delay={i * 90}
+                className="bg-azul-escuro px-7 py-9 sm:px-9"
               >
-                <span className="tipo-numero pt-[6px] text-dourado-claro">
+                <span className="tipo-numero text-dourado-claro">
                   {String(i + 1).padStart(2, "0")}
                 </span>
 
-                <h3 className="text-[17px] leading-[1.35] font-normal tracking-[-0.01em] text-white sm:text-[19px]">
-                  {item.pergunta}
-                </h3>
-
-                {/* no celular a explicação desce para a segunda linha da grade,
-                    alinhada com a pergunta e não com o número */}
-                <p className="col-start-2 tipo-corpo-curto text-pedra-claro sm:col-start-3 sm:pt-[3px]">
-                  {item.texto}
+                <p className="mt-5 text-[17px] leading-[1.45] font-light text-white sm:text-[18px]">
+                  {item}
                 </p>
               </Reveal>
             ))}
-          </ol>
+          </ul>
 
-          <Reveal className="mt-14">
+          <Tese tom="escuro" className="mt-14">
+            {lp1.paraQuem.fecho}
+          </Tese>
+
+          <Reveal className="mt-12">
             <BotaoFormulario tom="escuro">{lp1.cta}</BotaoFormulario>
           </Reveal>
         </Secao>
 
-        {/* ------------------------------------------------------- 04 PARA QUEM
-            Bloco curto e com respiro, como pedido: três linhas soltas, sem
-            card nem ícone, e o fecho em destaque. */}
+        {/* ------------------------------------------- 04 POR QUE ESTE CHECKLIST
+            A pergunta que o bloco anterior deixa no ar: quem entregou a lista é
+            a mesma parte interessada que um dia vai apresentar uma oportunidade.
+            Responder isso antes do formulário é o que sustenta o cadastro.
+
+            Volta ao claro entre os dois blocos escuros — a virada só funciona
+            se o escuro não for o fundo padrão da página. */}
         <Secao>
-          <div className="max-w-[820px]">
-            <Titulo>{lp1.paraQuem.titulo}</Titulo>
+          <div className="max-w-[760px]">
+            <Titulo>{lp1.porQueChecklist.titulo}</Titulo>
 
-            <ul className="mt-11 flex flex-col gap-7">
-              {lp1.paraQuem.itens.map((item, i) => (
-                <Reveal
-                  as="li"
-                  key={item.slice(0, 24)}
-                  delay={i * 90}
-                  className="flex gap-5 tipo-corpo text-pedra"
-                >
-                  <span
-                    aria-hidden
-                    className="mt-[13px] h-[7px] w-[7px] shrink-0 rotate-45 border border-dourado"
-                  />
-                  {item}
-                </Reveal>
+            <div className="mt-9 flex flex-col gap-6">
+              {lp1.porQueChecklist.paragrafos.map((texto, i) => (
+                <Paragrafo key={texto.slice(0, 24)} texto={texto} delay={i * 80} />
               ))}
-            </ul>
+            </div>
 
-            <Tese className="mt-14">{lp1.paraQuem.fecho}</Tese>
+            <Tese className="mt-12">{lp1.porQueChecklist.tese}</Tese>
           </div>
         </Secao>
 
@@ -202,9 +192,7 @@ export default function Lp1() {
           <div className="max-w-[720px]">
             <Titulo tom="escuro">{lp1.formulario.titulo}</Titulo>
 
-            <p className="tipo-lead mt-7 text-pedra-claro">{lp1.formulario.subtitulo}</p>
-
-            <p className="tipo-corpo mt-6 text-pedra-claro">{lp1.formulario.texto}</p>
+            <p className="tipo-lead mt-7 text-pedra-claro">{lp1.formulario.texto}</p>
 
             <Reveal className="mt-11">
               <BotaoFormulario tom="escuro">{lp1.cta}</BotaoFormulario>
