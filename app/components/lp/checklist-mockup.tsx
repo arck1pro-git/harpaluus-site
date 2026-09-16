@@ -35,7 +35,7 @@ export function ChecklistMockup({ className = "" }: { className?: string }) {
           7 perguntas antes de participar de uma SCP imobiliária
         </p>
 
-        <p className="tipo-numero mt-3 text-cinza">Checklist de análise</p>
+        <p className="tipo-numero mt-3 text-cinza-texto">Checklist de análise</p>
 
         <ul className="mt-7 flex flex-col gap-0">
           {lp1.perguntas.itens.map((item, i) => (

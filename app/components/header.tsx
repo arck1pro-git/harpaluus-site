@@ -49,7 +49,7 @@ export default function Header() {
 
             {/* container do logo (largura reduzida) */}
             <div className="flex flex-1 items-center overflow-hidden rounded-lg border border-linha bg-fundo px-10">
-                <Image src="/logo-amaan-name-03.png" alt="Amaan Incorporadora" width={1410} height={352} className="h-12 w-auto object-contain" priority />
+                <Image src="/logo-amaan-name-03.png" alt="Amaan Incorporadora" width={1410} height={352} className="h-12 w-auto object-contain" loading="eager" />
             </div>
 
             <ul className="flex w-auto items-center gap-9 rounded-lg border border-linha bg-fundo px-7">

@@ -132,7 +132,7 @@ export const nav: NavItem[] = [
 
 export const hero = {
   image: {
-    src: "/tourmaline4.png",
+    src: "/fotos/tourmaline4.jpg",
     alt: "Rooftop de empreendimento da Amaan ao pôr do sol, com a cidade e o mar ao fundo",
     position: "center 55%",
   } satisfies SiteImage,
@@ -251,12 +251,12 @@ export const empreendimentos = {
   /** a principal, maior, e a torre ao lado */
   imagens: [
     {
-      src: "/tourmaline2.png",
+      src: "/fotos/tourmaline2.jpg",
       alt: "Lounge gourmet do Tourmaline Tower, com vista panorâmica para o mar",
       position: "38% center",
     },
     {
-      src: "/tourmaline3.png",
+      src: "/fotos/tourmaline3.jpg",
       alt: "Torre iluminada ao entardecer",
       position: "center 40%",
     },

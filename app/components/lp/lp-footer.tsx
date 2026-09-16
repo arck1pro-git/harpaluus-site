@@ -12,6 +12,8 @@ import { CNPJ, endereco, marca } from "../landing/site-config";
  *   uma só, e ela ficou no formulário logo acima.
  * - "Rodapé institucional e jurídico discreto": sem colunas de navegação,
  *   sem redes sociais, sem WhatsApp, nada que tire o visitante do funil.
+ * - A tese de fecho é opcional: a LP02 perdeu a dela e fecha só na
+ *   assinatura, então a marca não pode depender de ter uma frase embaixo.
  * - Quando existe aviso de risco, ele fica legível e não em letra de 10px:
  *   transparência é argumento de confiança, então é lida, não escondida.
  *
@@ -25,8 +27,8 @@ export function LpFooter({
 }: {
   /** assinatura da marca, como o brief da página escreveu */
   titulo: string;
-  /** a tese central do funil, que a página inteira construiu */
-  tese: string;
+  /** a tese central do funil. A LP02 fecha sem nenhuma. */
+  tese?: string;
   /** aviso de risco da página. A LP02 fecha sem nenhum. */
   aviso?: string;
 }) {
@@ -46,9 +48,11 @@ export function LpFooter({
 
           <p className="tipo-label mt-7 text-dourado-claro">{titulo}</p>
 
-          <p className="tipo-lead mt-6 font-[family-name:var(--font-playfair)] text-white">
-            {tese}
-          </p>
+          {tese && (
+            <p className="tipo-lead mt-6 font-[family-name:var(--font-playfair)] text-white">
+              {tese}
+            </p>
+          )}
         </Reveal>
 
         <Reveal

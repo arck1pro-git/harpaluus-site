@@ -6,7 +6,7 @@ export default function SoberaniaSection() {
       {/* container no espaço da lateral esquerda */}
       <div className="rounded-lg border border-linha bg-fundo" />
       <div className="relative overflow-hidden rounded-lg border border-linha bg-azul-escuro">
-        <Image src="/site4.JPG" alt="" fill sizes="380px" className="object-cover" />
+        <Image src="/fotos/site4.jpg" alt="" fill sizes="380px" className="object-cover" />
       </div>
       <div className="flex flex-col justify-center rounded-lg border border-linha bg-fundo py-20 px-16">
         <h3 className="font-[family-name:var(--font-playfair)] text-[30px] font-normal mb-7 text-azul-escuro">

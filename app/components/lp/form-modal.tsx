@@ -9,11 +9,29 @@ import {
   useRef,
   useState,
 } from "react";
+import dynamic from "next/dynamic";
 import { ArrowRight, X } from "lucide-react";
 
 import { TRACO } from "../landing/icones";
-import { Formulario, type TextosSucesso } from "./formulario";
+import type { TextosSucesso } from "./formulario";
 import type { OrigemLead } from "./lead";
+
+/**
+ * O formulário só é baixado quando a janela abre.
+ *
+ * Ele já só *renderizava* depois do clique (`{aberto && …}`), mas o import
+ * estático colocava campos, máscaras, validação e a server action no mesmo
+ * pacote que a página carrega para pintar o hero — código que a maioria das
+ * visitas nunca executa, avaliado no meio da hidratação.
+ *
+ * `ssr: false` porque não há o que pré-renderizar: no HTML inicial o diálogo
+ * está fechado e vazio. O chunk chega no primeiro clique, com a página já
+ * ociosa.
+ */
+const Formulario = dynamic(
+  () => import("./formulario").then((m) => m.Formulario),
+  { ssr: false }
+);
 
 /**
  * O formulário como janela sobre a página.

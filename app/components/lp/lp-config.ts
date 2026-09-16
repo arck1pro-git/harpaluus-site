@@ -12,8 +12,8 @@
  * - A LP01 não cita rentabilidade, aporte, prazo, garantia ou dados de uma
  *   operação específica. Ela vende o critério de análise, não o negócio.
  * - A LP02 apresenta uma operação real e, com ela, o potencial projetado de
- *   até 2,5% ao mês. Esse número tem regras próprias de exibição e uma
- *   validação documental pendente: ver `POTENCIAL`.
+ *   até 2,5% ao mês. Esse número continua com validação documental pendente
+ *   antes de publicar: ver a nota logo acima de `lp2`.
  *
  * O que vale para as duas: nenhuma promete segurança, ausência de risco ou
  * resultado, e em nenhuma o risco é letra miúda — ele é parte do argumento.
@@ -37,9 +37,9 @@ export const ROTA_LP2 = "/lp2";
  * Fica visível no encerramento, não escondido em letra de 10px: o brief pede
  * transparência como construção de confiança.
  *
- * A LP02 não tem mais o equivalente. O risco continua na página, no bloco
- * "O que precisa estar claro antes da decisão" e na nota do potencial
- * projetado (ver `POTENCIAL`), mas o rodapé dela fecha sem aviso jurídico.
+ * A LP02 não tem equivalente: o bloco de risco e a nota do potencial
+ * projetado saíram da página a pedido do cliente, e o rodapé dela fecha sem
+ * aviso jurídico.
  */
 export const AVISO_LP1 =
   "Participações em operações de incorporação envolvem riscos. O material possui caráter educacional e não representa promessa de resultado ou oferta específica de investimento.";
@@ -185,8 +185,12 @@ export const lp1 = {
    incorporação, não uma aula sobre o que é SCP.
 
    A estrutura responde, nesta ordem, às seis perguntas do modelo:
-   O QUE · ONDE · POR QUE · COMO · QUEM · POR QUE AMAAN · QUANDO · RISCO ·
-   PERFIL · PROVA · CONVERSÃO.
+   O QUE · ONDE · POR QUE · COMO · QUEM · POR QUE AMAAN · QUANDO · PERFIL ·
+   PROVA · CONVERSÃO.
+
+   O bloco RISCO ("O que precisa estar claro antes da decisão") vinha entre
+   QUANDO e PERFIL e saiu a pedido do cliente. O que restou de ressalva na
+   página é o lado "não faz sentido para quem", em `perfil`.
 
    Duas regras do modelo mandam em tudo que está aqui dentro:
 
@@ -195,43 +199,28 @@ export const lp1 = {
       e a página nunca fala como banco, gestora ou fintech.
    2. O potencial de até 2,5% ao mês é dado/projeção da operação específica,
       sujeito a premissas, prazo, riscos e documentos. Nunca promessa
-      institucional, nunca número solto. Ver `POTENCIAL`, logo abaixo.
+      institucional.
 
    Convenção herdada da home: o que vier entre « » sai em dourado.
    ===================================================================== */
 
-/**
- * O número da operação — e as três coisas que o modelo obriga a manter
- * grudadas nele.
+/*
+ * O NÚMERO DA OPERAÇÃO — onde ele está e o que ainda falta validar.
  *
- * Regra 3 das orientações ao designer: "sempre manter «até» + potencial/
- * projetado + asterisco/disclaimer visualmente próximo; nunca isolar o
- * número como se fosse taxa contratada". Regra 9: no celular, número,
- * qualificador e disclaimer precisam permanecer juntos. Por isso o
- * qualificador e o disclaimer sobem na tela por uma peça só, `Potencial` em
- * `lp-ui.tsx`, encostada no título do hero, onde o número está escrito.
- *
- * O "box obrigatório" que o modelo pedia no bloco COMO ("até 2,5% a.m. é
- * potencial, não taxa fixa nem renda garantida") foi retirado da página. A
- * nota do hero é, agora, o único lugar em que o número aparece qualificado.
+ * O qualificador ("Potencial projetado da operação apresentada") e o
+ * disclaimer que o acompanhavam no hero foram retirados a pedido do cliente,
+ * junto com o asterisco do título que aterrissava neles. Sobrou o "até"
+ * colado ao número — o único qualificador que ainda impede a leitura de taxa
+ * contratada —, escrito por extenso em três frases: `lp2.hero.titulo`,
+ * `lp2.como.tese` e `lp2.formulario.texto`. Trocar o número exige editar as
+ * três.
  *
  * ⚠️ VALIDAÇÃO DOCUMENTAL PENDENTE ANTES DE PUBLICAR. O modelo condiciona a
  * publicação a validar: memória de cálculo dos 2,5% a.m., período
  * considerado, forma de distribuição/realização do resultado, prazo da
  * operação, disponibilidade real de participação e demais condições
  * contratuais.
- *
- * Trocar o número exige editar `valor` aqui e as três frases em que ele está
- * escrito por extenso: `lp2.hero.titulo`, `lp2.como.tese` e
- * `lp2.formulario.texto`.
  */
-export const POTENCIAL = {
-  /** sempre com o "até" colado: é o qualificador que impede a leitura de taxa */
-  valor: "até 2,5% ao mês",
-  qualificador: "Potencial projetado da operação apresentada",
-  disclaimer:
-    "Potencial/projeção da operação específica, sujeito à realização das premissas econômicas, comerciais e operacionais. Não constitui garantia de rentabilidade ou resultado.",
-};
 
 /** Foto de uma pessoa do bloco QUEM. `null` enquanto não houver imagem real. */
 type Retrato = { src: string; alt: string } | null;
@@ -256,11 +245,11 @@ export const lp2 = {
   ancora: "#interesse",
 
   /* ------------------------------------------------------------- 01 HERO
-     O QUE + ONDE + POTENCIAL, as três coisas que o modelo manda aparecer
-     sem ambiguidade no primeiro scroll. */
+     O QUE + ONDE + o potencial projetado, as três coisas que o modelo manda
+     aparecer sem ambiguidade no primeiro scroll. */
   hero: {
     titulo:
-      "Participe economicamente de uma incorporação no litoral catarinense, com potencial projetado de resultado de até 2,5% ao mês.*",
+      "Participe economicamente de uma incorporação no litoral catarinense, com potencial projetado de resultado de até 2,5% ao mês.",
     texto:
       "Conheça uma operação da AMAAN estruturada para quem quer acessar o mercado imobiliário «pelo lado de quem desenvolve o empreendimento», não pelo lado de quem compra a unidade pronta.",
     /**
@@ -270,7 +259,7 @@ export const lp2 = {
      * for a Tourmaline, somente imagens oficiais, sem recriação por IA.
      */
     imagem: {
-      src: "/tourmaline4.png",
+      src: "/fotos/tourmaline4.jpg",
       alt: "Rooftop de empreendimento da Amaan ao pôr do sol, com a cidade e o mar ao fundo",
     },
   },
@@ -285,7 +274,7 @@ export const lp2 = {
     ],
     tese: "A oportunidade aqui é participar economicamente da incorporação que produz o empreendimento.",
     fecho:
-      "Na AMAAN, essa participação pode ocorrer por meio de uma «Sociedade em Conta de Participação (SCP)», conforme as regras específicas de cada operação.",
+      "Na AMAAN, a participação é formalizada por contrato que estabelece as condições específicas de cada operação, incluindo «prazos de entrada e saída, percentuais de lucro, garantias aplicáveis» e demais regras da participação.",
   },
 
   /* -------------------------------------------------------------- 03 ONDE */
@@ -294,6 +283,20 @@ export const lp2 = {
     tese: "Não basta escolher participar de uma incorporação. Importa onde essa incorporação acontece.",
     abertura:
       "A AMAAN atua no litoral de Santa Catarina, região que concentra «algumas das praças imobiliárias de maior valor do Brasil». A força imobiliária se conecta a turismo, mobilidade e atratividade regional.",
+    /**
+     * A foto do lugar, ao lado do texto que fala dele.
+     *
+     * É a mesma praça que a seção descreve, não uma paisagem de banco de
+     * imagens: o modelo pede repertório de arquitetura e lugar reais, e uma
+     * foto genérica de praia diria "litoral" sem dizer "este litoral".
+     *
+     * `alt` descritivo porque a imagem carrega informação — ela é o "onde" da
+     * seção, não ornamento.
+     */
+    imagem: {
+      src: "/fotos/site4.jpg",
+      alt: "Vista aérea do litoral de Santa Catarina, com a orla verticalizada encontrando o mar",
+    },
     /**
      * Regra 4 do modelo: o dado precisa de fonte e data. Por isso cada item
      * carrega a própria fonte, e ela sobe na tela junto com o número.
@@ -331,22 +334,24 @@ export const lp2 = {
   /* ----------------------------------------------------------- 04 POR QUE */
   porQue: {
     titulo: "Por que participar da incorporação?",
-    abertura:
-      "Quem compra uma unidade se relaciona economicamente com o ativo adquirido. Quem participa de uma SCP «se expõe ao resultado da própria operação de incorporação», conforme as regras contratadas.",
-    tese: "É por assumir prazo, risco empresarial e variáveis de execução que uma operação de incorporação pode apresentar um potencial de resultado diferente de alternativas tradicionais.",
-    fecho:
-      "Isso não torna a SCP melhor para todos. Torna a análise diferente: você precisa compreender «qual negócio produzirá o resultado, quem executa, para onde vai o capital, quais riscos existem e quais premissas sustentam a projeção».",
+    /* Dois parágrafos e nenhuma tese: o texto aprovado pelo cliente abre no
+       potencial e fecha na qualificação do perfil, e promover qualquer uma
+       das duas metades a tese desequilibraria o par. */
+    paragrafos: [
+      "A incorporação está justamente na etapa do mercado imobiliário «em que o valor é criado»: transformar terreno, projeto, capital e execução em um empreendimento comercializável. Participar dessa operação permite ao investidor acessar diretamente esse potencial econômico, com possibilidade de resultados mais elevados do que alternativas imobiliárias tradicionais.",
+      "Investir em uma incorporação pode não ser a escolha ideal para todos os perfis. Mas, para muitos investidores, pode representar uma nova alternativa para diversificar o patrimônio e acessar o mercado imobiliário por outro ângulo: «participando economicamente da operação que desenvolve o empreendimento», e não apenas adquirindo o imóvel pronto.",
+    ],
   },
 
   /* -------------------------------------------------------------- 05 COMO */
   como: {
-    titulo: "De onde pode vir o resultado?",
+    titulo: "De onde vem o resultado?",
     tese: "Uma projeção de até 2,5% ao mês só faz sentido quando você entende o que precisa acontecer para produzi-la.",
     /** a tabela ETAPA × LÓGICA do modelo, na ordem em que o dinheiro anda */
     etapas: [
       {
         etapa: "Capital",
-        logica: "O investidor aporta conforme as regras da SCP.",
+        logica: "O investidor aporta conforme as regras contratuais.",
       },
       {
         etapa: "Incorporação",
@@ -378,7 +383,6 @@ export const lp2 = {
   /* -------------------------------------------------------------- 06 QUEM */
   quem: {
     titulo: "Quem está por trás da operação?",
-    tese: "Em uma SCP de incorporação, você não analisa apenas um projeto. Analisa quem tomará as decisões que transformam a tese em empreendimento e a projeção em resultado.",
     incorporadora: {
       nome: "AMAAN Incorporadora",
       texto:
@@ -393,17 +397,17 @@ export const lp2 = {
      */
     pessoas: [
       {
-        nome: "Fabrício Pavesi",
+        nome: "Fabrício Pavesi Junior",
         papel: "Arquiteto, incorporador e empresário",
         texto:
-          "Traz o olhar que conecta arquitetura, mercado imobiliário, negócios e patrimônio, enxergando terreno, viabilidade, produto, arquitetura, estratégia, execução e capacidade de geração de valor como partes da mesma decisão.",
+          "Conecta arquitetura, mercado imobiliário, negócios e patrimônio em uma leitura só: terreno, viabilidade, produto, projeto, estratégia e execução não são etapas separadas, são partes da mesma decisão. É esse olhar que define o que cada operação se propõe a ser — e o que ela precisa entregar para sustentar essa proposta depois da entrega.",
         foto: null as Retrato,
       },
       {
-        nome: "Patrícia",
+        nome: "Patrícia Nunes Pavesi",
         papel: "Empresária e estrategista, sócia da AMAAN",
         texto:
-          "Traz experiência na construção e gestão de negócios, conectando estratégia, comercial, posicionamento, processos e execução para transformar visão em operação.",
+          "Responde pela construção e pela gestão do negócio: estratégia, posicionamento, comercial, processos e rotina de execução. É o trabalho que impede a tese de cada incorporação de parar na intenção — ela vira método, prazo acompanhado de perto e decisão tomada com informação na mesa.",
         foto: null as Retrato,
       },
     ],
@@ -411,16 +415,13 @@ export const lp2 = {
       "Dois olhares complementares, com a mesma responsabilidade: transformar uma boa oportunidade imobiliária em um empreendimento capaz de produzir valor.",
   },
 
-  /* -------------------------------------------------------- 07 POR QUE AMAAN */
+  /* -------------------------------------------------------- 07 POR QUE AMAAN
+     O bloco inteiro virou uma frase só. O título anterior, os parágrafos de
+     apoio, o fecho e o CTA saíram a pedido do cliente: sobrou a declaração
+     do que a AMAAN faz, centralizada, ocupando a seção como título dela. */
   porQueAmaan: {
-    titulo: "A incorporadora antes do investimento",
-    paragrafos: [
+    titulo:
       "A atividade central da AMAAN é identificar oportunidades, desenvolver produtos imobiliários, estruturar e executar incorporações e criar «Empreendimentos Vivos», pensados para continuar servindo as pessoas, produzindo valor e permanecendo relevantes depois da entrega.",
-      "A participação via SCP é uma porta adicional para investidores que desejam exposição econômica a determinadas operações. «A AMAAN permanece incorporadora.»",
-    ],
-    fecho:
-      "Por isso, a pergunta central não é apenas «quanto pode render?». É se aquela incorporação faz sentido e se quem está por trás dela consegue executá-la.",
-    tese: "Não começamos pelo investimento. Começamos pela incorporação.",
   },
 
   /* ------------------------------------------------------------ 08 QUANDO */
@@ -428,7 +429,7 @@ export const lp2 = {
     titulo: "Por que analisar agora?",
     tese: "Uma oportunidade de incorporação tem janela.",
     paragrafos: [
-      "Uma SCP está vinculada a uma operação específica, com «necessidade de capital, cronograma, regras e disponibilidade próprios». Conhecer uma oportunidade hoje não significa que a mesma condição estará disponível depois.",
+      "Seu investimento está vinculado a uma operação específica, com «necessidade de capital, cronograma, regras e disponibilidade próprios». Conhecer uma oportunidade hoje não significa que a mesma condição estará disponível depois.",
     ],
     fecho:
       "O primeiro passo não é decidir investir. É «entender a operação enquanto existe a possibilidade real de participar dela».",
@@ -452,17 +453,6 @@ export const lp2 = {
         { rotulo: "Prazo da operação", valor: "" },
       ],
     },
-  },
-
-  /* ------------------------------------------------------------- 09 RISCO */
-  risco: {
-    titulo: "O que precisa estar claro antes da decisão",
-    abertura:
-      "Se uma oportunidade apresenta potencial relevante, você também precisa entender «o que pode impedir o cenário projetado de acontecer». Mercado, vendas, custos, cronograma, aprovações e execução podem se comportar de forma diferente das premissas.",
-    introSeparar: "Por isso, a apresentação de uma operação deve separar:",
-    separar: ["Fato", "Premissa", "Projeção", "Mitigador", "Risco residual"],
-    complemento: "Mitigação reduz risco. Não significa ausência de risco.",
-    tese: "A transparência não enfraquece a venda. Ela mostra que a AMAAN espera que você compreenda a operação antes de participar.",
   },
 
   /* ------------------------------------------------------------ 10 PERFIL */
@@ -490,16 +480,43 @@ export const lp2 = {
   prova: {
     titulo: "O que investidores que já conhecem a AMAAN perceberam na prática",
     /**
-     * Vazio de propósito, e a seção inteira não sobe enquanto estiver assim.
+     * ⚠️ DADOS FICTÍCIOS — NÃO PUBLICAR ASSIM.
      *
-     * O modelo pede três depoimentos reais, "cada um com nome, foto/vídeo
-     * real e contexto verdadeiro da relação com a AMAAN", e proíbe
-     * transformar experiência individual em promessa de rentabilidade.
-     * Depoimento inventado para segurar o layout é exatamente o que essa
-     * regra existe para impedir — então o layout fica sem a seção até
-     * existirem os três.
+     * Os três depoimentos abaixo são provisórios, pedidos para fechar o
+     * layout da seção enquanto os reais não chegam. Nome, contexto e texto
+     * são inventados e precisam ser substituídos, um a um, por depoimentos
+     * verdadeiros antes de a página ir ao ar — com nome real, contexto real
+     * da relação com a AMAAN e, quando houver, foto real em `foto`.
+     *
+     * O modelo é explícito nos dois pontos: depoimento real e nada de
+     * transformar experiência individual em promessa de rentabilidade. Por
+     * isso nenhum dos textos provisórios cita percentual, prazo ou retorno —
+     * os substitutos reais também não devem citar. Esvaziar o array volta a
+     * esconder a seção inteira (ver `lp2/page.tsx`).
      */
-    depoimentos: [] as Depoimento[],
+    depoimentos: [
+      {
+        nome: "Ricardo Almeida",
+        contexto: "Investidor · Curitiba/PR",
+        texto:
+          "O que me convenceu não foi a projeção. Foi poder perguntar de onde ela vinha e receber a conta aberta, com o que era premissa separado do que já era fato.",
+        foto: null,
+      },
+      {
+        nome: "Helena Bittencourt",
+        contexto: "Empresária · Balneário Camboriú/SC",
+        texto:
+          "Eu já tinha imóvel na região, mas sempre pelo lado de quem compra pronto. Entender a operação por dentro mudou o tipo de pergunta que eu faço antes de decidir.",
+        foto: null,
+      },
+      {
+        nome: "Marcelo Tavares",
+        contexto: "Investidor · São Paulo/SP",
+        texto:
+          "Conversei com quem toma as decisões, não com um vendedor. Saí sabendo o cronograma, o que podia sair do previsto e o que fariam se saísse.",
+        foto: null,
+      },
+    ] as Depoimento[],
   },
 
   /* --------------------------------------------------------- 12 CONVERSÃO */
@@ -511,10 +528,12 @@ export const lp2 = {
       "Para entender as premissas que sustentam o potencial projetado de até 2,5% ao mês, deixe seus dados.",
   },
 
-  /* -------------------------------------------------------- 13 FECHAMENTO */
+  /* -------------------------------------------------------- 13 FECHAMENTO
+     Sem tese: a frase que fechava a página ("A participação via SCP é uma
+     porta adicional. A AMAAN permanece incorporadora.") saiu a pedido do
+     cliente, e o rodapé fecha só com a assinatura e a pessoa jurídica. */
   fechamento: {
     marca: "AMAAN INCORPORADORA",
-    tese: "A participação via SCP é uma porta adicional. A AMAAN permanece incorporadora.",
   },
 };
 

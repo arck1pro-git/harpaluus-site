@@ -42,8 +42,15 @@
   --color-fundo: #ffffff;
   /* cinzas dos detalhes: bordas, vãos e listras diagonais */
   --color-linha: #e3e6ec;
-  /* cinza um pouco mais forte: filetes de input e textos de rodapé */
+  /* cinza um pouco mais forte: filetes de input e contornos de checkbox */
   --color-cinza: #a3aaba;
+  /* O par legível do anterior, 4.6:1 contra --color-fundo.
+     `--color-cinza` dá 2.33:1 e reprova no AA para qualquer texto — o mesmo
+     problema que --color-pedra já tinha resolvido aqui embaixo. Os dois
+     continuam separados porque um filete de 1px e uma linha de fonte não
+     precisam do mesmo tom: escurecer o traço junto engrossaria visualmente
+     todas as bordas do site. Este é só para texto. */
+  --color-cinza-texto: #6b7589;
 
   /* Paleta da landing institucional: 70% arquitetura de luxo, 20% editorial,
      10% tecnologia. As seções claras usam --color-fundo (o mesmo tom do header
@@ -156,6 +163,10 @@
   font-size: 1rem;
   line-height: 1.8;
   font-weight: 300;
+
+  @media (width < 48rem) {
+    @apply justificado;
+  }
 }
 
 /* corpo curto (descrições de item) — mesmo tamanho do corpo, entrelinha
@@ -164,6 +175,29 @@
   font-size: 1rem;
   line-height: 1.7;
   font-weight: 300;
+
+  @media (width < 48rem) {
+    @apply justificado;
+  }
+}
+
+/* No celular o corpo de texto é justificado: a coluna é estreita, o bloco
+   ocupa a largura inteira da faixa e a borda direita irregular deixava um
+   serrilhado que, nessa medida, lê como texto mal encaixado.
+   `hyphens: auto` não é enfeite — é o que torna o justificado viável. Sem ele
+   o português, que tem palavra longa demais para a coluna ("Participação",
+   "disponibilidade"), abre rios de espaço entre as palavras. A hifenização
+   depende do `lang` do documento, que o `<html lang="pt-BR">` já declara.
+   `text-wrap: initial` desfaz um eventual `balance`/`pretty` herdado: os dois
+   brigam com o justificado, porque reequilibram a linha depois de ela já ter
+   sido esticada. */
+@utility justificado {
+  text-align: justify;
+  text-justify: inter-word;
+  -webkit-hyphens: auto;
+  hyphens: auto;
+  hyphenate-limit-chars: 6 3 3;
+  text-wrap: initial;
 }
 
 /* label em caixa alta: seções, metadados, CTA */

@@ -17,6 +17,14 @@
     "react-dom": "19.2.4",
     "rough-notation": "^0.5.1"
   },
+  "//browserslist": "Alvo moderno, para o SWC parar de transpilar e poliencher o que todo navegador em uso ja entende (Array.prototype.at, encadeamento opcional, etc.). Sao versoes de 2021/2022: o Lighthouse contava ~13 KB de codigo legado no pacote principal so por causa do alvo padrao. Se precisar voltar a atender navegador mais antigo, e so afrouxar as versoes aqui.",
+  "browserslist": [
+    "chrome >= 92",
+    "edge >= 92",
+    "firefox >= 90",
+    "safari >= 15.4",
+    "not dead"
+  ],
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",

@@ -22,6 +22,14 @@ export function LpHeader() {
       <div className="faixa flex h-[var(--header-altura)] items-center">
         <Link
           href="/"
+          /* Sem prefetch. O App Router baixa a home inteira assim que este
+             link aparece na tela — payload RSC mais os chunks dos componentes
+             de cliente dela (hero com parallax, seções animadas). No celular
+             isso chegava como uma tarefa longa de ~300ms no meio do
+             carregamento da LP, atrasando a pintura do próprio título.
+             A home é a saída da página, não o destino: quem clica aqui aceita
+             esperar o carregamento dela. */
+          prefetch={false}
           className="inline-flex items-center"
           aria-label={`${marca} — página inicial`}
         >
@@ -30,7 +38,12 @@ export function LpHeader() {
             alt={logo.alt}
             width={logo.width}
             height={logo.height}
-            priority
+            /* `priority` foi depreciado no Next 16. Para o logo o
+               substituto certo é `loading="eager"`, não `preload`: ele está no
+               topo do body e o navegador o descobre imediatamente — um
+               `<link rel="preload">` no head só disputaria banda com a imagem
+               do hero, que é a LCP de verdade. */
+            loading="eager"
             sizes="132px"
             className="h-auto w-[132px]"
           />

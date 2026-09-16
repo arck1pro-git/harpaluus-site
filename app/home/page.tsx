@@ -29,11 +29,11 @@ export default function Home() {
       {/* HERO */}
       <div className="relative h-screen w-full overflow-hidden bg-azul-escuro">
         <Image
-          src="/site6.JPG"
+          src="/fotos/site6.jpg"
           alt=""
           fill
           sizes="100vw"
-          priority
+          preload
           className="object-cover"
         />
         {/* leve escurecida na base para o BLOG ficar legível sobre a foto */}
@@ -93,22 +93,22 @@ export default function Home() {
 
         <div className="grid grid-cols-4 h-[320px]">
           <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
-            <Image src="/site4.JPG" alt="" fill sizes="25vw" className="object-cover" />
+            <Image src="/fotos/site4.jpg" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Imobiliário Digital</span>
           </div>
           <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
-            <Image src="/site5.JPG" alt="" fill sizes="25vw" className="object-cover" />
+            <Image src="/fotos/site5.jpg" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Residência</span>
           </div>
           <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
-            <Image src="/site6.JPG" alt="" fill sizes="25vw" className="object-cover" />
+            <Image src="/fotos/site6.jpg" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Lucratividade Estruturada</span>
           </div>
           <div className="relative overflow-hidden flex items-end p-7 rounded-lg border border-linha bg-azul-escuro">
-            <Image src="/site7.JPG" alt="" fill sizes="25vw" className="object-cover" />
+            <Image src="/fotos/site7.jpg" alt="" fill sizes="25vw" className="object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-black/10" />
             <span className="relative z-10 text-[10px] tracking-[0.2em] uppercase text-dourado">Blindagem Imaterial</span>
           </div>
@@ -127,7 +127,7 @@ export default function Home() {
       {/* SUNSET BLOCK */}
       <div className="bg-linha">
         <div className="relative overflow-hidden rounded-lg border border-linha bg-azul-escuro h-[360px]">
-          <Image src="/site6.JPG" alt="" fill sizes="100vw" className="object-cover" />
+          <Image src="/fotos/site6.jpg" alt="" fill sizes="100vw" className="object-cover" />
         </div>
       </div>
 
@@ -153,16 +153,16 @@ export default function Home() {
               <input
                 type="text"
                 placeholder="Name"
-                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none transition-colors focus:border-azul-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
+                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none transition-colors focus:border-azul-escuro placeholder:text-cinza-texto placeholder:text-[11px] placeholder:tracking-[0.1em]"
               />
               <input
                 type="email"
                 placeholder="Email address"
-                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none transition-colors focus:border-azul-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
+                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none transition-colors focus:border-azul-escuro placeholder:text-cinza-texto placeholder:text-[11px] placeholder:tracking-[0.1em]"
               />
               <textarea
                 placeholder="Leave a message"
-                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none resize-none min-h-[80px] transition-colors focus:border-azul-escuro placeholder:text-cinza placeholder:text-[11px] placeholder:tracking-[0.1em]"
+                className="bg-transparent border-0 border-b border-cinza py-2.5 text-[12px] text-azul-escuro outline-none resize-none min-h-[80px] transition-colors focus:border-azul-escuro placeholder:text-cinza-texto placeholder:text-[11px] placeholder:tracking-[0.1em]"
               />
               <button
                 type="button"
@@ -174,8 +174,8 @@ export default function Home() {
           </div>
         </div>
         <div className="flex justify-between items-center max-w-[1000px] mx-auto mt-[60px] pt-7 border-t border-linha">
-          <p className="text-[10px] text-cinza tracking-[0.12em]">Seu nome de perfil no Canva não será compartilhado. Nunca envie senhas.</p>
-          <p className="text-[10px] text-cinza tracking-[0.12em]">© Empírus – Tourmaline Tower</p>
+          <p className="text-[10px] text-cinza-texto tracking-[0.12em]">Seu nome de perfil no Canva não será compartilhado. Nunca envie senhas.</p>
+          <p className="text-[10px] text-cinza-texto tracking-[0.12em]">© Empírus – Tourmaline Tower</p>
         </div>
       </footer>
     </div>

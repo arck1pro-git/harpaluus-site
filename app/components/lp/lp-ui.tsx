@@ -75,22 +75,34 @@ export function Secao({
 
 /* ---------------------------------------------------------------- TÍTULO */
 
-/** Título de seção. `nivel` existe porque nem toda seção é um h2. */
+/**
+ * Título de seção. `nivel` existe porque nem toda seção é um h2.
+ *
+ * `escala` troca `tipo-secao` por `tipo-headline` — a mesma escala do h1 das
+ * LPs, criada para frase inteira em vez de título curto. Serve às seções cujo
+ * título é uma declaração de duas ou três linhas (a 07 da LP02, por exemplo):
+ * no corpo de `tipo-secao`, que chega a 3.5rem, uma frase dessas passaria de
+ * uma tela no desktop.
+ */
 export function Titulo({
   children,
   tom = "claro",
   nivel: Tag = "h2",
+  escala = "secao",
   className = "",
 }: {
   children: React.ReactNode;
   tom?: Tom;
   nivel?: "h1" | "h2" | "h3";
+  escala?: "secao" | "headline";
   className?: string;
 }) {
   return (
     <Reveal
       as={Tag}
-      className={`tipo-secao ${tom === "escuro" ? "text-white" : "text-azul-escuro"} ${className}`}
+      className={`${escala === "headline" ? "tipo-headline" : "tipo-secao"} ${
+        tom === "escuro" ? "text-white" : "text-azul-escuro"
+      } ${className}`}
     >
       {children}
     </Reveal>
@@ -145,56 +157,6 @@ export function Tese({
         }`}
       >
         {children}
-      </p>
-    </Reveal>
-  );
-}
-
-/* ------------------------------------------------------------ POTENCIAL */
-
-/**
- * A nota que acompanha o potencial projetado da LP02.
- *
- * Duas regras do modelo se encontram aqui, e são a razão de isto ser um
- * componente em vez de dois parágrafos soltos na página: "sempre manter «até»
- * + potencial/projetado + asterisco/disclaimer visualmente próximo, nunca
- * isolar o número como se fosse taxa contratada" (regra 3) e "no celular,
- * número + qualificador + disclaimer precisam permanecer juntos" (regra 9).
- *
- * O número em si fica na frase ao lado, que termina em asterisco: o título do
- * hero. Esta peça é onde o asterisco aterrissa, e ela carrega qualificador e
- * disclaimer grudados, de forma que nenhuma quebra de coluna no celular
- * consiga separar um do outro. O texto vem de `POTENCIAL`, em
- * `lp-config.ts`, onde também está a validação documental pendente.
- */
-export function Potencial({
-  qualificador,
-  disclaimer,
-  tom = "claro",
-  className = "",
-}: {
-  qualificador: string;
-  disclaimer: string;
-  tom?: Tom;
-  className?: string;
-}) {
-  const escuro = tom === "escuro";
-
-  return (
-    <Reveal
-      className={`border-l ${escuro ? "border-white/20" : "border-linha"} pl-5 ${className}`}
-    >
-      <p className={`tipo-label ${escuro ? "text-dourado-claro" : "text-dourado-escuro"}`}>
-        {qualificador}
-      </p>
-
-      <p
-        className={`mt-3 text-[13px] leading-[1.7] font-light ${
-          escuro ? "text-pedra-claro" : "text-pedra"
-        }`}
-      >
-        <span aria-hidden>* </span>
-        {disclaimer}
       </p>
     </Reveal>
   );

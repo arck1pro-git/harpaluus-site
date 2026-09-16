@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 
+import { ComDestaqueClaro } from "../components/landing/com-destaque";
 import {
   jsonLd,
   organizacao,
@@ -10,13 +11,12 @@ import {
 } from "../components/landing/dados-estruturados";
 import { Dots } from "../components/landing/dots";
 import { Reveal } from "../components/landing/reveal";
-import { Fluxo } from "../components/lp/fluxo";
 import { BotaoFormulario, FormularioProvider } from "../components/lp/form-modal";
 import type { TextosSucesso } from "../components/lp/formulario";
-import { lp2, marca, POTENCIAL, ROTA_LP2 } from "../components/lp/lp-config";
+import { lp2, marca, ROTA_LP2 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
-import { Paragrafo, Potencial, Secao, Tese, Titulo } from "../components/lp/lp-ui";
+import { Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
  * LP 02 — Participação em incorporação via SCP (Funil 1).
@@ -27,14 +27,16 @@ import { Paragrafo, Potencial, Secao, Tese, Titulo } from "../components/lp/lp-u
  * uma operação real e pede para o visitante analisá-la.
  *
  * A ordem dos blocos é a hierarquia que o modelo determina: oportunidade,
- * mercado, mecanismo, pessoas, AMAAN, timing, risco, perfil, prova e
- * conversão. Cada seção responde a uma das seis perguntas do modelo (O quê,
- * Onde, Por quê, Como, Quem, Quando), mas isso fica no título de cada uma,
- * não numa etiqueta por cima: o título já é a resposta.
+ * mercado, mecanismo, pessoas, AMAAN, timing, perfil, prova e conversão.
+ * Cada seção responde a uma das seis perguntas do modelo (O quê, Onde, Por
+ * quê, Como, Quem, Quando), mas isso fica no título de cada uma, não numa
+ * etiqueta por cima: o título já é a resposta.
  *
- * Dois blocos do modelo não sobem na tela, e é de propósito. Ver os
- * comentários em "08 QUANDO" e "11 PROVA SOCIAL": os dois são bloqueados por
- * exigência do próprio modelo, não por estarem inacabados.
+ * O bloco de risco do modelo ("O que precisa estar claro antes da decisão")
+ * saiu da página a pedido do cliente, junto com a nota do potencial projetado
+ * no hero. Um bloco do modelo continua sem subir na tela: ver o comentário em
+ * "08 QUANDO" — ele é bloqueado por exigência do próprio modelo, não por
+ * estar inacabado.
  *
  * A copy inteira vem de `lp-config.ts`; o que está aqui é a composição.
  */
@@ -43,11 +45,10 @@ const TITULO =
   "Participação em incorporação via SCP no litoral catarinense | Amaan";
 
 /* O número não entra em metadata nem no card do link: fora da página ele
-   apareceria sem o qualificador e sem o disclaimer que o modelo obriga a
-   manter colados nele — que é exatamente a leitura de "taxa contratada" que
-   a regra existe para impedir. */
+   apareceria sozinho, sem nada que impeça a leitura de "taxa contratada" —
+   que é exatamente o que a regra do modelo existe para evitar. */
 const DESCRICAO =
-  "Conheça uma operação de incorporação da Amaan estruturada para investidores: o que é a participação via SCP, onde a operação acontece, como o resultado pode ser produzido, quem executa e quais riscos existem antes da decisão.";
+  "Conheça uma operação de incorporação da Amaan estruturada para investidores: o que é a participação via SCP, onde a operação acontece, como o resultado é produzido, quem executa e o que analisar antes da decisão.";
 
 export const metadata: Metadata = {
   title: TITULO,
@@ -115,8 +116,9 @@ export default function Lp2() {
             A foto entra por causa disso: é render oficial de empreendimento,
             que é o que prova incorporação e litoral de uma vez — e é o
             oposto do repertório de banco, bolsa ou fintech que o modelo
-            proíbe. O disclaimer do número fica encostado no título, não no
-            rodapé: o asterisco do h1 tem que ter onde aterrissar. */}
+            proíbe. O qualificador e o disclaimer que ficavam encostados no
+            título saíram a pedido do cliente, e o asterisco do h1 saiu com
+            eles: sem a nota, ele não teria onde aterrissar. */}
         <section className="relative overflow-hidden bg-azul-escuro text-white">
           <Dots
             canto="superior-direito"
@@ -127,13 +129,6 @@ export default function Lp2() {
           <div className="faixa relative grid items-center gap-x-16 gap-y-14 py-[clamp(4rem,8vw,6.5rem)] lg:grid-cols-[1.05fr_0.95fr]">
             <div className="max-w-[640px]">
               <h1 className="tipo-headline text-white">{lp2.hero.titulo}</h1>
-
-              <Potencial
-                tom="escuro"
-                qualificador={POTENCIAL.qualificador}
-                disclaimer={POTENCIAL.disclaimer}
-                className="mt-7 max-w-[560px]"
-              />
 
               <Reveal as="p" delay={160} className="tipo-corpo mt-8 max-w-[580px] text-pedra-claro">
                 {lp2.hero.texto}
@@ -154,8 +149,17 @@ export default function Lp2() {
                 src={lp2.hero.imagem.src}
                 alt={lp2.hero.imagem.alt}
                 fill
-                priority
-                sizes="(min-width: 1024px) 46vw, 100vw"
+                /* `priority` foi depreciado no Next 16; `preload` é o nome
+                   novo do mesmo comportamento — `<link rel="preload">` no
+                   head, que é o que esta imagem precisa por ser a LCP do
+                   desktop e só ser descoberta no meio do body. */
+                preload
+                /* O `100vw` do fallback fazia o celular baixar a versão de
+                   tela cheia de uma imagem que está em `hidden lg:block` —
+                   invisível, e mesmo assim paga. Com `1px` o navegador elege
+                   o menor candidato do srcset abaixo de 1024px, e a foto
+                   volta ao tamanho real a partir daí. */
+                sizes="(min-width: 1024px) 46vw, 1px"
                 className="object-cover"
               />
             </Reveal>
@@ -165,7 +169,8 @@ export default function Lp2() {
         {/* ----------------------------------------------------------- 02 O QUE
             A oportunidade, antes de qualquer explicação de estrutura: o
             modelo não quer uma aula sobre SCP, quer que a pessoa entenda que
-            existe um outro lado da mesa. A sigla só aparece no fecho. */}
+            existe um outro lado da mesa. O fecho fala de contrato e das
+            condições que ele fixa, não da sigla. */}
         <Secao id="a-oportunidade">
           <div className="max-w-[760px]">
             <Titulo>{lp2.oQue.titulo}</Titulo>
@@ -187,14 +192,37 @@ export default function Lp2() {
         {/* ------------------------------------------------------------ 03 ONDE
             O mercado como contexto, nunca como promessa: cada indicador sobe
             com a própria fonte e data colada, e a ressalva do modelo fecha o
-            bloco antes que alguém leia os números como valorização futura. */}
+            bloco antes que alguém leia os números como valorização futura.
+
+            A foto do lugar entra como painel da coluna direita, de fundo, com
+            o texto na esquerda. `items-stretch` é o que faz o painel ter a
+            altura da coluna de texto em vez de uma proporção fixa: a foto
+            acompanha o bloco, e não o contrário. No celular a grade desmonta
+            e ela vira uma faixa 4/3 abaixo do texto — em coluna única, ao
+            lado de nada, um painel de altura livre viraria uma tela inteira
+            de foto entre o parágrafo e os indicadores. */}
         <Secao className="border-t border-linha">
-          <div className="max-w-[760px]">
-            <Titulo>{lp2.onde.titulo}</Titulo>
+          <div className="grid items-stretch gap-x-14 gap-y-12 lg:grid-cols-[1fr_0.78fr]">
+            <div className="max-w-[640px]">
+              <Titulo>{lp2.onde.titulo}</Titulo>
 
-            <Tese className="mt-9">{lp2.onde.tese}</Tese>
+              <Tese className="mt-9">{lp2.onde.tese}</Tese>
 
-            <Paragrafo texto={lp2.onde.abertura} className="mt-11" />
+              <Paragrafo texto={lp2.onde.abertura} className="mt-11" />
+            </div>
+
+            <Reveal
+              delay={160}
+              className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-auto lg:min-h-[440px]"
+            >
+              <Image
+                src={lp2.onde.imagem.src}
+                alt={lp2.onde.imagem.alt}
+                fill
+                sizes="(min-width: 1024px) 40vw, 100vw"
+                className="object-cover"
+              />
+            </Reveal>
           </div>
 
           <ul className="mt-14 grid gap-px bg-linha md:grid-cols-3">
@@ -213,7 +241,7 @@ export default function Lp2() {
 
                 {/* a fonte é parte do dado, não nota de rodapé: o modelo pede
                     fonte e data visíveis junto do número */}
-                <p className="mt-6 border-t border-linha pt-4 text-[12px] leading-[1.6] font-light text-cinza">
+                <p className="mt-6 border-t border-linha pt-4 text-[12px] leading-[1.6] font-light text-cinza-texto">
                   {indicador.fonte}
                 </p>
               </Reveal>
@@ -224,19 +252,19 @@ export default function Lp2() {
         </Secao>
 
         {/* -------------------------------------------------------- 04 POR QUE
-            O motivo econômico da participação, e a contrapartida dele. A tese
-            e o fecho andam juntos de propósito: o modelo dá o potencial e o
-            preço dele (prazo, risco empresarial, execução) na mesma
-            respiração, e separar os dois viraria promessa. */}
+            O motivo econômico da participação, e a contrapartida dele — os
+            dois parágrafos andam juntos de propósito: o primeiro dá o
+            potencial, o segundo diz que ele não serve a todo perfil, e
+            separar os dois viraria promessa. */}
         <Secao className="border-t border-linha">
           <div className="max-w-[760px]">
             <Titulo>{lp2.porQue.titulo}</Titulo>
 
-            <Paragrafo texto={lp2.porQue.abertura} className="mt-9" />
-
-            <Tese className="mt-12">{lp2.porQue.tese}</Tese>
-
-            <Paragrafo texto={lp2.porQue.fecho} className="mt-12" />
+            <div className="mt-9 flex flex-col gap-6">
+              {lp2.porQue.paragrafos.map((texto, i) => (
+                <Paragrafo key={texto.slice(0, 24)} texto={texto} delay={i * 80} />
+              ))}
+            </div>
           </div>
 
           <Reveal className="mt-12">
@@ -284,19 +312,17 @@ export default function Lp2() {
         </Secao>
 
         {/* ------------------------------------------------------------ 06 QUEM
-            "Você não analisa apenas um projeto. Analisa quem tomará as
-            decisões." Sem foto por enquanto: o modelo pede imagem real de
-            cada um em contexto de trabalho, e retrato genérico no lugar da
-            pessoa é o tipo de enquadramento que ele proíbe. Quando as fotos
-            existirem, basta preencher `foto` em `lp-config.ts`. */}
+            Quem toma as decisões que transformam a tese em empreendimento.
+            Sem foto por enquanto: o modelo pede imagem real de cada um em
+            contexto de trabalho, e retrato genérico no lugar da pessoa é o
+            tipo de enquadramento que ele proíbe. Quando as fotos existirem,
+            basta preencher `foto` em `lp-config.ts`. */}
         <Secao className="border-t border-linha">
           <div className="max-w-[820px]">
             <Titulo>{lp2.quem.titulo}</Titulo>
-
-            <Tese className="mt-9">{lp2.quem.tese}</Tese>
           </div>
 
-          <Reveal className="mt-14 border-t border-linha pt-10">
+          <Reveal className="mt-12 border-t border-linha pt-10">
             <h3 className="tipo-label text-dourado-escuro">{lp2.quem.incorporadora.nome}</h3>
 
             <div className="mt-6 max-w-[760px]">
@@ -340,39 +366,21 @@ export default function Lp2() {
 
         {/* ------------------------------------------------------ 07 POR QUE AMAAN
             A diferenciação, e o segundo bloco escuro: a autoridade nasce da
-            incorporação, não de gestão financeira. O bloco fecha na frase que
-            assina a página inteira, e ela vem por último de propósito: os dois
-            parágrafos existem para que ela signifique alguma coisa. */}
+            incorporação, não de gestão financeira. É uma declaração só,
+            centralizada e ocupando a seção inteira — sem parágrafos de apoio,
+            sem tese e sem CTA, porque um bloco com um elemento só é o que dá
+            a essa frase o peso de assinatura.
+
+            `escala="headline"` porque a frase é longa: no corpo de
+            `tipo-secao` ela passaria de uma tela no desktop. */}
         <Secao tom="escuro" cantoDots="superior-direito">
-          <div className="max-w-[820px]">
-            <Titulo tom="escuro">{lp2.porQueAmaan.titulo}</Titulo>
-
-            <div className="mt-9 flex flex-col gap-6">
-              {lp2.porQueAmaan.paragrafos.map((texto, i) => (
-                <Paragrafo
-                  key={texto.slice(0, 24)}
-                  tom="escuro"
-                  texto={texto}
-                  delay={i * 80}
-                  className="max-w-[680px]"
-                />
-              ))}
-            </div>
-
-            <Paragrafo
-              tom="escuro"
-              texto={lp2.porQueAmaan.fecho}
-              className="mt-8 max-w-[680px]"
-            />
-
-            <Tese tom="escuro" className="mt-12">
-              {lp2.porQueAmaan.tese}
-            </Tese>
-          </div>
-
-          <Reveal className="mt-14">
-            <BotaoFormulario tom="escuro">{lp2.cta}</BotaoFormulario>
-          </Reveal>
+          <Titulo
+            tom="escuro"
+            escala="headline"
+            className="mx-auto max-w-[900px] text-center text-balance"
+          >
+            <ComDestaqueClaro texto={lp2.porQueAmaan.titulo} />
+          </Titulo>
         </Secao>
 
         {/* ---------------------------------------------------------- 08 QUANDO
@@ -415,34 +423,6 @@ export default function Lp2() {
           <Paragrafo texto={lp2.quando.fecho} className="mt-12 max-w-[760px]" />
         </Secao>
 
-        {/* ----------------------------------------------------------- 09 RISCO
-            "Risco deve aparecer como parte da qualidade da análise", diz o
-            modelo — e não escondido em rodapé ilegível. Por isso este bloco
-            tem a mesma tipografia dos outros e vem antes do formulário, que
-            é a outra exigência: riscos e limites visíveis antes do pedido. */}
-        <Secao className="border-t border-linha">
-          <div className="max-w-[760px]">
-            <Titulo>{lp2.risco.titulo}</Titulo>
-
-            <Paragrafo texto={lp2.risco.abertura} className="mt-9" />
-
-            <p className="tipo-corpo mt-8 text-pedra">{lp2.risco.introSeparar}</p>
-          </div>
-
-          <div className="mt-12 border-y border-linha py-12">
-            <Fluxo etapas={lp2.risco.separar} />
-          </div>
-
-          <Reveal
-            as="p"
-            className="tipo-corpo mt-10 max-w-[720px] text-pedra"
-          >
-            {lp2.risco.complemento}
-          </Reveal>
-
-          <Tese className="mt-12 max-w-[760px]">{lp2.risco.tese}</Tese>
-        </Secao>
-
         {/* ---------------------------------------------------------- 10 PERFIL
             Qualificação honesta: os dois cartões têm o mesmo peso gráfico
             porque o modelo quer que a pessoa se reconheça — inclusive do lado
@@ -476,12 +456,13 @@ export default function Lp2() {
         </Secao>
 
         {/* ---------------------------------------------------- 11 PROVA SOCIAL
-            A seção inteira depende de três depoimentos reais, com nome, foto
-            ou vídeo verdadeiro e o contexto real da relação com a AMAAN — é o
-            que o modelo pede, e ele também proíbe transformar experiência
-            individual em promessa de rentabilidade. Enquanto `depoimentos`
-            estiver vazio em `lp-config.ts`, nada sobe: depoimento inventado
-            para segurar o layout é exatamente o que essa regra impede. */}
+            ⚠️ Os três depoimentos em `lp-config.ts` são FICTÍCIOS, provisórios
+            para fechar o layout. O modelo pede depoimento real, com nome,
+            foto ou vídeo verdadeiro e o contexto real da relação com a AMAAN,
+            e proíbe transformar experiência individual em promessa de
+            rentabilidade — os textos provisórios já respeitam a segunda
+            parte, mas não a primeira. Substituir antes de publicar; esvaziar
+            `depoimentos` volta a esconder a seção. */}
         {lp2.prova.depoimentos.length > 0 && (
           <Secao className="border-t border-linha">
             <div className="max-w-[760px]">
@@ -515,7 +496,7 @@ export default function Lp2() {
                   <p className="mt-7 border-t border-linha pt-5 text-[15px] font-normal text-azul-escuro">
                     {depoimento.nome}
                   </p>
-                  <p className="mt-1 text-[13px] leading-[1.6] font-light text-cinza">
+                  <p className="mt-1 text-[13px] leading-[1.6] font-light text-cinza-texto">
                     {depoimento.contexto}
                   </p>
                 </Reveal>
@@ -552,10 +533,9 @@ export default function Lp2() {
         </Secao>
 
         {/* -------------------------------------------------------- 13 FECHAMENTO
-            Sem `aviso`: o rodapé desta página fecha só com a assinatura e a
-            identificação da pessoa jurídica. O risco continua na página, no
-            bloco 09 e na nota do potencial projetado, no hero. */}
-        <LpFooter titulo={lp2.fechamento.marca} tese={lp2.fechamento.tese} />
+            Sem `aviso` e sem `tese`: o rodapé desta página fecha só com a
+            assinatura e a identificação da pessoa jurídica. */}
+        <LpFooter titulo={lp2.fechamento.marca} />
       </main>
     </FormularioProvider>
   );

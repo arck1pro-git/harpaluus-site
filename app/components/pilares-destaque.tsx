@@ -3,10 +3,10 @@ import Image from "next/image";
 type Destaque = { numero: string; titulo: string; img: string };
 
 const DESTAQUES: Destaque[] = [
-  { numero: "01", titulo: "Imobiliário Digital", img: "/site4.JPG" },
-  { numero: "02", titulo: "Residência", img: "/site5.JPG" },
-  { numero: "03", titulo: "Lucratividade Estruturada", img: "/site6.JPG" },
-  { numero: "04", titulo: "Blindagem Imaterial", img: "/site7.JPG" },
+  { numero: "01", titulo: "Imobiliário Digital", img: "/fotos/site4.jpg" },
+  { numero: "02", titulo: "Residência", img: "/fotos/site5.jpg" },
+  { numero: "03", titulo: "Lucratividade Estruturada", img: "/fotos/site6.jpg" },
+  { numero: "04", titulo: "Blindagem Imaterial", img: "/fotos/site7.jpg" },
 ];
 
 /** faixa vazia na mesma altura do header, com a aurora branca desfocada */

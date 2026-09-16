@@ -17,7 +17,7 @@ const PILARES: PilarData[] = [
     frase: "Infraestrutura inteligente que reduz risco e custo ao longo do tempo.",
     resumo:
       "Monitoramento, prevenção e segurança automatizada que reduzem risco e custo ao longo de todo o ciclo do edifício.",
-    img: "/tourmaline.png",
+    img: "/fotos/tourmaline.jpg",
     grupos: [
       {
         titulo: "Monitoramento e Prevenção",
@@ -52,7 +52,7 @@ const PILARES: PilarData[] = [
     frase: "Tipologia desenhada para eficiência de capital.",
     resumo:
       "Tipologia compacta desenhada para liquidez e eficiência de capital, com alta absorção em qualquer ciclo de mercado.",
-    img: "/tourmaline2.png",
+    img: "/fotos/tourmaline2.jpg",
     grupos: [
       {
         titulo: "Ticket Inteligente",
@@ -86,7 +86,7 @@ const PILARES: PilarData[] = [
     frase: "Infraestrutura física ativada por sistema operacional.",
     resumo:
       "Ambientes monetizáveis e gestão de performance que fazem o ativo nascer estruturado para performar.",
-    img: "/tourmaline3.png",
+    img: "/fotos/tourmaline3.jpg",
     grupos: [
       {
         titulo: "Infraestrutura Monetizável",
@@ -120,7 +120,7 @@ const PILARES: PilarData[] = [
     frase: "Percepção premium é o que protege preço no longo prazo.",
     resumo:
       "Neuroarquitetura, modernidade percebida e topografia estratégica que sustentam a percepção premium e protegem o preço.",
-    img: "/tourmaline5.png",
+    img: "/fotos/tourmaline5.jpg",
     grupos: [
       {
         titulo: "Neuroarquitetura Aplicada",
