@@ -9,11 +9,15 @@ import { validarLead } from "./validar";
 /**
  * Recebimento dos leads das duas LPs do Funil 1.
  *
- * A LP02 tem destino: o CRM Chroma, pela webhook "LPs amaan" — ver
- * `chroma.ts`. A LP01 ainda não, e continua no arranjo anterior: tenta
- * POSTar em `LEAD_WEBHOOK_URL` e, enquanto essa variável não existir,
- * registra o lead no log do servidor. Ligar um destino para ela depois é
- * preencher a env, sem tocar em código.
+ * As duas vão para o CRM Chroma, cada uma pela sua webhook — a LP01 pela
+ * "LPs amaan" e a LP02 pela "LPs amaan - sem doc", que fazem o contato nascer
+ * em etapas diferentes do funil. Quem escolhe é `chroma.ts`, pela origem do
+ * lead; aqui só se decide *quando* chamar.
+ *
+ * `LEAD_WEBHOOK_URL` continua como destino genérico e opcional (automação,
+ * planilha), e recebe o lead no formato interno (`Lead`, em `validar.ts`).
+ * Vazia, esse segundo envio simplesmente não acontece — o CRM já é o destino
+ * de verdade.
  *
  * Aqui fica só o transporte: as regras de validação estão em `validar.ts`, e
  * o formato do estado em `lead.ts` — um arquivo `"use server"` só pode
@@ -60,30 +64,22 @@ export async function registrarLead(
 
   const { lead } = resultado;
 
-  /* LP02 → CRM Chroma. Em `after()` porque o envio acontece depois da
-     resposta: a tela de sucesso não fica esperando o CRM, e as retentativas
-     de `enviarAoChroma` cabem sem segurar quem preencheu o formulário. A
-     função nunca lança — falha dela vira log, não erro na tela.
+  /* Em `after()` porque o envio acontece depois da resposta: a tela de
+     sucesso não fica esperando o CRM, e as retentativas de `enviarAoChroma`
+     cabem sem segurar quem preencheu o formulário. A função nunca lança —
+     falha dela vira log, não erro na tela.
 
-     A LP01 fica de fora por ora: o CRM aceitaria o lead dela (só `valor` e
-     `scp` viriam vazios), mas levar aquela página junto é decisão do
-     Comercial. Quando for, é trocar esta condição por uma chamada direta. */
-  const paraOCrm = origem === "lp2-interesse";
-
-  if (paraOCrm) {
-    after(() => enviarAoChroma(lead));
-  }
+     A LP01 não coleta os dois selects, então o lead dela chega ao CRM sem
+     `valor` nem `scp`; os campos ficam vazios na ficha, que é o que o CRM
+     espera de campo opcional. */
+  after(() => enviarAoChroma(lead));
 
   const webhook = process.env.LEAD_WEBHOOK_URL;
 
   if (!webhook) {
-    /* Só a LP01 chega aqui sem destino nenhum: fica registrada no log do
-       servidor para não perder cadastro antes da integração dela. O lead da
-       LP02 já saiu para o CRM acima — repeti-lo aqui seria duplicar dado
-       pessoal no log sem nada em troca. */
-    if (!paraOCrm) {
-      console.info("[lead] webhook não configurado — lead recebido:", lead);
-    }
+    /* Sem destino genérico configurado não há nada a fazer: o lead já saiu
+       para o CRM acima, e repeti-lo no log só duplicaria dado pessoal sem
+       nada em troca. */
     return { status: "sucesso" };
   }
 

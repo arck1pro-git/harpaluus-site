@@ -1,19 +1,27 @@
 import "server-only";
 
+import type { OrigemLead } from "./lead";
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
 import type { Lead } from "./validar";
 
 /**
- * Envio do lead ao CRM Chroma — webhook "LPs amaan".
+ * Envio do lead ao CRM Chroma — uma webhook por LP.
  *
- * O segredo da webhook viaja na query string, então a URL inteira é o
- * segredo, e ela está fixa aqui embaixo (`WEBHOOK`) em vez de vir do
- * ambiente. Quem lê o repositório lê a credencial: trocá-la é trocar esta
- * linha e publicar de novo, e o histórico do git guarda as antigas.
+ * São duas webhooks irmãs, de corpo idêntico, e a única diferença está do
+ * lado do CRM: cada uma faz o contato nascer numa etapa diferente do funil.
+ * Por isso o destino é escolhido pela origem do lead, e não por uma constante
+ * única — trocar as duas de lugar não daria erro nenhum aqui, nem no CRM: os
+ * leads apenas cairiam na etapa errada, e só o Comercial notaria, dias
+ * depois.
  *
- * O que impede a URL de acabar no navegador é o `import "server-only"` da
+ * O segredo de cada webhook viaja na query string, então a URL inteira é o
+ * segredo, e as duas estão fixas aqui embaixo (`WEBHOOKS`) em vez de virem do
+ * ambiente. Quem lê o repositório lê a credencial: trocá-la é trocar estas
+ * linhas e publicar de novo, e o histórico do git guarda as antigas.
+ *
+ * O que impede as URLs de acabarem no navegador é o `import "server-only"` da
  * primeira linha: com ele, importar este módulo de um componente cliente
- * quebra o build em vez de embutir a string no pacote. Sem essa linha nada
+ * quebra o build em vez de embutir as strings no pacote. Sem essa linha nada
  * avisaria — uma constante não tem o `NEXT_PUBLIC_` para servir de aviso, e
  * o vazamento só apareceria na aba de rede de um visitante.
  *
@@ -21,8 +29,15 @@ import type { Lead } from "./validar";
  * `actions.ts`), depois da resposta já ter saído. Quem preencheu não espera o
  * CRM, e as retentativas cabem sem segurar o formulário.
  */
-const WEBHOOK =
-  "https://chromacrm.vercel.app/api/webhooks/nova-captacao-515314?secret=0bfc50194e3224c2822387d1d75856630f637044fcd6360856c28f37190ba3c5";
+const WEBHOOKS: Record<OrigemLead, string> = {
+  /* Webhook "LPs amaan" — o contato entra na etapa novo contato. */
+  "lp1-checklist":
+    "https://chromacrm.vercel.app/api/webhooks/nova-captacao-515314?secret=0bfc50194e3224c2822387d1d75856630f637044fcd6360856c28f37190ba3c5",
+  /* Webhook "LPs amaan - sem doc" — cópia da de cima, com uma etapa própria:
+     novo contato - sem doc. */
+  "lp2-interesse":
+    "https://chromacrm.vercel.app/api/webhooks/lps-amaan-sem-doc-381d95?secret=faf4c41f566b07d963e26c08b5d43ddeaa25ae4bd0d4fe777765289369c7635d",
+};
 
 /**
  * As cinco chaves que a webhook lê.
@@ -98,8 +113,8 @@ export function payloadChroma(lead: Lead): PayloadChroma {
 }
 
 /**
- * Posta o lead na webhook. Nunca lança: quem chama está em `after()`, onde
- * uma exceção não teria a quem ser contada.
+ * Posta o lead na webhook da LP de onde ele veio. Nunca lança: quem chama
+ * está em `after()`, onde uma exceção não teria a quem ser contada.
  *
  * O tratamento segue o contrato da webhook:
  *
@@ -115,10 +130,11 @@ export function payloadChroma(lead: Lead): PayloadChroma {
  */
 export async function enviarAoChroma(lead: Lead) {
   const corpo = JSON.stringify(payloadChroma(lead));
+  const webhook = WEBHOOKS[lead.origem];
 
   for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
     try {
-      const resposta = await fetch(WEBHOOK, {
+      const resposta = await fetch(webhook, {
         method: "POST",
         /* O segredo já está na URL: a webhook não espera header de
            autenticação, e mandar um só vazaria credencial em log de proxy. */
@@ -136,7 +152,7 @@ export async function enviarAoChroma(lead: Lead) {
         } | null;
 
         console.info(
-          `[chroma] lead registrado (contato ${dados?.contato_id ?? "sem id"})`
+          `[chroma] ${lead.origem}: lead registrado (contato ${dados?.contato_id ?? "sem id"})`
         );
         return;
       }
@@ -144,7 +160,7 @@ export async function enviarAoChroma(lead: Lead) {
       if (resposta.status < 500) {
         const detalhe = await resposta.text().catch(() => "");
         console.error(
-          `[chroma] recusado com ${resposta.status}: ${detalhe} — lead para reenvio manual:`,
+          `[chroma] ${lead.origem}: recusado com ${resposta.status}: ${detalhe} — lead para reenvio manual:`,
           lead
         );
         return;
@@ -156,7 +172,7 @@ export async function enviarAoChroma(lead: Lead) {
     } catch (erro) {
       if (tentativa === TENTATIVAS) {
         console.error(
-          `[chroma] falha após ${TENTATIVAS} tentativas:`,
+          `[chroma] ${lead.origem}: falha após ${TENTATIVAS} tentativas:`,
           erro,
           "— lead para reenvio manual:",
           lead
