@@ -18,7 +18,7 @@ const AZUL_ESCURO = "#111729";
 const DOURADO = "#af8951";
 const DOURADO_CLARO = "#f0c991";
 const CREME = "#f5e7d2";
-const PEDRA_CLARO = "#aeb7c7";
+const PEDRA_CLARO = "#dde3ed";
 
 export function CartaoOg({
   etiqueta,

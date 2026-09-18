@@ -225,7 +225,7 @@ export const lp1 = {
 /** Foto de uma pessoa do bloco QUEM. `null` enquanto não houver imagem real. */
 type Retrato = { src: string; alt: string } | null;
 
-/** Depoimento do bloco de prova social. */
+/** Depoimento do bloco 11. */
 type Depoimento = {
   nome: string;
   /** o vínculo verdadeiro com a AMAAN, como o modelo exige */
@@ -252,16 +252,12 @@ export const lp2 = {
       "Participe economicamente de uma incorporação no litoral catarinense, com potencial projetado de resultado de até 2,5% ao mês.",
     texto:
       "Conheça uma operação da AMAAN estruturada para quem quer acessar o mercado imobiliário «pelo lado de quem desenvolve o empreendimento», não pelo lado de quem compra a unidade pronta.",
-    /**
-     * Render oficial, do mesmo banco de imagens que a home usa. O modelo é
-     * explícito nos dois sentidos: usar arquitetura/empreendimento real e
-     * nunca códigos visuais de banco, bolsa ou fintech — e, se a operação
-     * for a Tourmaline, somente imagens oficiais, sem recriação por IA.
-     */
-    imagem: {
-      src: "/fotos/tourmaline4.jpg",
-      alt: "Rooftop de empreendimento da Amaan ao pôr do sol, com a cidade e o mar ao fundo",
-    },
+    /* Sem `imagem`: a foto do hero saiu daqui quando virou o fundo do bloco,
+       e agora é a mesma da home, lida de `hero.image` no `site-config` (ver
+       `FundoHero`, em lp-ui.tsx). A regra que escolhia esta foto continua
+       valendo para a de lá: render oficial de empreendimento real, nunca o
+       repertório visual de banco, bolsa ou fintech, e — se a operação for a
+       Tourmaline — só imagem oficial, sem recriação por IA. */
   },
 
   /* ------------------------------------------------------------- 02 O QUE */
@@ -284,18 +280,27 @@ export const lp2 = {
     abertura:
       "A AMAAN atua no litoral de Santa Catarina, região que concentra «algumas das praças imobiliárias de maior valor do Brasil». A força imobiliária se conecta a turismo, mobilidade e atratividade regional.",
     /**
-     * A foto do lugar, ao lado do texto que fala dele.
+     * O lugar, filmado, no fundo do bloco que fala dele.
      *
-     * É a mesma praça que a seção descreve, não uma paisagem de banco de
-     * imagens: o modelo pede repertório de arquitetura e lugar reais, e uma
-     * foto genérica de praia diria "litoral" sem dizer "este litoral".
+     * Substituiu a foto `/fotos/site4.jpg`, que ocupava um painel na coluna
+     * direita: é a mesma leitura, aérea da orla verticalizada encontrando o
+     * mar, com o movimento que a foto parada não tinha. Continua valendo a
+     * regra que escolheu a foto — o modelo pede repertório de lugar real, e
+     * uma filmagem genérica de praia diria "litoral" sem dizer "este
+     * litoral".
      *
-     * `alt` descritivo porque a imagem carrega informação — ela é o "onde" da
-     * seção, não ornamento.
+     * `poster` é um quadro do próprio arquivo, extraído em 0,5s. É o que a
+     * seção mostra antes de o vídeo chegar e para quem pediu menos
+     * movimento, então precisa ser deste vídeo e não de outra imagem.
+     *
+     * ⚠️ O arquivo está num bucket do Supabase que responde
+     * `Cache-Control: no-cache`, ou seja, o navegador revalida a cada visita
+     * em vez de reusar o que já baixou. Se o vídeo for ficar, vale servi-lo
+     * de `/public` ou ajustar o cache do bucket.
      */
-    imagem: {
-      src: "/fotos/site4.jpg",
-      alt: "Vista aérea do litoral de Santa Catarina, com a orla verticalizada encontrando o mar",
+    video: {
+      src: "https://vlxejpotqiodxdlmmqel.supabase.co/storage/v1/object/public/videos/hero.mp4",
+      poster: "/fotos/onde-video-poster.jpg",
     },
     /**
      * Regra 4 do modelo: o dado precisa de fonte e data. Por isso cada item
@@ -389,11 +394,17 @@ export const lp2 = {
         "A AMAAN transforma oportunidades imobiliárias em patrimônio por meio de uma visão integrada de incorporação. Antes de construir, constrói uma tese: «por que este lugar, para quem, com qual proposta de valor, com qual lógica econômica e com qual capacidade de permanecer relevante».",
     },
     /**
-     * `foto` fica `null` até existir imagem real de cada um em contexto de
-     * trabalho. O modelo pede exatamente isso e proíbe qualquer enquadramento
-     * que diminua a autoridade institucional, o que inclui ilustração
-     * genérica ou retrato de banco de imagens no lugar da pessoa. Sem foto, o
-     * cartão sobe tipográfico; com foto, ela entra sem mexer em mais nada.
+     * As duas fotos são das pessoas, como o modelo exige — ele pede imagem
+     * real de cada um em contexto de trabalho e proíbe ilustração genérica ou
+     * retrato de banco de imagens no lugar da pessoa.
+     *
+     * ⚠️ A do Fabrício cumpre as duas metades: é ele, e é trabalho — palco,
+     * microfone, painel atrás. A da Patrícia cumpre a primeira e não a
+     * segunda: é retrato de estúdio, em traje social, sobre fundo cinza. Não
+     * é banco de imagens, então não cai na proibição, mas também não é o
+     * "contexto de trabalho" que o modelo pede. Substituir quando houver uma
+     * dela em contexto — os dois cartões ficam mais parelhos junto, porque
+     * hoje um é cena escura de evento e o outro é estúdio claro.
      */
     pessoas: [
       {
@@ -401,14 +412,20 @@ export const lp2 = {
         papel: "Arquiteto, incorporador e empresário",
         texto:
           "Conecta arquitetura, mercado imobiliário, negócios e patrimônio em uma leitura só: terreno, viabilidade, produto, projeto, estratégia e execução não são etapas separadas, são partes da mesma decisão. É esse olhar que define o que cada operação se propõe a ser — e o que ela precisa entregar para sustentar essa proposta depois da entrega.",
-        foto: null as Retrato,
+        foto: {
+          src: "/fabhricio.webp",
+          alt: "Fabrício Pavesi Junior falando ao microfone num palco, diante do painel de uma apresentação",
+        } as Retrato,
       },
       {
         nome: "Patrícia Nunes Pavesi",
         papel: "Empresária e estrategista, sócia da AMAAN",
         texto:
           "Responde pela construção e pela gestão do negócio: estratégia, posicionamento, comercial, processos e rotina de execução. É o trabalho que impede a tese de cada incorporação de parar na intenção — ela vira método, prazo acompanhado de perto e decisão tomada com informação na mesa.",
-        foto: null as Retrato,
+        foto: {
+          src: "/patricia-card.jpeg",
+          alt: "Retrato de Patrícia Nunes Pavesi",
+        } as Retrato,
       },
     ],
     fecho:
@@ -476,44 +493,49 @@ export const lp2 = {
     tese: "Se você quer saber onde seu capital estará, quem tomará as decisões e qual negócio precisa funcionar para produzir o resultado projetado, faz sentido conhecer a operação.",
   },
 
-  /* ------------------------------------------------------- 11 PROVA SOCIAL */
-  prova: {
-    titulo: "O que investidores que já conhecem a AMAAN perceberam na prática",
-    /**
-     * ⚠️ DADOS FICTÍCIOS — NÃO PUBLICAR ASSIM.
-     *
-     * Os três depoimentos abaixo são provisórios, pedidos para fechar o
-     * layout da seção enquanto os reais não chegam. Nome, contexto e texto
-     * são inventados e precisam ser substituídos, um a um, por depoimentos
-     * verdadeiros antes de a página ir ao ar — com nome real, contexto real
-     * da relação com a AMAAN e, quando houver, foto real em `foto`.
-     *
-     * O modelo é explícito nos dois pontos: depoimento real e nada de
-     * transformar experiência individual em promessa de rentabilidade. Por
-     * isso nenhum dos textos provisórios cita percentual, prazo ou retorno —
-     * os substitutos reais também não devem citar. Esvaziar o array volta a
-     * esconder a seção inteira (ver `lp2/page.tsx`).
-     */
-    depoimentos: [
+  /* -------------------------------------------------------- 11 DEPOIMENTOS
+     Seção nova, no lugar da antiga "prova social" — aquela existia com três
+     depoimentos inventados, só para fechar o layout enquanto os reais não
+     chegavam, e saiu inteira quando estes dois chegaram.
+
+     Os dois textos são reais: áudios enviados por investidores. O que está
+     aqui é o trecho de cada um, não a transcrição inteira — saíram a saudação,
+     a despedida e as repetições, que é onde os nomes próprios de dentro da
+     conversa apareciam, e sobrou o que cada um diz sobre o negócio.
+
+     Nada foi reescrito: as palavras são as deles, na ordem em que foram
+     ditas, com a pontuação ajustada para leitura. É por isso que o ritmo
+     ainda é de fala e não de copy, e é esse ritmo que faz a seção ler como
+     depoimento. Cortar mais, tudo bem; trocar palavra, não — o áudio é a
+     fonte, e o que está aqui precisa continuar cabendo dentro dele.
+
+     "AMAAN" fica: é a empresa de quem é a página, não o nome de alguém.
+
+     Nenhum dos dois cita percentual, prazo ou retorno, e os próximos também
+     não devem: o modelo proíbe transformar experiência individual em promessa
+     de rentabilidade. As aspas são postas na composição, não aqui, para o
+     texto continuar sendo só o que a pessoa disse.
+
+     Esvaziar `itens` esconde a seção inteira (ver `lp2/page.tsx`).
+  */
+  depoimentos: {
+    titulo: "O que dizem investidores que já fecharam com a AMAAN",
+    itens: [
       {
-        nome: "Ricardo Almeida",
-        contexto: "Investidor · Curitiba/PR",
+        nome: "José",
+        /* O vínculo que ele mesmo enuncia no áudio. Trocar por um contexto
+           mais específico (cidade, atividade) assim que for confirmado com
+           ele — o modelo pede o vínculo real, e "Investidor" é o mínimo. */
+        contexto: "Investidor",
         texto:
-          "O que me convenceu não foi a projeção. Foi poder perguntar de onde ela vinha e receber a conta aberta, com o que era premissa separado do que já era fato.",
+          "Eu vou passar para outros amigos, eu vou oferecer o prédio para outros amigos. Essa oportunidade da gente, como investidor, ser parceiro também na venda do empreendimento… eu me sinto parte do negócio. Então, se eu sou parte do negócio, eu quero que o negócio evolua e realmente aconteça.",
         foto: null,
       },
       {
-        nome: "Helena Bittencourt",
-        contexto: "Empresária · Balneário Camboriú/SC",
+        nome: "Valdemar",
+        contexto: "Negociação concluída com a AMAAN",
         texto:
-          "Eu já tinha imóvel na região, mas sempre pelo lado de quem compra pronto. Entender a operação por dentro mudou o tipo de pergunta que eu faço antes de decidir.",
-        foto: null,
-      },
-      {
-        nome: "Marcelo Tavares",
-        contexto: "Investidor · São Paulo/SP",
-        texto:
-          "Conversei com quem toma as decisões, não com um vendedor. Saí sabendo o cronograma, o que podia sair do previsto e o que fariam se saísse.",
+          "Recebi o contrato, meu jurídico analisou tudo dentro dos conformes e concluímos essa negociação devido a essa seriedade que eu vi em vocês, todo o grupo, a equipe da AMAAN. Tomara que esse seja um de vários negócios que a gente pode vir a fazer futuramente.",
         foto: null,
       },
     ] as Depoimento[],

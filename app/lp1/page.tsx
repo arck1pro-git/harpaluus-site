@@ -14,7 +14,7 @@ import type { TextosSucesso } from "../components/lp/formulario";
 import { lp1, marca, ROTA_LP1 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
-import { Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
+import { FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
  * LP 01 — Checklist (Funil 1 · SCP).
@@ -91,15 +91,40 @@ export default function Lp1() {
             Curto, como o brief pede: promessa, prova do material e convite.
             O mockup do Checklist é a prova visual do que está sendo oferecido
             — e some no celular, onde ocuparia uma tela inteira entre a
-            promessa e o botão, empurrando a conversão para baixo da dobra. */}
-        <section className="relative overflow-hidden bg-fundo">
-          <div className="faixa grid items-center gap-x-16 gap-y-12 pt-[clamp(3rem,6vw,5rem)] pb-[clamp(4rem,8vw,6.5rem)] lg:grid-cols-[1.04fr_0.96fr]">
+            promessa e o botão, empurrando a conversão para baixo da dobra.
+
+            O fundo é a foto que abre a home (ver `FundoHero`): a página de
+            anúncio abre com a mesma imagem do site, e quem clica reconhece
+            de quem é a página antes de ler a promessa. O bloco era claro e
+            ficou escuro por causa disso — título e texto em branco, botão no
+            sólido branco (`tom="escuro"`). O mockup é o único que ganha com a
+            troca sem mudar: papel claro que antes era card branco sobre fundo
+            branco, e agora recorta contra a foto.
+
+            No celular o hero ocupa a primeira tela inteira, como o da home.
+            É `min-h`, não `h`: com altura fixa, o título longo somado ao
+            texto e ao botão passaria de 100svh nos aparelhos mais baixos e
+            seria cortado. E é `100svh` menos a altura do header — o header
+            fica acima, em fluxo, então o `100svh` cheio jogaria o fim do hero
+            para fora da dobra, que é o contrário do que a medida quer. `svh`
+            e não `dvh`: a barra do navegador que aparece e some redimensiona
+            o `dvh` no meio da rolagem, e o bloco inteiro pularia junto.
+
+            A partir de `lg` a altura volta a ser a do conteúdo: na horizontal
+            e no desktop, 100svh é uma faixa baixa e larga, e forçar o bloco a
+            ela só afastaria o texto do botão. */}
+        <section className="relative flex min-h-[calc(100svh-var(--header-altura))] flex-col justify-center overflow-hidden bg-azul-escuro text-white lg:block lg:min-h-0">
+          <FundoHero />
+
+          <div className="faixa relative z-10 grid items-center gap-x-16 gap-y-12 pt-[clamp(3rem,6vw,5rem)] pb-[clamp(4rem,8vw,6.5rem)] lg:grid-cols-[1.04fr_0.96fr]">
             <div className="max-w-[620px]">
-              <h1 className="tipo-headline text-azul-escuro">{lp1.hero.titulo}</h1>
+              <h1 className="tipo-headline text-white">{lp1.hero.titulo}</h1>
 
-              <p className="tipo-corpo mt-7 max-w-[560px] text-pedra">{lp1.hero.texto}</p>
+              <p className="tipo-corpo mt-7 max-w-[560px] text-pedra-claro">{lp1.hero.texto}</p>
 
-              <BotaoFormulario className="mt-10">{lp1.cta}</BotaoFormulario>
+              <BotaoFormulario tom="escuro" className="mt-10">
+                {lp1.cta}
+              </BotaoFormulario>
             </div>
 
             <ChecklistMockup className="hidden max-w-[400px] lg:ml-auto lg:block" />

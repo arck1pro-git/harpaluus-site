@@ -63,8 +63,20 @@
      contra --color-fundo — o cinza quente anterior (#8a857c) dava 3.4:1 e
      reprovava no AA para texto pequeno. */
   --color-pedra: #606b84;
-  /* par claro do anterior, para texto sobre as seções em azul-escuro (8.8:1) */
-  --color-pedra-claro: #aeb7c7;
+  /* Par claro do anterior, e a única cor de texto das seções em azul-escuro
+     e das que têm vídeo no fundo — nenhum uso sobre fundo claro, então mexer
+     aqui mexe só no escuro.
+
+     Era #aeb7c7, 8.8:1. Lia cinza: a 12,6% de saturação, o azul aparecia
+     menos que a poeira por cima dele, e ao lado dos títulos em branco puro o
+     corpo parecia apagado em vez de subordinado. #dde3ed sobe para 13.8:1
+     com quase metade do desvio de cinza (6,8%), e é claro o bastante para
+     aguentar também os fundos que não são chapados — sobre o vídeo da LP02 o
+     azul entra a 75% e a base fica mais clara que o azul-escuro puro.
+
+     Não virou branco puro de propósito: é o branco que marca título e número
+     dentro desses blocos, e igualar os dois tiraria o degrau entre eles. */
+  --color-pedra-claro: #dde3ed;
 }
 
 :root {

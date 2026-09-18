@@ -9,14 +9,14 @@ import {
   site,
   trilha,
 } from "../components/landing/dados-estruturados";
-import { Dots } from "../components/landing/dots";
 import { Reveal } from "../components/landing/reveal";
+import { FundoVideo } from "../components/lp/fundo-video";
 import { BotaoFormulario, FormularioProvider } from "../components/lp/form-modal";
 import type { TextosSucesso } from "../components/lp/formulario";
 import { lp2, marca, ROTA_LP2 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
-import { Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
+import { FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
  * LP 02 — Participação em incorporação via SCP (Funil 1).
@@ -27,7 +27,7 @@ import { Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
  * uma operação real e pede para o visitante analisá-la.
  *
  * A ordem dos blocos é a hierarquia que o modelo determina: oportunidade,
- * mercado, mecanismo, pessoas, AMAAN, timing, perfil, prova e conversão.
+ * mercado, mecanismo, pessoas, AMAAN, timing, perfil, depoimentos e conversão.
  * Cada seção responde a uma das seis perguntas do modelo (O quê, Onde, Por
  * quê, Como, Quem, Quando), mas isso fica no título de cada uma, não numa
  * etiqueta por cima: o título já é a resposta.
@@ -118,15 +118,32 @@ export default function Lp2() {
             oposto do repertório de banco, bolsa ou fintech que o modelo
             proíbe. O qualificador e o disclaimer que ficavam encostados no
             título saíram a pedido do cliente, e o asterisco do h1 saiu com
-            eles: sem a nota, ele não teria onde aterrissar. */}
-        <section className="relative overflow-hidden bg-azul-escuro text-white">
-          <Dots
-            canto="superior-direito"
-            tone="claro"
-            tamanho="h-[520px] w-[520px] md:h-[860px] md:w-[860px]"
-          />
+            eles: sem a nota, ele não teria onde aterrissar.
 
-          <div className="faixa relative grid items-center gap-x-16 gap-y-14 py-[clamp(4rem,8vw,6.5rem)] lg:grid-cols-[1.05fr_0.95fr]">
+            Ela era um card de 4/5 na coluna da direita e virou o fundo do
+            bloco inteiro (`FundoHero`), a mesma abertura da home — é a mesma
+            foto nos dois lugares, então mantê-la também à direita seria
+            repeti-la contra si mesma. Com a coluna da direita vazia, o hero
+            voltou a ser uma coluna só, e a textura de bolinhas saiu junto:
+            ela existe para dar superfície ao azul chapado das outras seções
+            escuras, e sobre a foto vira ruído.
+
+            No celular o hero ocupa a primeira tela inteira, como o da home.
+            É `min-h`, não `h`: com altura fixa, o título longo somado ao
+            texto e ao botão passaria de 100svh nos aparelhos mais baixos e
+            seria cortado. E é `100svh` menos a altura do header — o header
+            fica acima, em fluxo, então o `100svh` cheio jogaria o fim do hero
+            para fora da dobra, que é o contrário do que a medida quer. `svh`
+            e não `dvh`: a barra do navegador que aparece e some redimensiona
+            o `dvh` no meio da rolagem, e o bloco inteiro pularia junto.
+
+            A partir de `lg` a altura volta a ser a do conteúdo: na horizontal
+            e no desktop, 100svh é uma faixa baixa e larga, e forçar o bloco a
+            ela só afastaria o texto do botão. */}
+        <section className="relative flex min-h-[calc(100svh-var(--header-altura))] flex-col justify-center overflow-hidden bg-azul-escuro text-white lg:block lg:min-h-0">
+          <FundoHero />
+
+          <div className="faixa relative z-10 py-[clamp(4rem,8vw,6.5rem)]">
             <div className="max-w-[640px]">
               <h1 className="tipo-headline text-white">{lp2.hero.titulo}</h1>
 
@@ -138,31 +155,6 @@ export default function Lp2() {
                 <BotaoFormulario tom="escuro">{lp2.cta}</BotaoFormulario>
               </Reveal>
             </div>
-
-            {/* some no celular: entre a promessa e o botão, ocuparia uma tela
-                inteira e empurraria a conversão para baixo da dobra */}
-            <Reveal
-              delay={200}
-              className="relative hidden aspect-[4/5] w-full overflow-hidden lg:block"
-            >
-              <Image
-                src={lp2.hero.imagem.src}
-                alt={lp2.hero.imagem.alt}
-                fill
-                /* `priority` foi depreciado no Next 16; `preload` é o nome
-                   novo do mesmo comportamento — `<link rel="preload">` no
-                   head, que é o que esta imagem precisa por ser a LCP do
-                   desktop e só ser descoberta no meio do body. */
-                preload
-                /* O `100vw` do fallback fazia o celular baixar a versão de
-                   tela cheia de uma imagem que está em `hidden lg:block` —
-                   invisível, e mesmo assim paga. Com `1px` o navegador elege
-                   o menor candidato do srcset abaixo de 1024px, e a foto
-                   volta ao tamanho real a partir daí. */
-                sizes="(min-width: 1024px) 46vw, 1px"
-                className="object-cover"
-              />
-            </Reveal>
           </div>
         </section>
 
@@ -194,61 +186,66 @@ export default function Lp2() {
             com a própria fonte e data colada, e a ressalva do modelo fecha o
             bloco antes que alguém leia os números como valorização futura.
 
-            A foto do lugar entra como painel da coluna direita, de fundo, com
-            o texto na esquerda. `items-stretch` é o que faz o painel ter a
-            altura da coluna de texto em vez de uma proporção fixa: a foto
-            acompanha o bloco, e não o contrário. No celular a grade desmonta
-            e ela vira uma faixa 4/3 abaixo do texto — em coluna única, ao
-            lado de nada, um painel de altura livre viraria uma tela inteira
-            de foto entre o parágrafo e os indicadores. */}
-        <Secao className="border-t border-linha">
-          <div className="grid items-stretch gap-x-14 gap-y-12 lg:grid-cols-[1fr_0.78fr]">
-            <div className="max-w-[640px]">
-              <Titulo>{lp2.onde.titulo}</Titulo>
+            O lugar era uma foto num painel na coluna direita e virou o vídeo
+            de fundo do bloco inteiro (`FundoVideo`) — a mesma aérea da orla,
+            com movimento. Duas consequências, as duas de propósito:
 
-              <Tese className="mt-9">{lp2.onde.tese}</Tese>
+            O bloco ficou escuro. É o `tom` que troca a cor do texto, e sem
+            ele o azul-escuro do corpo sumiria contra a filmagem. Isso faz da
+            LP02 uma página com quatro blocos escuros (hero, aqui, 08 e o
+            formulário) onde antes havia três — o limite antes de a virada
+            escura virar listra, e o motivo de não haver um quinto.
 
-              <Paragrafo texto={lp2.onde.abertura} className="mt-11" />
-            </div>
+            O texto voltou a ocupar a largura toda, sem a coluna que existia
+            só para segurar o painel da foto. Os indicadores são os mesmos
+            cards, na versão escura da mesma peça que a LP01 usa em "para
+            quem": o vão de `bg-white/12` é o filete entre eles. */}
+        <Secao
+          tom="escuro"
+          fundo={
+            <FundoVideo src={lp2.onde.video.src} poster={lp2.onde.video.poster} />
+          }
+        >
+          <div className="max-w-[700px]">
+            <Titulo tom="escuro">{lp2.onde.titulo}</Titulo>
 
-            <Reveal
-              delay={160}
-              className="relative aspect-[4/3] w-full overflow-hidden lg:aspect-auto lg:min-h-[440px]"
-            >
-              <Image
-                src={lp2.onde.imagem.src}
-                alt={lp2.onde.imagem.alt}
-                fill
-                sizes="(min-width: 1024px) 40vw, 100vw"
-                className="object-cover"
-              />
-            </Reveal>
+            <Tese tom="escuro" className="mt-9">
+              {lp2.onde.tese}
+            </Tese>
+
+            <Paragrafo tom="escuro" texto={lp2.onde.abertura} className="mt-11" />
           </div>
 
-          <ul className="mt-14 grid gap-px bg-linha md:grid-cols-3">
+          <ul className="mt-14 grid gap-px bg-white/12 md:grid-cols-3">
             {lp2.onde.indicadores.map((indicador, i) => (
               <Reveal
                 as="li"
                 key={indicador.fonte}
                 delay={i * 110}
-                className="flex flex-col bg-fundo px-7 py-9 sm:px-8"
+                className="flex flex-col bg-azul-escuro px-7 py-9 sm:px-8"
               >
-                <p className="font-[family-name:var(--font-playfair)] text-[34px] leading-[1.05] text-azul-escuro">
+                <p className="font-[family-name:var(--font-playfair)] text-[34px] leading-[1.05] text-white">
                   {indicador.dado}
                 </p>
 
-                <p className="tipo-corpo-curto mt-5 flex-1 text-pedra">{indicador.texto}</p>
+                <p className="tipo-corpo-curto mt-5 flex-1 text-pedra-claro">
+                  {indicador.texto}
+                </p>
 
                 {/* a fonte é parte do dado, não nota de rodapé: o modelo pede
                     fonte e data visíveis junto do número */}
-                <p className="mt-6 border-t border-linha pt-4 text-[12px] leading-[1.6] font-light text-cinza-texto">
+                <p className="mt-6 border-t border-white/12 pt-4 text-[12px] leading-[1.6] font-light text-pedra-claro/80">
                   {indicador.fonte}
                 </p>
               </Reveal>
             ))}
           </ul>
 
-          <Paragrafo texto={lp2.onde.fecho} className="mt-12 max-w-[760px]" />
+          <Paragrafo
+            tom="escuro"
+            texto={lp2.onde.fecho}
+            className="mt-12 max-w-[760px]"
+          />
         </Secao>
 
         {/* -------------------------------------------------------- 04 POR QUE
@@ -313,10 +310,18 @@ export default function Lp2() {
 
         {/* ------------------------------------------------------------ 06 QUEM
             Quem toma as decisões que transformam a tese em empreendimento.
-            Sem foto por enquanto: o modelo pede imagem real de cada um em
-            contexto de trabalho, e retrato genérico no lugar da pessoa é o
-            tipo de enquadramento que ele proíbe. Quando as fotos existirem,
-            basta preencher `foto` em `lp-config.ts`. */}
+            As fotos entram por `foto`, em `lp-config.ts`, e o cartão continua
+            subindo tipográfico para quem não tiver uma.
+
+            O retrato é 3/4 e não os 4/3 que estavam aqui: os dois arquivos
+            são verticais (2:3 e 4:5), e o corte deitado comia metade da
+            altura — no do Fabrício, a cabeça junto. Em 3/4 nenhum dos dois
+            perde mais que uma margem fina.
+
+            E é `max-w-[260px]`, não a largura do cartão: em duas colunas o
+            cartão passa de 500px, e um retrato vertical nessa largura teria
+            quase 700px de altura — viraria o assunto do bloco, que é o texto
+            ao lado do nome. */}
         <Secao className="border-t border-linha">
           <div className="max-w-[820px]">
             <Titulo>{lp2.quem.titulo}</Titulo>
@@ -339,12 +344,12 @@ export default function Lp2() {
                 className="bg-fundo px-7 py-9 sm:px-9 sm:py-10"
               >
                 {pessoa.foto && (
-                  <div className="relative mb-7 aspect-[4/3] w-full overflow-hidden">
+                  <div className="relative mb-7 aspect-[3/4] w-full max-w-[260px] overflow-hidden">
                     <Image
                       src={pessoa.foto.src}
                       alt={pessoa.foto.alt}
                       fill
-                      sizes="(min-width: 768px) 46vw, 100vw"
+                      sizes="260px"
                       className="object-cover"
                     />
                   </div>
@@ -455,27 +460,29 @@ export default function Lp2() {
           <Tese className="mt-14">{lp2.perfil.tese}</Tese>
         </Secao>
 
-        {/* ---------------------------------------------------- 11 PROVA SOCIAL
-            ⚠️ Os três depoimentos em `lp-config.ts` são FICTÍCIOS, provisórios
-            para fechar o layout. O modelo pede depoimento real, com nome,
-            foto ou vídeo verdadeiro e o contexto real da relação com a AMAAN,
-            e proíbe transformar experiência individual em promessa de
-            rentabilidade — os textos provisórios já respeitam a segunda
-            parte, mas não a primeira. Substituir antes de publicar; esvaziar
-            `depoimentos` volta a esconder a seção. */}
-        {lp2.prova.depoimentos.length > 0 && (
+        {/* ----------------------------------------------------- 11 DEPOIMENTOS
+            Seção nova, que substituiu a "prova social" de três cartões curtos
+            — aqueles eram texto inventado para fechar o layout. Estes dois são
+            transcrições de áudios reais, e por isso são longos: o grid é de
+            duas colunas, não de três, para a fala caber sem virar parágrafo
+            apertado.
+
+            As aspas ficam aqui, na composição, e não no dado: `texto` em
+            `lp-config.ts` guarda só o que a pessoa disse. Esvaziar `itens`
+            esconde a seção inteira. */}
+        {lp2.depoimentos.itens.length > 0 && (
           <Secao className="border-t border-linha">
             <div className="max-w-[760px]">
-              <Titulo>{lp2.prova.titulo}</Titulo>
+              <Titulo>{lp2.depoimentos.titulo}</Titulo>
             </div>
 
-            <ul className="mt-14 grid gap-px bg-linha md:grid-cols-3">
-              {lp2.prova.depoimentos.map((depoimento, i) => (
+            <ul className="mt-14 grid gap-px bg-linha md:grid-cols-2">
+              {lp2.depoimentos.itens.map((depoimento, i) => (
                 <Reveal
                   as="li"
                   key={depoimento.nome}
                   delay={i * 110}
-                  className="flex flex-col bg-fundo px-7 py-9 sm:px-8"
+                  className="flex flex-col bg-fundo px-7 py-9 sm:px-9 sm:py-10"
                 >
                   {depoimento.foto && (
                     <div className="relative mb-7 aspect-square w-[72px] shrink-0 overflow-hidden rounded-full">
@@ -490,7 +497,7 @@ export default function Lp2() {
                   )}
 
                   <blockquote className="tipo-corpo flex-1 text-pedra">
-                    {depoimento.texto}
+                    {`“${depoimento.texto}”`}
                   </blockquote>
 
                   <p className="mt-7 border-t border-linha pt-5 text-[15px] font-normal text-azul-escuro">

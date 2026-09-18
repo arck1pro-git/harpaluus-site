@@ -1,16 +1,19 @@
 "use server";
 
+import { after } from "next/server";
+
+import { enviarAoChroma } from "./chroma";
 import type { EstadoLead, OrigemLead } from "./lead";
 import { validarLead } from "./validar";
 
 /**
  * Recebimento dos leads das duas LPs do Funil 1.
  *
- * O destino final ainda não existe (CRM/automação entram depois). Em vez de
- * deixar um TODO, a action já está inteira: valida, normaliza e tenta POSTar
- * em `LEAD_WEBHOOK_URL`. Enquanto essa variável não estiver definida, o lead
- * é registrado no log do servidor e a página segue para a tela de sucesso —
- * então ligar o webhook depois é só preencher a env, sem tocar em código.
+ * A LP02 tem destino: o CRM Chroma, pela webhook "LPs amaan" — ver
+ * `chroma.ts`. A LP01 ainda não, e continua no arranjo anterior: tenta
+ * POSTar em `LEAD_WEBHOOK_URL` e, enquanto essa variável não existir,
+ * registra o lead no log do servidor. Ligar um destino para ela depois é
+ * preencher a env, sem tocar em código.
  *
  * Aqui fica só o transporte: as regras de validação estão em `validar.ts`, e
  * o formato do estado em `lead.ts` — um arquivo `"use server"` só pode
@@ -56,12 +59,31 @@ export async function registrarLead(
   }
 
   const { lead } = resultado;
+
+  /* LP02 → CRM Chroma. Em `after()` porque o envio acontece depois da
+     resposta: a tela de sucesso não fica esperando o CRM, e as retentativas
+     de `enviarAoChroma` cabem sem segurar quem preencheu o formulário. A
+     função nunca lança — falha dela vira log, não erro na tela.
+
+     A LP01 fica de fora por ora: o CRM aceitaria o lead dela (só `valor` e
+     `scp` viriam vazios), mas levar aquela página junto é decisão do
+     Comercial. Quando for, é trocar esta condição por uma chamada direta. */
+  const paraOCrm = origem === "lp2-interesse";
+
+  if (paraOCrm) {
+    after(() => enviarAoChroma(lead));
+  }
+
   const webhook = process.env.LEAD_WEBHOOK_URL;
 
   if (!webhook) {
-    // Etapa atual: o destino ainda não foi definido. Fica registrado no log do
-    // servidor para não perder nenhum cadastro de teste antes da integração.
-    console.info("[lead] webhook não configurado — lead recebido:", lead);
+    /* Só a LP01 chega aqui sem destino nenhum: fica registrada no log do
+       servidor para não perder cadastro antes da integração dela. O lead da
+       LP02 já saiu para o CRM acima — repeti-lo aqui seria duplicar dado
+       pessoal no log sem nada em troca. */
+    if (!paraOCrm) {
+      console.info("[lead] webhook não configurado — lead recebido:", lead);
+    }
     return { status: "sucesso" };
   }
 
