@@ -18,7 +18,7 @@ import type { Lead } from "./validar";
  *
  * Variável de ambiente:
  *
- *   CHROMA_WEBHOOK_URL=https://chroma-red-sigma.vercel.app/api/webhooks/nova-captacao-515314?secret=…
+ *   CHROMA_WEBHOOK_URL=https://chromacrm.vercel.app/api/webhooks/nova-captacao-515314?secret=…
  *
  * (em `.env.local` para desenvolvimento; na Vercel, em Settings → Environment
  * Variables — `.env.local` não sobe no deploy.)
