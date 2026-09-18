@@ -1,3 +1,5 @@
+import "server-only";
+
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
 import type { Lead } from "./validar";
 
@@ -5,24 +7,22 @@ import type { Lead } from "./validar";
  * Envio do lead ao CRM Chroma — webhook "LPs amaan".
  *
  * O segredo da webhook viaja na query string, então a URL inteira é o
- * segredo: a chamada só pode sair do servidor. Este módulo é importado
- * exclusivamente pela Server Action (`actions.ts`), e a URL vem de
- * `CHROMA_WEBHOOK_URL` — sem o prefixo `NEXT_PUBLIC_`, que é justamente o
- * que impede o Next de inliná-la no pacote que vai para o navegador. Posta
- * daqui de dentro de um componente cliente, ela apareceria inteira na aba de
- * rede de qualquer visitante.
+ * segredo, e ela está fixa aqui embaixo (`WEBHOOK`) em vez de vir do
+ * ambiente. Quem lê o repositório lê a credencial: trocá-la é trocar esta
+ * linha e publicar de novo, e o histórico do git guarda as antigas.
+ *
+ * O que impede a URL de acabar no navegador é o `import "server-only"` da
+ * primeira linha: com ele, importar este módulo de um componente cliente
+ * quebra o build em vez de embutir a string no pacote. Sem essa linha nada
+ * avisaria — uma constante não tem o `NEXT_PUBLIC_` para servir de aviso, e
+ * o vazamento só apareceria na aba de rede de um visitante.
  *
  * Nada aqui barra a tela de sucesso: a chamada roda em `after()` (ver
  * `actions.ts`), depois da resposta já ter saído. Quem preencheu não espera o
  * CRM, e as retentativas cabem sem segurar o formulário.
- *
- * Variável de ambiente:
- *
- *   CHROMA_WEBHOOK_URL=https://chromacrm.vercel.app/api/webhooks/nova-captacao-515314?secret=…
- *
- * (em `.env.local` para desenvolvimento; na Vercel, em Settings → Environment
- * Variables — `.env.local` não sobe no deploy.)
  */
+const WEBHOOK =
+  "https://chromacrm.vercel.app/api/webhooks/nova-captacao-515314?secret=0bfc50194e3224c2822387d1d75856630f637044fcd6360856c28f37190ba3c5";
 
 /**
  * As cinco chaves que a webhook lê.
@@ -114,21 +114,11 @@ export function payloadChroma(lead: Lead): PayloadChroma {
  * uma integração estava fora do ar.
  */
 export async function enviarAoChroma(lead: Lead) {
-  const url = process.env.CHROMA_WEBHOOK_URL;
-
-  if (!url) {
-    console.error(
-      "[chroma] CHROMA_WEBHOOK_URL não configurada — lead para reenvio manual:",
-      lead
-    );
-    return;
-  }
-
   const corpo = JSON.stringify(payloadChroma(lead));
 
   for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
     try {
-      const resposta = await fetch(url, {
+      const resposta = await fetch(WEBHOOK, {
         method: "POST",
         /* O segredo já está na URL: a webhook não espera header de
            autenticação, e mandar um só vazaria credencial em log de proxy. */
