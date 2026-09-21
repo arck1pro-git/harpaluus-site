@@ -1,6 +1,12 @@
 "use client";
 
-import { useActionState, useId, useMemo, useState } from "react";
+import {
+  useActionState,
+  useId,
+  useMemo,
+  useState,
+  useSyncExternalStore,
+} from "react";
 import { Check } from "lucide-react";
 
 import { TRACO } from "../landing/icones";
@@ -12,6 +18,12 @@ import {
   type OrigemLead,
 } from "./lead";
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import {
+  CAMPOS_UTM,
+  SEM_INSCRICAO,
+  utmsDaVisita,
+  utmsNoServidor,
+} from "./utms";
 import { ERRO_WHATSAPP, normalizarWhatsApp } from "./validar";
 
 /**
@@ -306,6 +318,17 @@ export function Formulario({
      hora: as outras dependem de regra que só o servidor conhece. */
   const [erroWhatsapp, setErroWhatsapp] = useState<string>();
 
+  /* A campanha que trouxe a visita, para viajar junto com o lead.
+     `useSyncExternalStore` porque a URL e o `sessionStorage` são exatamente
+     o que ele existe para ler: um valor que mora fora do React. Ler direto na
+     renderização quebraria no dia em que este formulário voltar a ser
+     renderizado no servidor, e um `useEffect` com `setState` compraria uma
+     renderização em cascata para um dado que nunca muda.
+
+     Os três argumentos moram em `utms.ts` e são estáveis de propósito — ver
+     a nota do memo por lá. */
+  const utms = useSyncExternalStore(SEM_INSCRICAO, utmsDaVisita, utmsNoServidor);
+
   const qualifica = origem === "lp2-interesse";
 
   if (estado.status === "sucesso") {
@@ -357,6 +380,20 @@ export function Formulario({
           autoComplete="off"
         />
       </div>
+
+      {/* As UTMs da visita, uma por campo oculto.
+          Campo oculto e não `bind` como a origem: a origem o servidor sabe
+          sozinho, porque é ele que monta a página; a campanha só existe do
+          lado do navegador, na URL com que a pessoa chegou. Chegam forjáveis
+          por natureza, e quem as limpa é `normalizarUtms`, na Server Action.
+
+          Só sobe campo que tenha valor: um `utm_term=` vazio no corpo seria
+          indistinguível de uma campanha sem termo. */}
+      {CAMPOS_UTM.map((campo) =>
+        utms[campo] ? (
+          <input key={campo} type="hidden" name={campo} value={utms[campo]} readOnly />
+        ) : null
+      )}
 
       <div className="flex flex-col gap-7">
         <Campo

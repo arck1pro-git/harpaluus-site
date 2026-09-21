@@ -15,6 +15,7 @@ import { ArrowRight, X } from "lucide-react";
 import { TRACO } from "../landing/icones";
 import type { TextosSucesso } from "./formulario";
 import type { OrigemLead } from "./lead";
+import { utmsDaVisita } from "./utms";
 
 /**
  * O formulário só é baixado quando a janela abre.
@@ -138,6 +139,15 @@ export function FormularioProvider({
 
   const fechar = useCallback(() => {
     dialogo.current?.close();
+  }, []);
+
+  /* As UTMs são lidas quando a página monta, não quando a janela abre.
+     Aqui a URL do anúncio ainda está na barra; guardá-las na sessão agora é o
+     que salva o lead de quem clica no CTA depois de uma navegação interna,
+     que teria levado a query embora. O formulário lê o mesmo lugar quando
+     abre — esta chamada só garante que já haja o que ler. */
+  useEffect(() => {
+    utmsDaVisita();
   }, []);
 
   /* A página atrás não deve rolar enquanto a janela está aberta: no celular é

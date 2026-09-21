@@ -4,6 +4,7 @@ import { after } from "next/server";
 
 import { enviarAoChroma } from "./chroma";
 import type { EstadoLead, OrigemLead } from "./lead";
+import { normalizarUtms } from "./utms";
 import { validarLead } from "./validar";
 
 /**
@@ -54,7 +55,15 @@ export async function registrarLead(
     faixaCapital: texto(formData, "faixaCapital"),
   };
 
-  const resultado = validarLead(origem, entrada);
+  /* As UTMs chegam por campo oculto, preenchido no navegador a partir da URL
+     do anúncio (ver `utms.ts`). Diferente da origem, que viaja por `bind`
+     justamente para o navegador não poder reescrevê-la: a campanha só existe
+     do lado de lá, então não há de onde tirá-la aqui. É metadado forjável por
+     natureza, e por isso passa pela limpeza de `normalizarUtms` antes de
+     entrar no lead e nos logs — mas nunca reprova o cadastro. */
+  const utms = normalizarUtms((campo) => texto(formData, campo));
+
+  const resultado = validarLead(origem, entrada, utms);
 
   if (!resultado.ok) {
     /* `valores` devolve o que foi digitado: sem isso, um erro de validação

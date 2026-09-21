@@ -1,5 +1,6 @@
 import type { CampoLead, EstadoLead, OrigemLead } from "./lead";
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import type { Utms } from "./utms";
 
 /**
  * Regras de validação e normalização do lead.
@@ -92,6 +93,8 @@ export type Lead = {
   whatsapp: string;
   experiencia?: string;
   faixaCapital?: string;
+  /** a campanha que trouxe a visita; ausente quando não veio nenhuma */
+  utm?: Utms;
   enviadoEm: string;
 };
 
@@ -106,10 +109,15 @@ export type Resultado =
  * qualificação naquela página —, e os dois só são exigidos quando a origem é
  * a LP02. Os selects são conferidos contra a lista de opções, e não apenas
  * "não vazio": o campo chega pelo cliente e pode trazer qualquer string.
+ *
+ * As UTMs não são validadas, são anexadas: chegam já limpas de `utms.ts` e
+ * não entram em nenhuma das recusas abaixo. Campanha faltando é um dado a
+ * menos para o Comercial, nunca um motivo para perder o cadastro.
  */
 export function validarLead(
   origem: OrigemLead,
-  entrada: Record<CampoLead, string>
+  entrada: Record<CampoLead, string>,
+  utm?: Utms
 ): Resultado {
   const nome = entrada.nome.trim();
   const email = entrada.email.trim().toLowerCase();
@@ -153,6 +161,8 @@ export function validarLead(
       whatsapp,
       /* só existem na LP02; ficam fora do payload da LP01 em vez de irem vazios */
       ...(origem === "lp2-interesse" ? { experiencia, faixaCapital } : {}),
+      /* mesma ideia da linha de cima: a chave não existe quando não há valor */
+      ...(utm ? { utm } : {}),
       enviadoEm: new Date().toISOString(),
     },
   };

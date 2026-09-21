@@ -2,6 +2,7 @@ import "server-only";
 
 import type { OrigemLead } from "./lead";
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import type { Utms } from "./utms";
 import type { Lead } from "./validar";
 
 /**
@@ -40,12 +41,16 @@ const WEBHOOKS: Record<OrigemLead, string> = {
 };
 
 /**
- * As cinco chaves que a webhook lê.
+ * As chaves que a webhook lê.
  *
  * Tipo fechado de propósito: chave fora desta lista o CRM descarta em
  * silêncio, sem erro nenhum na resposta — e acento, hífen e maiúscula contam
  * (`email` não é `e-mail`). Um erro de digitação aqui não apareceria em lugar
  * nenhum a não ser num campo vazio na ficha do contato, semanas depois.
+ *
+ * As dez estão conferidas contra a ficha do contato. As de UTM entraram
+ * depois, com o nome padrão do parâmetro, e foram confirmadas por envio de
+ * teste em 21/09/2026: o contato chegou com os cinco campos preenchidos.
  */
 type PayloadChroma = {
   /** Contato · Nome */
@@ -58,7 +63,7 @@ type PayloadChroma = {
   valor?: string;
   /** Contato · campo "participa_de_uma_scp" */
   scp?: string;
-};
+} & Utms;
 
 /** Quantas vezes tentar no total (a primeira mais duas retentativas). */
 const TENTATIVAS = 3;
@@ -109,6 +114,10 @@ export function payloadChroma(lead: Lead): PayloadChroma {
     email: lead.email,
     valor: rotulo(FAIXAS_CAPITAL, lead.faixaCapital),
     scp: rotulo(PARTICIPOU_SCP, lead.experiencia),
+    /* Uma chave por parâmetro, com o nome padrão da UTM. `lead.utm` só
+       carrega as que existem, então a visita orgânica não escreve nenhuma —
+       nem vazia, que é o que apagaria a campanha de um contato reenviado. */
+    ...lead.utm,
   };
 }
 
