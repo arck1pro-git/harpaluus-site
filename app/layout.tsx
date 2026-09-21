@@ -62,6 +62,17 @@ export const metadata: Metadata = {
     title: `${marca} · Empreendimentos Vivos`,
     description: descricao,
   },
+  /**
+   * Prova de posse do domínio para o Google Search Console — é de lá que se
+   * pede o recrawl que troca o nome antigo pelo atual no resultado da busca.
+   *
+   * Vira `<meta name="google-site-verification" content="…">` no <head> de
+   * todas as rotas. O Google relê a tag de tempos em tempos: removê-la depois
+   * de verificado derruba a propriedade, então ela fica.
+   */
+  verification: {
+    google: "GnCB2_sdpX5IkG7dZfGe3T2eBUhFgb1GTmrkhKKjnQM",
+  },
   robots: {
     index: true,
     follow: true,

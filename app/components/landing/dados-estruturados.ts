@@ -1,4 +1,12 @@
-import { CNPJ, descricao, endereco, logo, marca, SITE_URL } from "./site-config";
+import {
+  CNPJ,
+  descricao,
+  endereco,
+  INSTAGRAM,
+  logo,
+  marca,
+  SITE_URL,
+} from "./site-config";
 
 /**
  * Os registros Schema.org do site, num lugar só.
@@ -15,10 +23,10 @@ import { CNPJ, descricao, endereco, logo, marca, SITE_URL } from "./site-config"
 /**
  * A empresa.
  *
- * `sameAs` (perfis oficiais) fica de fora de propósito: o único perfil ligado
- * ao site ainda está no handle antigo, e declará-lo aqui diria ao Google
- * exatamente o contrário do que se quer — que a Amaan e o nome extinto são a
- * mesma entidade. Entra assim que o perfil da Amaan existir.
+ * `sameAs` lista os perfis oficiais: é a aresta que faz o Google tratar o
+ * site e o Instagram da Amaan como uma entidade só. Ficou vazio enquanto o
+ * único perfil estava no handle antigo — declarar aquele endereço aqui diria
+ * o contrário do que se quer.
  */
 export const ID_ORGANIZACAO = `${SITE_URL}/#organizacao`;
 export const ID_SITE = `${SITE_URL}/#site`;
@@ -28,6 +36,7 @@ export const organizacao = {
   "@id": ID_ORGANIZACAO,
   name: marca,
   url: SITE_URL,
+  sameAs: [INSTAGRAM],
   logo: `${SITE_URL}${logo.src}`,
   image: `${SITE_URL}${logo.src}`,
   description: descricao,
