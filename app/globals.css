@@ -162,6 +162,20 @@
   letter-spacing: -0.012em;
 }
 
+/* declaração que ocupa uma seção inteira (a 07 da LP02).
+   Não é título e não se comporta como um: a frase tem 300 caracteres e fecha
+   o bloco sozinha, então a entrelinha é de parágrafo, não de manchete. O
+   corpo fica entre o `tipo-lead` e o `tipo-headline` — grande o bastante
+   para carregar a seção inteira, pequeno o bastante para a frase não virar
+   uma parede de dez linhas no celular. */
+@utility tipo-declaracao {
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(1.375rem, 0.95rem + 1.7vw, 2.125rem);
+  line-height: 1.38;
+  font-weight: 400;
+  letter-spacing: -0.008em;
+}
+
 /* frase de abertura de cada bloco editorial */
 @utility tipo-lead {
   font-size: clamp(1.25rem, 1.05rem + 0.85vw, 1.625rem);

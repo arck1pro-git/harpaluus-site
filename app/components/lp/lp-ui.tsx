@@ -146,29 +146,27 @@ export function Secao({
 /**
  * Título de seção. `nivel` existe porque nem toda seção é um h2.
  *
- * `escala` troca `tipo-secao` por `tipo-headline` — a mesma escala do h1 das
- * LPs, criada para frase inteira em vez de título curto. Serve às seções cujo
- * título é uma declaração de duas ou três linhas (a 07 da LP02, por exemplo):
- * no corpo de `tipo-secao`, que chega a 3.5rem, uma frase dessas passaria de
- * uma tela no desktop.
+ * Teve uma `escala` que trocava `tipo-secao` por `tipo-headline`, para a
+ * seção cujo título era uma frase inteira. Essa frase deixou de ser título
+ * (ver a 07 da LP02) e a opção saiu junto: enquanto existisse, convidaria a
+ * repetir o mesmo — resolver texto comprido demais para um título mexendo no
+ * corpo dele.
  */
 export function Titulo({
   children,
   tom = "claro",
   nivel: Tag = "h2",
-  escala = "secao",
   className = "",
 }: {
   children: React.ReactNode;
   tom?: Tom;
   nivel?: "h1" | "h2" | "h3";
-  escala?: "secao" | "headline";
   className?: string;
 }) {
   return (
     <Reveal
       as={Tag}
-      className={`${escala === "headline" ? "tipo-headline" : "tipo-secao"} ${
+      className={`tipo-secao ${
         tom === "escuro" ? "text-white" : "text-azul-escuro"
       } ${className}`}
     >

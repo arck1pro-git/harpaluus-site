@@ -222,18 +222,6 @@ export const lp1 = {
  * contratuais.
  */
 
-/** Foto de uma pessoa do bloco QUEM. `null` enquanto não houver imagem real. */
-type Retrato = { src: string; alt: string } | null;
-
-/** Depoimento do bloco 11. */
-type Depoimento = {
-  nome: string;
-  /** o vínculo verdadeiro com a AMAAN, como o modelo exige */
-  contexto: string;
-  texto: string;
-  foto: Retrato;
-};
-
 export const lp2 = {
   /**
    * "CTA dominante: QUERO CONHECER A OPORTUNIDADE. Repetir em pontos de
@@ -385,53 +373,6 @@ export const lp2 = {
     ],
   },
 
-  /* -------------------------------------------------------------- 06 QUEM */
-  quem: {
-    titulo: "Quem está por trás da operação?",
-    incorporadora: {
-      nome: "AMAAN Incorporadora",
-      texto:
-        "A AMAAN transforma oportunidades imobiliárias em patrimônio por meio de uma visão integrada de incorporação. Antes de construir, constrói uma tese: «por que este lugar, para quem, com qual proposta de valor, com qual lógica econômica e com qual capacidade de permanecer relevante».",
-    },
-    /**
-     * As duas fotos são das pessoas, como o modelo exige — ele pede imagem
-     * real de cada um em contexto de trabalho e proíbe ilustração genérica ou
-     * retrato de banco de imagens no lugar da pessoa.
-     *
-     * ⚠️ A do Fabrício cumpre as duas metades: é ele, e é trabalho — palco,
-     * microfone, painel atrás. A da Patrícia cumpre a primeira e não a
-     * segunda: é retrato de estúdio, em traje social, sobre fundo cinza. Não
-     * é banco de imagens, então não cai na proibição, mas também não é o
-     * "contexto de trabalho" que o modelo pede. Substituir quando houver uma
-     * dela em contexto — os dois cartões ficam mais parelhos junto, porque
-     * hoje um é cena escura de evento e o outro é estúdio claro.
-     */
-    pessoas: [
-      {
-        nome: "Fabrício Pavesi Junior",
-        papel: "Arquiteto, incorporador e empresário",
-        texto:
-          "Conecta arquitetura, mercado imobiliário, negócios e patrimônio em uma leitura só: terreno, viabilidade, produto, projeto, estratégia e execução não são etapas separadas, são partes da mesma decisão. É esse olhar que define o que cada operação se propõe a ser — e o que ela precisa entregar para sustentar essa proposta depois da entrega.",
-        foto: {
-          src: "/fabhricio.webp",
-          alt: "Fabrício Pavesi Junior falando ao microfone num palco, diante do painel de uma apresentação",
-        } as Retrato,
-      },
-      {
-        nome: "Patrícia Nunes Pavesi",
-        papel: "Empresária e estrategista, sócia da AMAAN",
-        texto:
-          "Responde pela construção e pela gestão do negócio: estratégia, posicionamento, comercial, processos e rotina de execução. É o trabalho que impede a tese de cada incorporação de parar na intenção — ela vira método, prazo acompanhado de perto e decisão tomada com informação na mesa.",
-        foto: {
-          src: "/patricia-card.jpeg",
-          alt: "Retrato de Patrícia Nunes Pavesi",
-        } as Retrato,
-      },
-    ],
-    fecho:
-      "Dois olhares complementares, com a mesma responsabilidade: transformar uma boa oportunidade imobiliária em um empreendimento capaz de produzir valor.",
-  },
-
   /* -------------------------------------------------------- 07 POR QUE AMAAN
      O bloco inteiro virou uma frase só. O título anterior, os parágrafos de
      apoio, o fecho e o CTA saíram a pedido do cliente: sobrou a declaração
@@ -491,54 +432,6 @@ export const lp2 = {
       },
     ],
     tese: "Se você quer saber onde seu capital estará, quem tomará as decisões e qual negócio precisa funcionar para produzir o resultado projetado, faz sentido conhecer a operação.",
-  },
-
-  /* -------------------------------------------------------- 11 DEPOIMENTOS
-     Seção nova, no lugar da antiga "prova social" — aquela existia com três
-     depoimentos inventados, só para fechar o layout enquanto os reais não
-     chegavam, e saiu inteira quando estes dois chegaram.
-
-     Os dois textos são reais: áudios enviados por investidores. O que está
-     aqui é o trecho de cada um, não a transcrição inteira — saíram a saudação,
-     a despedida e as repetições, que é onde os nomes próprios de dentro da
-     conversa apareciam, e sobrou o que cada um diz sobre o negócio.
-
-     Nada foi reescrito: as palavras são as deles, na ordem em que foram
-     ditas, com a pontuação ajustada para leitura. É por isso que o ritmo
-     ainda é de fala e não de copy, e é esse ritmo que faz a seção ler como
-     depoimento. Cortar mais, tudo bem; trocar palavra, não — o áudio é a
-     fonte, e o que está aqui precisa continuar cabendo dentro dele.
-
-     "AMAAN" fica: é a empresa de quem é a página, não o nome de alguém.
-
-     Nenhum dos dois cita percentual, prazo ou retorno, e os próximos também
-     não devem: o modelo proíbe transformar experiência individual em promessa
-     de rentabilidade. As aspas são postas na composição, não aqui, para o
-     texto continuar sendo só o que a pessoa disse.
-
-     Esvaziar `itens` esconde a seção inteira (ver `lp2/page.tsx`).
-  */
-  depoimentos: {
-    titulo: "O que dizem investidores que já fecharam com a AMAAN",
-    itens: [
-      {
-        nome: "José",
-        /* O vínculo que ele mesmo enuncia no áudio. Trocar por um contexto
-           mais específico (cidade, atividade) assim que for confirmado com
-           ele — o modelo pede o vínculo real, e "Investidor" é o mínimo. */
-        contexto: "Investidor",
-        texto:
-          "Eu vou passar para outros amigos, eu vou oferecer o prédio para outros amigos. Essa oportunidade da gente, como investidor, ser parceiro também na venda do empreendimento… eu me sinto parte do negócio. Então, se eu sou parte do negócio, eu quero que o negócio evolua e realmente aconteça.",
-        foto: null,
-      },
-      {
-        nome: "Valdemar",
-        contexto: "Negociação concluída com a AMAAN",
-        texto:
-          "Recebi o contrato, meu jurídico analisou tudo dentro dos conformes e concluímos essa negociação devido a essa seriedade que eu vi em vocês, todo o grupo, a equipe da AMAAN. Tomara que esse seja um de vários negócios que a gente pode vir a fazer futuramente.",
-        foto: null,
-      },
-    ] as Depoimento[],
   },
 
   /* --------------------------------------------------------- 12 CONVERSÃO */

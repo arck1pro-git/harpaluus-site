@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 
 import { ComDestaqueClaro } from "../components/landing/com-destaque";
 import {
@@ -27,16 +26,17 @@ import { FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-u
  * uma operação real e pede para o visitante analisá-la.
  *
  * A ordem dos blocos é a hierarquia que o modelo determina: oportunidade,
- * mercado, mecanismo, pessoas, AMAAN, timing, perfil, depoimentos e conversão.
- * Cada seção responde a uma das seis perguntas do modelo (O quê, Onde, Por
- * quê, Como, Quem, Quando), mas isso fica no título de cada uma, não numa
- * etiqueta por cima: o título já é a resposta.
+ * mercado, mecanismo, AMAAN, timing, perfil e conversão. Cada seção responde
+ * a uma das perguntas do modelo, mas isso fica no título de cada uma, não
+ * numa etiqueta por cima: o título já é a resposta.
  *
- * O bloco de risco do modelo ("O que precisa estar claro antes da decisão")
- * saiu da página a pedido do cliente, junto com a nota do potencial projetado
- * no hero. Um bloco do modelo continua sem subir na tela: ver o comentário em
- * "08 QUANDO" — ele é bloqueado por exigência do próprio modelo, não por
- * estar inacabado.
+ * Três blocos do modelo não estão aqui, os três a pedido do cliente: o de
+ * risco ("O que precisa estar claro antes da decisão"), junto com a nota do
+ * potencial projetado no hero; a "06 QUEM", que apresentava a incorporadora e
+ * os sócios; e a "11 DEPOIMENTOS". A numeração das seções ficou como estava,
+ * com os buracos à vista — ela é a do modelo, não a da página, e renumerar
+ * perderia a correspondência. Um quarto bloco continua sem subir na tela por
+ * exigência do próprio modelo, não por estar inacabado: ver "08 QUANDO".
  *
  * A copy inteira vem de `lp-config.ts`; o que está aqui é a composição.
  */
@@ -308,67 +308,6 @@ export default function Lp2() {
           </ol>
         </Secao>
 
-        {/* ------------------------------------------------------------ 06 QUEM
-            Quem toma as decisões que transformam a tese em empreendimento.
-            As fotos entram por `foto`, em `lp-config.ts`, e o cartão continua
-            subindo tipográfico para quem não tiver uma.
-
-            O retrato é 3/4 e não os 4/3 que estavam aqui: os dois arquivos
-            são verticais (2:3 e 4:5), e o corte deitado comia metade da
-            altura — no do Fabrício, a cabeça junto. Em 3/4 nenhum dos dois
-            perde mais que uma margem fina.
-
-            E é `max-w-[260px]`, não a largura do cartão: em duas colunas o
-            cartão passa de 500px, e um retrato vertical nessa largura teria
-            quase 700px de altura — viraria o assunto do bloco, que é o texto
-            ao lado do nome. */}
-        <Secao className="border-t border-linha">
-          <div className="max-w-[820px]">
-            <Titulo>{lp2.quem.titulo}</Titulo>
-          </div>
-
-          <Reveal className="mt-12 border-t border-linha pt-10">
-            <h3 className="tipo-label text-dourado-escuro">{lp2.quem.incorporadora.nome}</h3>
-
-            <div className="mt-6 max-w-[760px]">
-              <Paragrafo texto={lp2.quem.incorporadora.texto} />
-            </div>
-          </Reveal>
-
-          <ul className="mt-12 grid gap-px bg-linha md:grid-cols-2">
-            {lp2.quem.pessoas.map((pessoa, i) => (
-              <Reveal
-                as="li"
-                key={pessoa.nome}
-                delay={i * 120}
-                className="bg-fundo px-7 py-9 sm:px-9 sm:py-10"
-              >
-                {pessoa.foto && (
-                  <div className="relative mb-7 aspect-[3/4] w-full max-w-[260px] overflow-hidden">
-                    <Image
-                      src={pessoa.foto.src}
-                      alt={pessoa.foto.alt}
-                      fill
-                      sizes="260px"
-                      className="object-cover"
-                    />
-                  </div>
-                )}
-
-                <h3 className="font-[family-name:var(--font-playfair)] text-[22px] leading-[1.2] text-azul-escuro">
-                  {pessoa.nome}
-                </h3>
-
-                <p className="tipo-label mt-4 text-dourado-escuro">{pessoa.papel}</p>
-
-                <p className="tipo-corpo mt-6 text-pedra">{pessoa.texto}</p>
-              </Reveal>
-            ))}
-          </ul>
-
-          <Tese className="mt-14">{lp2.quem.fecho}</Tese>
-        </Secao>
-
         {/* ------------------------------------------------------ 07 POR QUE AMAAN
             A diferenciação, e o segundo bloco escuro: a autoridade nasce da
             incorporação, não de gestão financeira. É uma declaração só,
@@ -376,16 +315,25 @@ export default function Lp2() {
             sem tese e sem CTA, porque um bloco com um elemento só é o que dá
             a essa frase o peso de assinatura.
 
-            `escala="headline"` porque a frase é longa: no corpo de
-            `tipo-secao` ela passaria de uma tela no desktop. */}
+            Ela saiu do `<h2>` e do corpo de headline em que estava — os
+            dois eram o mesmo engano. Tratada como título, uma frase de 300
+            caracteres ia para escala de manchete (31px no celular, 50px no
+            desktop) com entrelinha de 1.14, que existe para três palavras; e
+            o leitor de tela ainda a anunciava como o cabeçalho da seção.
+            Agora é o que sempre foi: um parágrafo, em `tipo-declaracao`,
+            com ar entre as linhas.
+
+            `text-pretty` no lugar de `text-balance`: passando de poucas
+            linhas o balanceamento desiste e não faz nada, enquanto o defeito
+            que sobra num bloco centralizado é a última linha órfã — que é
+            justamente o que `pretty` resolve. */}
         <Secao tom="escuro" cantoDots="superior-direito">
-          <Titulo
-            tom="escuro"
-            escala="headline"
-            className="mx-auto max-w-[900px] text-center text-balance"
+          <Reveal
+            as="p"
+            className="tipo-declaracao mx-auto max-w-[900px] text-center text-pretty text-white"
           >
             <ComDestaqueClaro texto={lp2.porQueAmaan.titulo} />
-          </Titulo>
+          </Reveal>
         </Secao>
 
         {/* ---------------------------------------------------------- 08 QUANDO
@@ -459,58 +407,6 @@ export default function Lp2() {
 
           <Tese className="mt-14">{lp2.perfil.tese}</Tese>
         </Secao>
-
-        {/* ----------------------------------------------------- 11 DEPOIMENTOS
-            Seção nova, que substituiu a "prova social" de três cartões curtos
-            — aqueles eram texto inventado para fechar o layout. Estes dois são
-            transcrições de áudios reais, e por isso são longos: o grid é de
-            duas colunas, não de três, para a fala caber sem virar parágrafo
-            apertado.
-
-            As aspas ficam aqui, na composição, e não no dado: `texto` em
-            `lp-config.ts` guarda só o que a pessoa disse. Esvaziar `itens`
-            esconde a seção inteira. */}
-        {lp2.depoimentos.itens.length > 0 && (
-          <Secao className="border-t border-linha">
-            <div className="max-w-[760px]">
-              <Titulo>{lp2.depoimentos.titulo}</Titulo>
-            </div>
-
-            <ul className="mt-14 grid gap-px bg-linha md:grid-cols-2">
-              {lp2.depoimentos.itens.map((depoimento, i) => (
-                <Reveal
-                  as="li"
-                  key={depoimento.nome}
-                  delay={i * 110}
-                  className="flex flex-col bg-fundo px-7 py-9 sm:px-9 sm:py-10"
-                >
-                  {depoimento.foto && (
-                    <div className="relative mb-7 aspect-square w-[72px] shrink-0 overflow-hidden rounded-full">
-                      <Image
-                        src={depoimento.foto.src}
-                        alt={depoimento.foto.alt}
-                        fill
-                        sizes="72px"
-                        className="object-cover"
-                      />
-                    </div>
-                  )}
-
-                  <blockquote className="tipo-corpo flex-1 text-pedra">
-                    {`“${depoimento.texto}”`}
-                  </blockquote>
-
-                  <p className="mt-7 border-t border-linha pt-5 text-[15px] font-normal text-azul-escuro">
-                    {depoimento.nome}
-                  </p>
-                  <p className="mt-1 text-[13px] leading-[1.6] font-light text-cinza-texto">
-                    {depoimento.contexto}
-                  </p>
-                </Reveal>
-              ))}
-            </ul>
-          </Secao>
-        )}
 
         {/* ------------------------------------------------------- 12 CONVERSÃO
             O convite final recapitula as seis respostas antes de pedir os
