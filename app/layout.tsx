@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
 import { ScrollSuave } from "./components/landing/scroll-suave";
+import { MetaPageViewNavegacao } from "./components/meta-pageview-navegacao";
+import { MetaPixelBase, MetaPixelSemJs } from "./components/meta-pixel-base";
 import { descricao, marca, SITE_URL } from "./components/landing/site-config";
 
 /**
@@ -102,7 +104,13 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
       className={`${playfair.variable} ${inter.variable} h-full scroll-smooth antialiased`}
     >
+      <head>
+        {/* Meta Pixel — código base, em todas as páginas */}
+        <MetaPixelBase />
+      </head>
       <body className="min-h-full flex flex-col">
+        <MetaPixelSemJs />
+        <MetaPageViewNavegacao />
         {/* sem JS as microanimações não disparam: o conteúdo já nasce visível */}
         <noscript>
           <style>{`.reveal,.linha-desenha,.linha-desenha-y,.cena,.cena-filete,.cena-imagem{opacity:1!important;transform:none!important}`}</style>
