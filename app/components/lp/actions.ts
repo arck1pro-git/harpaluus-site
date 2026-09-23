@@ -1,9 +1,12 @@
 "use server";
 
+import { cookies, headers } from "next/headers";
 import { after } from "next/server";
 
 import { enviarAoChroma } from "./chroma";
 import type { EstadoLead, OrigemLead } from "./lead";
+import { enviarAoMeta, type ContextoEvento } from "./meta-capi";
+import { idDeEventoValido } from "./meta-eventos";
 import { normalizarUtms } from "./utms";
 import { validarLead } from "./validar";
 
@@ -28,6 +31,34 @@ import { validarLead } from "./validar";
 function texto(formData: FormData, campo: string) {
   const valor = formData.get(campo);
   return typeof valor === "string" ? valor.trim() : "";
+}
+
+/**
+ * O que a API de Conversões do Meta usa para ligar o cadastro ao clique no
+ * anúncio. Lido aqui, durante a requisição, e não dentro do `after()`.
+ */
+async function contextoMeta(formData: FormData): Promise<ContextoEvento> {
+  const cabecalhos = await headers();
+  const biscoitos = await cookies();
+
+  /* O envio é same-origin, então o Referer traz a URL inteira da LP —
+     inclusive o `fbclid` de quem chegou pelo anúncio. */
+  const url = cabecalhos.get("referer") ?? undefined;
+  let fbc = biscoitos.get("_fbc")?.value;
+
+  if (!fbc && url) {
+    const fbclid = URL.canParse(url) ? new URL(url).searchParams.get("fbclid") : null;
+    if (fbclid) fbc = `fb.1.${Date.now()}.${fbclid}`;
+  }
+
+  return {
+    idEvento: idDeEventoValido(texto(formData, "event_id")),
+    url,
+    ip: cabecalhos.get("x-forwarded-for")?.split(",")[0]?.trim() || undefined,
+    userAgent: cabecalhos.get("user-agent") ?? undefined,
+    fbp: biscoitos.get("_fbp")?.value,
+    fbc,
+  };
 }
 
 /**
@@ -82,6 +113,11 @@ export async function registrarLead(
      `valor` nem `scp`; os campos ficam vazios na ficha, que é o que o CRM
      espera de campo opcional. */
   after(() => enviarAoChroma(lead));
+
+  /* O mesmo cadastro para o Meta, com o `event_id` que o Pixel também mandou
+     do navegador — ver `meta-capi.ts`. */
+  const contexto = await contextoMeta(formData);
+  after(() => enviarAoMeta(lead, contexto));
 
   const webhook = process.env.LEAD_WEBHOOK_URL;
 

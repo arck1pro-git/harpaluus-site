@@ -15,6 +15,7 @@ import { ArrowRight, X } from "lucide-react";
 import { TRACO } from "../landing/icones";
 import type { TextosSucesso } from "./formulario";
 import type { OrigemLead } from "./lead";
+import { rastrearAbertura } from "./meta-pixel";
 import { utmsDaVisita } from "./utms";
 
 /**
@@ -135,7 +136,8 @@ export function FormularioProvider({
        é só uma caixa no fluxo — e nenhum dos comportamentos de modal existe. */
     dialogo.current?.showModal();
     setAberto(true);
-  }, []);
+    rastrearAbertura(origem);
+  }, [origem]);
 
   const fechar = useCallback(() => {
     dialogo.current?.close();

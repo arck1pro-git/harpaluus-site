@@ -16,28 +16,24 @@ import type { Lead } from "./validar";
  * depois.
  *
  * O segredo de cada webhook viaja na query string, então a URL inteira é o
- * segredo, e as duas estão fixas aqui embaixo (`WEBHOOKS`) em vez de virem do
- * ambiente. Quem lê o repositório lê a credencial: trocá-la é trocar estas
- * linhas e publicar de novo, e o histórico do git guarda as antigas.
+ * segredo — e por isso as duas vêm do ambiente (`CHROMA_WEBHOOK_LP1` e
+ * `CHROMA_WEBHOOK_LP2`, no `.env.local` e na Vercel), e não do repositório.
+ * Trocar uma delas é trocar a variável e publicar de novo.
  *
- * O que impede as URLs de acabarem no navegador é o `import "server-only"` da
- * primeira linha: com ele, importar este módulo de um componente cliente
- * quebra o build em vez de embutir as strings no pacote. Sem essa linha nada
- * avisaria — uma constante não tem o `NEXT_PUBLIC_` para servir de aviso, e
- * o vazamento só apareceria na aba de rede de um visitante.
+ * O `import "server-only"` da primeira linha continua de guarda: importar
+ * este módulo de um componente cliente quebra o build, em vez de deixar o
+ * código que lê as URLs chegar ao pacote do navegador.
  *
  * Nada aqui barra a tela de sucesso: a chamada roda em `after()` (ver
  * `actions.ts`), depois da resposta já ter saído. Quem preencheu não espera o
  * CRM, e as retentativas cabem sem segurar o formulário.
  */
-const WEBHOOKS: Record<OrigemLead, string> = {
+const WEBHOOKS: Record<OrigemLead, string | undefined> = {
   /* Webhook "LPs amaan" — o contato entra na etapa novo contato. */
-  "lp1-checklist":
-    "https://chromacrm.vercel.app/api/webhooks/nova-captacao-515314?secret=0bfc50194e3224c2822387d1d75856630f637044fcd6360856c28f37190ba3c5",
+  "lp1-checklist": process.env.CHROMA_WEBHOOK_LP1,
   /* Webhook "LPs amaan - sem doc" — cópia da de cima, com uma etapa própria:
      novo contato - sem doc. */
-  "lp2-interesse":
-    "https://chromacrm.vercel.app/api/webhooks/lps-amaan-sem-doc-381d95?secret=faf4c41f566b07d963e26c08b5d43ddeaa25ae4bd0d4fe777765289369c7635d",
+  "lp2-interesse": process.env.CHROMA_WEBHOOK_LP2,
 };
 
 /**
@@ -140,6 +136,16 @@ export function payloadChroma(lead: Lead): PayloadChroma {
 export async function enviarAoChroma(lead: Lead) {
   const corpo = JSON.stringify(payloadChroma(lead));
   const webhook = WEBHOOKS[lead.origem];
+
+  /* Variável faltando é erro de configuração, não motivo para perder o
+     cadastro: o lead vai para o log, como em qualquer outra falha. */
+  if (!webhook) {
+    console.error(
+      `[chroma] ${lead.origem}: webhook não configurada no ambiente — lead para reenvio manual:`,
+      lead
+    );
+    return;
+  }
 
   for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
     try {

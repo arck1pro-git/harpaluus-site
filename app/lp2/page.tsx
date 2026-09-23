@@ -15,6 +15,7 @@ import type { TextosSucesso } from "../components/lp/formulario";
 import { lp2, marca, ROTA_LP2 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
+import { MetaPixel } from "../components/lp/meta-pixel";
 import { FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
@@ -106,6 +107,8 @@ export default function Lp2() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: dadosEstruturados }}
         />
+
+        <MetaPixel origem="lp2-interesse" />
 
         <LpHeader />
 

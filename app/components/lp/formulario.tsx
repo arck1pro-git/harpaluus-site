@@ -2,8 +2,10 @@
 
 import {
   useActionState,
+  useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   useSyncExternalStore,
 } from "react";
@@ -18,6 +20,7 @@ import {
   type OrigemLead,
 } from "./lead";
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import { rastrearLead } from "./meta-pixel";
 import {
   CAMPOS_UTM,
   SEM_INSCRICAO,
@@ -331,6 +334,21 @@ export function Formulario({
 
   const qualifica = origem === "lp2-interesse";
 
+  /* O que o evento de Lead precisa e a resposta de sucesso da Server Action
+     não devolve: o id do evento, que também sobe para o servidor e faz o Meta
+     juntar Pixel e API de Conversões num cadastro só, e as respostas de
+     qualificação. Guardado no envio. */
+  const envio = useRef<{ idEvento?: string; faixaCapital?: string; experiencia?: string }>(
+    undefined
+  );
+  const campoIdEvento = useRef<HTMLInputElement>(null);
+
+  /* O Lead só sai quando o servidor aceitou o cadastro — não no clique do
+     botão, que ainda pode voltar com campo a corrigir. */
+  useEffect(() => {
+    if (estado.status === "sucesso") rastrearLead(origem, envio.current);
+  }, [estado.status, origem]);
+
   if (estado.status === "sucesso") {
     return (
       <div className={className}>
@@ -362,7 +380,23 @@ export function Formulario({
           evento.preventDefault();
           setErroWhatsapp(ERRO_WHATSAPP);
           campo.focus();
+          return;
         }
+
+        /* Escrito direto no campo oculto: o React monta o FormData da action
+           depois deste handler, então o valor já sobe neste envio. Um id novo
+           por tentativa — um reenvio depois de erro é outro evento. */
+        const idEvento = crypto.randomUUID();
+        if (campoIdEvento.current) campoIdEvento.current.value = idEvento;
+
+        const dados = new FormData(evento.currentTarget);
+        envio.current = {
+          idEvento,
+          ...(qualifica && {
+            faixaCapital: String(dados.get("faixaCapital") ?? ""),
+            experiencia: String(dados.get("experiencia") ?? ""),
+          }),
+        };
       }}
       className={`flex flex-col ${className}`}
     >
@@ -389,6 +423,9 @@ export function Formulario({
 
           Só sobe campo que tenha valor: um `utm_term=` vazio no corpo seria
           indistinguível de uma campanha sem termo. */}
+      {/* O id do evento do Meta, preenchido no `onSubmit`. */}
+      <input ref={campoIdEvento} type="hidden" name="event_id" defaultValue="" />
+
       {CAMPOS_UTM.map((campo) =>
         utms[campo] ? (
           <input key={campo} type="hidden" name={campo} value={utms[campo]} readOnly />
