@@ -6,9 +6,10 @@ import { PAGEVIEW_POR_ROTA, PIXEL_ID } from "./lp/meta-eventos";
  * `meta-eventos.ts`, o mesmo que a API de Conversões usa.
  *
  * Ele roda uma vez por carregamento de documento: dá o `init` e o PageView da
- * primeira página. Nas LPs ele sai como evento personalizado, `PageView_lp1`
- * ou `PageView_lp2`, escolhido pelo caminho da URL; no resto do site, como o
- * `PageView` padrão. Os PageViews das navegações internas saem de
+ * primeira página. O `PageView` padrão sai em todas as páginas — é dele que
+ * o Gerenciador de Anúncios tira as visualizações da página de destino. Nas
+ * LPs sai também o personalizado, `PageView_lp1` ou `PageView_lp2`, escolhido
+ * pelo caminho da URL. Os PageViews das navegações internas saem de
  * `MetaPageViewNavegacao`, e os eventos das LPs, de `lp/meta-pixel.tsx`.
  */
 const SNIPPET = `!function(f,b,e,v,n,t,s)
@@ -21,7 +22,8 @@ s.parentNode.insertBefore(t,s)}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '${PIXEL_ID}');
 var p=${JSON.stringify(PAGEVIEW_POR_ROTA)}[location.pathname.replace(/[/]+$/,'')];
-p?fbq('trackCustom', p[0], p[1]):fbq('track', 'PageView');`;
+fbq('track', 'PageView');
+if(p)fbq('trackCustom', p[0], p[1]);`;
 
 export function MetaPixelBase() {
   return <script dangerouslySetInnerHTML={{ __html: SNIPPET }} />;

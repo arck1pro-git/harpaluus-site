@@ -8,14 +8,15 @@ import { conteudo, nomeDoEvento } from "./meta-eventos";
 /**
  * Eventos do Meta Pixel nas duas LPs do Funil 1.
  *
- * Nas LPs todos os eventos são personalizados, com a LP no nome (ver
- * `nomeDoEvento`, em `meta-eventos.ts`) — nenhum evento padrão do Meta sai
- * delas. Por ordem no funil:
- *  - `PageView_lp1` / `_lp2` — do código base no `<head>` (ver
+ * Nas LPs os eventos são personalizados, com a LP no nome (ver
+ * `nomeDoEvento`, em `meta-eventos.ts`). `PageView` e `Lead` saem também na
+ * versão padrão do Meta, porque as métricas nativas do Gerenciador de
+ * Anúncios dependem delas. Por ordem no funil:
+ *  - `PageView` + `PageView_lp1` / `_lp2` — do código base no `<head>` (ver
  *    `components/meta-pixel-base.tsx`);
  *  - `ViewContent_lp1` / `_lp2` — a pessoa chegou ao fim da página;
  *  - `AbriuFormulario_lp1` / `_lp2` — clique em qualquer CTA;
- *  - `Lead_lp1` / `_lp2` — cadastro aceito pelo servidor.
+ *  - `Lead` + `Lead_lp1` / `_lp2` — cadastro aceito pelo servidor.
  *
  * Nada de dado pessoal nos parâmetros do navegador. Nome, e-mail e WhatsApp
  * vão só pela API de Conversões, com hash, a partir do servidor
@@ -84,5 +85,8 @@ export function rastrearLead(
   };
   const opcoes = envio?.idEvento ? { eventID: envio.idEvento } : undefined;
 
+  /* O padrão e o da LP, com o mesmo `eventID`: o Meta deduplica por nome +
+     id, então cada um se junta ao seu par da API de Conversões. */
+  window.fbq("track", "Lead", parametros, opcoes);
   window.fbq("trackCustom", nomeDoEvento("Lead", origem), parametros, opcoes);
 }

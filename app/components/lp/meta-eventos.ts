@@ -12,10 +12,10 @@ import { ROTA_LP1, ROTA_LP2 } from "./lp-config";
 export const PIXEL_ID = "1124238353883498";
 
 /**
- * O sufixo de cada LP. Nas LPs nenhum evento sai com nome padrão do Meta:
- * todos são personalizados, com o sufixo no nome (`Lead_lp1`,
- * `PageView_lp2`…), para que cada página apareça como linha própria no
- * Gerenciador de Eventos e a campanha otimize direto pelo evento da LP.
+ * O sufixo de cada LP. Os eventos das LPs saem com o sufixo no nome
+ * (`Lead_lp1`, `PageView_lp2`…), para que cada página apareça como linha
+ * própria no Gerenciador de Eventos e a campanha otimize direto pelo evento
+ * da LP. `PageView` e `Lead` saem também na versão padrão, ao lado destes.
  * O sufixo também vai como `content_name`. Curto e fixo de propósito: mudar
  * o valor troca o nome do evento e quebra a otimização das campanhas.
  */

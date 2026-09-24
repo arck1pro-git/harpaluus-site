@@ -71,19 +71,17 @@ export async function enviarAoMeta(lead: Lead, contexto: ContextoEvento) {
   const momento = Math.floor(Date.now() / 1000);
 
   const corpo = {
-    data: [
-      {
-        // o mesmo nome do Pixel (`Lead_lp1` / `Lead_lp2`): nome e `event_id`
-        // iguais é o que faz o Meta juntar os dois lados num cadastro só
-        event_name: nomeDoEvento("Lead", lead.origem),
-        event_time: momento,
-        action_source: "website",
-        ...(contexto.idEvento && { event_id: contexto.idEvento }),
-        ...(contexto.url && { event_source_url: contexto.url }),
-        user_data: dadosUsuario,
-        custom_data: dadosCustom,
-      },
-    ],
+    // os mesmos dois do Pixel — `Lead` e `Lead_lp1` / `Lead_lp2`: nome e
+    // `event_id` iguais é o que faz o Meta juntar os dois lados num cadastro só
+    data: ["Lead", nomeDoEvento("Lead", lead.origem)].map((nome) => ({
+      event_name: nome,
+      event_time: momento,
+      action_source: "website",
+      ...(contexto.idEvento && { event_id: contexto.idEvento }),
+      ...(contexto.url && { event_source_url: contexto.url }),
+      user_data: dadosUsuario,
+      custom_data: dadosCustom,
+    })),
     ...(process.env.META_CAPI_TEST_CODE && {
       test_event_code: process.env.META_CAPI_TEST_CODE,
     }),
