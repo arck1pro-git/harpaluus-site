@@ -165,7 +165,7 @@ export const lp1 = {
 
   formulario: {
     titulo: "Receba gratuitamente o Checklist",
-    texto: "Preencha seus dados e receba as 7 perguntas por e-mail.",
+    texto: "Preencha seus dados e receba as 7 perguntas no seu WhatsApp.",
   },
 
   fechamento: {

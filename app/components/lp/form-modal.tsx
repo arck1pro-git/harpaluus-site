@@ -223,6 +223,7 @@ export function FormularioProvider({
                 rotuloEnvio={rotuloEnvio}
                 sucesso={sucesso}
                 aviso={aviso}
+                onFechar={fechar}
               />
             )}
           </div>

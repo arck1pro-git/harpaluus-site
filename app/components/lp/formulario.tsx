@@ -340,12 +340,14 @@ function mascararWhatsApp(valor: string) {
 
 function Sucesso({
   titulo,
-  texto,
+  paragrafos,
   tom,
+  onFechar,
 }: {
   titulo: string;
-  texto: string;
+  paragrafos: readonly string[];
   tom: Tom;
+  onFechar?: () => void;
 }) {
   return (
     <div
@@ -371,20 +373,37 @@ function Sucesso({
         {titulo}
       </p>
 
-      <p
-        className={`mt-4 max-w-[34ch] text-[16px] leading-[1.6] font-light ${
+      <div
+        className={`mt-4 flex max-w-[36ch] flex-col gap-3 text-[16px] leading-[1.6] font-light ${
           tom === "escuro" ? "text-pedra-claro" : "text-pedra"
         }`}
       >
-        {texto}
-      </p>
+        {paragrafos.map((paragrafo) => (
+          <p key={paragrafo}>{paragrafo}</p>
+        ))}
+      </div>
+
+      {onFechar && (
+        <button
+          type="button"
+          onClick={onFechar}
+          className={`mt-9 inline-flex min-h-[52px] w-full items-center justify-center rounded-xl px-8 py-[18px] text-[11px] leading-none font-bold tracking-[0.2em] uppercase transition-colors duration-300 ease-out ${
+            tom === "escuro"
+              ? "bg-white text-azul-escuro hover:bg-dourado-claro"
+              : "bg-azul-escuro text-white hover:bg-azul-profundo"
+          }`}
+        >
+          Fechar
+        </button>
+      )}
     </div>
   );
 }
 
 /* ------------------------------------------------------------ FORMULÁRIO */
 
-export type TextosSucesso = { titulo: string; texto: string };
+/** A confirmação depois do envio: um título e um parágrafo por item. */
+export type TextosSucesso = { titulo: string; paragrafos: readonly string[] };
 
 export function Formulario({
   origem,
@@ -393,12 +412,15 @@ export function Formulario({
   rotuloEnvio,
   sucesso,
   aviso,
+  onFechar,
   className = "",
 }: {
   origem: OrigemLead;
   tom?: Tom;
   /** título visível acima dos campos; some na tela de sucesso */
   titulo?: string;
+  /** o botão "Fechar" da tela de sucesso; sem ele, o botão não aparece */
+  onFechar?: () => void;
   /** o mesmo texto do CTA da página: os briefs pedem CTA consistente */
   rotuloEnvio: string;
   sucesso: TextosSucesso;
@@ -454,7 +476,12 @@ export function Formulario({
   if (estado.status === "sucesso") {
     return (
       <div className={className}>
-        <Sucesso titulo={sucesso.titulo} texto={sucesso.texto} tom={tom} />
+        <Sucesso
+          titulo={sucesso.titulo}
+          paragrafos={sucesso.paragrafos}
+          tom={tom}
+          onFechar={onFechar}
+        />
       </div>
     );
   }

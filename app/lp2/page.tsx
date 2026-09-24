@@ -82,8 +82,11 @@ const dadosEstruturados = jsonLd(
 );
 
 const SUCESSO: TextosSucesso = {
-  titulo: "Obrigado!",
-  texto: "Recebemos seus dados. Nossa equipe vai entrar em contato com você em breve.",
+  titulo: "Cadastro recebido!",
+  paragrafos: [
+    "Obrigado pelo interesse em conhecer a oportunidade da AMAAN Incorporadora.",
+    "Nossa equipe vai falar com você pelo WhatsApp em breve para apresentar a operação e tirar suas dúvidas.",
+  ],
 };
 
 /* O bloco dinâmico do "QUANDO" só existe se os três campos estiverem
