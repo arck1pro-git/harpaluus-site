@@ -342,6 +342,7 @@ export function Formulario({
     undefined
   );
   const campoIdEvento = useRef<HTMLInputElement>(null);
+  const campoPagina = useRef<HTMLInputElement>(null);
 
   /* O Lead só sai quando o servidor aceitou o cadastro — não no clique do
      botão, que ainda pode voltar com campo a corrigir. */
@@ -388,6 +389,7 @@ export function Formulario({
            por tentativa — um reenvio depois de erro é outro evento. */
         const idEvento = crypto.randomUUID();
         if (campoIdEvento.current) campoIdEvento.current.value = idEvento;
+        if (campoPagina.current) campoPagina.current.value = window.location.href;
 
         const dados = new FormData(evento.currentTarget);
         envio.current = {
@@ -425,6 +427,9 @@ export function Formulario({
           indistinguível de uma campanha sem termo. */}
       {/* O id do evento do Meta, preenchido no `onSubmit`. */}
       <input ref={campoIdEvento} type="hidden" name="event_id" defaultValue="" />
+      {/* A URL da LP para a API de Conversões, também do `onSubmit` — ver
+          `contextoMeta`, em `actions.ts`. */}
+      <input ref={campoPagina} type="hidden" name="event_source_url" defaultValue="" />
 
       {CAMPOS_UTM.map((campo) =>
         utms[campo] ? (

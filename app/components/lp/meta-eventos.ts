@@ -1,4 +1,5 @@
 import type { OrigemLead } from "./lead";
+import { ROTA_LP1, ROTA_LP2 } from "./lp-config";
 
 /**
  * O que o Pixel (navegador) e a API de Conversões (servidor) precisam dizer
@@ -10,22 +11,54 @@ import type { OrigemLead } from "./lead";
 
 export const PIXEL_ID = "1124238353883498";
 
-/** o nome com que cada LP aparece no Gerenciador de Eventos */
+/**
+ * O sufixo de cada LP. Nas LPs nenhum evento sai com nome padrão do Meta:
+ * todos são personalizados, com o sufixo no nome (`Lead_lp1`,
+ * `PageView_lp2`…), para que cada página apareça como linha própria no
+ * Gerenciador de Eventos e a campanha otimize direto pelo evento da LP.
+ * O sufixo também vai como `content_name`. Curto e fixo de propósito: mudar
+ * o valor troca o nome do evento e quebra a otimização das campanhas.
+ */
 const CONTEUDO: Record<OrigemLead, string> = {
-  "lp1-checklist": "LP01 · Checklist SCP",
-  "lp2-interesse": "LP02 · Participação SCP",
+  "lp1-checklist": "lp1",
+  "lp2-interesse": "lp2",
 };
 
 export function conteudo(origem: OrigemLead) {
   return { content_name: CONTEUDO[origem], content_category: "SCP imobiliária" };
 }
 
+/** Os quatro eventos das LPs, antes do sufixo. */
+export type EventoLp = "PageView" | "ViewContent" | "AbriuFormulario" | "Lead";
+
+/** O nome com que o evento chega ao Meta: `Lead_lp1`, `PageView_lp2`… */
+export function nomeDoEvento(evento: EventoLp, origem: OrigemLead) {
+  return `${evento}_${CONTEUDO[origem]}`;
+}
+
+const ORIGEM_DA_ROTA: Record<string, OrigemLead> = {
+  [ROTA_LP1]: "lp1-checklist",
+  [ROTA_LP2]: "lp2-interesse",
+};
+
 /**
- * Os eventos de conversão de cada LP. A LP01 soma `CompleteRegistration`,
- * porque a troca ali é o material gratuito.
+ * O PageView de cada rota de LP — nome e parâmetros —, para o snippet do
+ * `<head>`, que roda antes do React e só enxerga `location.pathname`. Fora das
+ * LPs não há entrada, e sai o `PageView` padrão.
  */
-export function eventosDeConversao(origem: OrigemLead) {
-  return origem === "lp1-checklist" ? ["Lead", "CompleteRegistration"] : ["Lead"];
+export const PAGEVIEW_POR_ROTA: Record<string, [string, ReturnType<typeof conteudo>]> =
+  Object.fromEntries(
+    Object.entries(ORIGEM_DA_ROTA).map(([rota, origem]) => [
+      rota,
+      [nomeDoEvento("PageView", origem), conteudo(origem)],
+    ])
+  );
+
+/** O mesmo, para o PageView das navegações internas. */
+export function pageViewDaRota(caminho: string) {
+  return PAGEVIEW_POR_ROTA[caminho.replace(/\/+$/, "")] as
+    | [string, ReturnType<typeof conteudo>]
+    | undefined;
 }
 
 /**

@@ -1,20 +1,21 @@
 "use client";
 
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 import type { OrigemLead } from "./lead";
-import { conteudo, eventosDeConversao } from "./meta-eventos";
+import { conteudo, nomeDoEvento } from "./meta-eventos";
 
 /**
  * Eventos do Meta Pixel nas duas LPs do Funil 1.
  *
- * O código base (`init` e PageView) está no `<head>` de todas as páginas —
- * ver `components/meta-pixel-base.tsx`. Aqui ficam só os eventos que dizem
- * respeito às LPs, por ordem no funil:
- *  - `ViewContent` — a visita, com o nome da LP;
- *  - `AbriuFormulario` (personalizado) — clique em qualquer CTA;
- *  - `Lead` — cadastro aceito pelo servidor. Na LP01 também
- *    `CompleteRegistration`, porque a troca ali é o material gratuito.
+ * Nas LPs todos os eventos são personalizados, com a LP no nome (ver
+ * `nomeDoEvento`, em `meta-eventos.ts`) — nenhum evento padrão do Meta sai
+ * delas. Por ordem no funil:
+ *  - `PageView_lp1` / `_lp2` — do código base no `<head>` (ver
+ *    `components/meta-pixel-base.tsx`);
+ *  - `ViewContent_lp1` / `_lp2` — a pessoa chegou ao fim da página;
+ *  - `AbriuFormulario_lp1` / `_lp2` — clique em qualquer CTA;
+ *  - `Lead_lp1` / `_lp2` — cadastro aceito pelo servidor.
  *
  * Nada de dado pessoal nos parâmetros do navegador. Nome, e-mail e WhatsApp
  * vão só pela API de Conversões, com hash, a partir do servidor
@@ -37,9 +38,33 @@ declare global {
   }
 }
 
+/**
+ * ViewContent de quem rolou até o fim da LP. Fica no último lugar da página:
+ * quando entra na tela, o evento sai — uma vez por visita à página.
+ */
+export function MetaViuConteudo({ origem }: { origem: OrigemLead }) {
+  const marco = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const alvo = marco.current;
+    if (!alvo) return;
+
+    const observador = new IntersectionObserver((entradas) => {
+      if (!entradas.some((entrada) => entrada.isIntersecting)) return;
+      observador.disconnect();
+      window.fbq?.("trackCustom", nomeDoEvento("ViewContent", origem), conteudo(origem));
+    });
+
+    observador.observe(alvo);
+    return () => observador.disconnect();
+  }, [origem]);
+
+  return <div ref={marco} aria-hidden className="h-px w-full" />;
+}
+
 /** Clique num CTA: a janela do formulário abriu. */
 export function rastrearAbertura(origem: OrigemLead) {
-  window.fbq?.("trackCustom", "AbriuFormulario", conteudo(origem));
+  window.fbq?.("trackCustom", nomeDoEvento("AbriuFormulario", origem), conteudo(origem));
 }
 
 /**
@@ -59,16 +84,5 @@ export function rastrearLead(
   };
   const opcoes = envio?.idEvento ? { eventID: envio.idEvento } : undefined;
 
-  for (const evento of eventosDeConversao(origem)) {
-    window.fbq("track", evento, parametros, opcoes);
-  }
-}
-
-/** ViewContent da LP. Vai uma vez em cada página. */
-export function MetaPixel({ origem }: { origem: OrigemLead }) {
-  useEffect(() => {
-    window.fbq?.("track", "ViewContent", conteudo(origem));
-  }, [origem]);
-
-  return null;
+  window.fbq("trackCustom", nomeDoEvento("Lead", origem), parametros, opcoes);
 }

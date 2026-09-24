@@ -15,7 +15,7 @@ import type { TextosSucesso } from "../components/lp/formulario";
 import { lp2, marca, ROTA_LP2 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
-import { MetaPixel } from "../components/lp/meta-pixel";
+import { MetaViuConteudo } from "../components/lp/meta-pixel";
 import { FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
@@ -107,8 +107,6 @@ export default function Lp2() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: dadosEstruturados }}
         />
-
-        <MetaPixel origem="lp2-interesse" />
 
         <LpHeader />
 
@@ -442,6 +440,9 @@ export default function Lp2() {
             Sem `aviso` e sem `tese`: o rodapé desta página fecha só com a
             assinatura e a identificação da pessoa jurídica. */}
         <LpFooter titulo={lp2.fechamento.marca} />
+
+        {/* ViewContent: a pessoa chegou ao fim da página */}
+        <MetaViuConteudo origem="lp2-interesse" />
       </main>
     </FormularioProvider>
   );

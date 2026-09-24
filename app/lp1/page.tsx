@@ -14,7 +14,7 @@ import type { TextosSucesso } from "../components/lp/formulario";
 import { lp1, marca, ROTA_LP1 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
-import { MetaPixel } from "../components/lp/meta-pixel";
+import { MetaViuConteudo } from "../components/lp/meta-pixel";
 import { FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
@@ -85,8 +85,6 @@ export default function Lp1() {
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: dadosEstruturados }}
         />
-
-        <MetaPixel origem="lp1-checklist" />
 
         <LpHeader />
 
@@ -234,6 +232,9 @@ export default function Lp1() {
           tese={lp1.fechamento.tese}
           aviso={lp1.fechamento.aviso}
         />
+
+        {/* ViewContent: a pessoa chegou ao fim da página */}
+        <MetaViuConteudo origem="lp1-checklist" />
       </main>
     </FormularioProvider>
   );

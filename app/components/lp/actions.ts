@@ -41,9 +41,15 @@ async function contextoMeta(formData: FormData): Promise<ContextoEvento> {
   const cabecalhos = await headers();
   const biscoitos = await cookies();
 
-  /* O envio é same-origin, então o Referer traz a URL inteira da LP —
-     inclusive o `fbclid` de quem chegou pelo anúncio. */
-  const url = cabecalhos.get("referer") ?? undefined;
+  /* A URL da LP, com o `fbclid` de quem chegou pelo anúncio. Vem do campo
+     que o navegador preenche no envio; o Referer fica de reserva, porque
+     política de referrer, proxy ou extensão de privacidade podem reduzi-lo à
+     origem — e aí o Meta registra `amaan.com.br/` sem o `/lp1` ou `/lp2`.
+     Só vale URL deste mesmo host: o campo é forjável. */
+  const host = cabecalhos.get("host");
+  const url = [texto(formData, "event_source_url"), cabecalhos.get("referer")].find(
+    (valor) => valor && URL.canParse(valor) && new URL(valor).host === host
+  ) || undefined;
   let fbc = biscoitos.get("_fbc")?.value;
 
   if (!fbc && url) {
