@@ -67,9 +67,8 @@ const dadosEstruturados = jsonLd(
 );
 
 const SUCESSO: TextosSucesso = {
-  titulo: "Pronto. Seu Checklist está a caminho.",
-  texto:
-    "Enviamos as 7 perguntas para o e-mail informado. Se não chegar nos próximos minutos, vale conferir a caixa de promoções ou de spam.",
+  titulo: "Obrigado!",
+  texto: "Recebemos seus dados. Nossa equipe vai entrar em contato com você em breve.",
 };
 
 export default function Lp1() {

@@ -9,7 +9,7 @@ import {
   useState,
   useSyncExternalStore,
 } from "react";
-import { Check } from "lucide-react";
+import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 
 import { TRACO } from "../landing/icones";
 import { registrarLead } from "./actions";
@@ -49,30 +49,40 @@ import { ERRO_WHATSAPP, normalizarWhatsApp } from "./validar";
 type Tom = "claro" | "escuro";
 
 /**
- * Filete embaixo em vez de caixa fechada: mantém o campo na mesma família
- * gráfica dos filetes que abrem as seções, e é menos peso visual do que seis
- * retângulos empilhados.
+ * Caixa com o rótulo dentro: o rótulo ocupa o lugar do texto enquanto o campo
+ * está vazio e sobe para o topo da caixa quando ele ganha foco ou conteúdo.
+ * O fundo levemente mais claro que o painel é o que diz "aqui se escreve"
+ * sem precisar de borda forte.
  */
 function estilosCampo(tom: Tom, invalido: boolean) {
   const base =
-    "peer w-full appearance-none border-0 border-b bg-transparent px-0 pt-6 pb-2 text-[16px] font-light outline-none transition-colors duration-300";
+    "peer block h-[60px] w-full appearance-none rounded-xl border px-4 pt-6 pb-2 text-[16px] font-light outline-none transition-[border-color,background-color,box-shadow] duration-300 focus:ring-4";
 
   const cor =
     tom === "escuro"
-      ? "text-white placeholder:text-transparent"
-      : "text-azul-escuro placeholder:text-transparent";
+      ? "bg-white/[0.04] text-white placeholder:text-transparent focus:bg-white/[0.07] focus:ring-dourado-claro/10"
+      : "bg-white text-azul-escuro placeholder:text-transparent focus:ring-dourado/10";
 
-  const filete = invalido
-    ? "border-dourado-escuro"
+  const borda = invalido
+    ? tom === "escuro"
+      ? "border-dourado-claro/70"
+      : "border-dourado-escuro"
     : tom === "escuro"
-      ? "border-white/25 hover:border-white/45 focus:border-dourado-claro"
+      ? "border-white/15 hover:border-white/30 focus:border-dourado-claro"
       : "border-linha hover:border-cinza focus:border-dourado";
 
-  return `${base} ${cor} ${filete}`;
+  return `${base} ${cor} ${borda}`;
+}
+
+/** O rótulo pequeno, já no topo da caixa. */
+const ROTULO_TOPO = "top-[11px] text-[10px] font-medium tracking-[0.18em] uppercase";
+
+function corRotulo(tom: Tom) {
+  return tom === "escuro" ? "text-pedra-claro/80" : "text-pedra";
 }
 
 /**
- * O rótulo sobe para cima do campo quando ele tem conteúdo ou foco.
+ * O rótulo flutuante.
  *
  * Depende do `placeholder=" "` no input: é o truque que dá ao CSS o seletor
  * `:placeholder-shown` para saber se o campo está vazio, sem estado em JS.
@@ -80,17 +90,23 @@ function estilosCampo(tom: Tom, invalido: boolean) {
  * lugar de rótulo, que some justamente quando a pessoa vai conferir.
  */
 function estilosRotulo(tom: Tom) {
-  const cor = tom === "escuro" ? "text-pedra-claro" : "text-pedra";
-  const focoCor = tom === "escuro" ? "peer-focus:text-dourado-claro" : "peer-focus:text-dourado-escuro";
+  const focoCor =
+    tom === "escuro" ? "peer-focus:text-dourado-claro" : "peer-focus:text-dourado-escuro";
 
-  return `tipo-label pointer-events-none absolute top-0 left-0 origin-left transition-all duration-300 ${cor} ${focoCor} peer-placeholder-shown:top-6 peer-placeholder-shown:text-[15px] peer-placeholder-shown:tracking-normal peer-placeholder-shown:normal-case peer-focus:top-0 peer-focus:text-[11px] peer-focus:tracking-[0.2em] peer-focus:uppercase`;
+  return `pointer-events-none absolute left-4 ${ROTULO_TOPO} transition-all duration-200 ${corRotulo(tom)} ${focoCor} peer-placeholder-shown:top-1/2 peer-placeholder-shown:-translate-y-1/2 peer-placeholder-shown:text-[15px] peer-placeholder-shown:font-light peer-placeholder-shown:tracking-normal peer-placeholder-shown:normal-case peer-focus:top-[11px] peer-focus:translate-y-0 peer-focus:text-[10px] peer-focus:font-medium peer-focus:tracking-[0.18em] peer-focus:uppercase`;
 }
 
-function Erro({ id, mensagem }: { id: string; mensagem?: string }) {
+function Erro({ id, mensagem, tom }: { id: string; mensagem?: string; tom: Tom }) {
   if (!mensagem) return null;
 
+  /* No painel escuro o dourado-escuro some contra o fundo: lá vai o claro. */
   return (
-    <p id={id} className="mt-2 text-[13px] font-light text-dourado-escuro">
+    <p
+      id={id}
+      className={`mt-2 pl-1 text-[13px] font-light ${
+        tom === "escuro" ? "text-dourado-claro" : "text-dourado-escuro"
+      }`}
+    >
       {mensagem}
     </p>
   );
@@ -127,26 +143,28 @@ function Campo({
   const idErro = `${id}-erro`;
 
   return (
-    <div className="relative pt-6">
-      <input
-        id={id}
-        name={nome}
-        type={tipo}
-        inputMode={inputMode}
-        autoComplete={autoComplete}
-        required
-        placeholder=" "
-        defaultValue={estado.valores?.[nome] ?? ""}
-        onInput={onInput}
-        onBlur={onBlur}
-        aria-invalid={erro ? true : undefined}
-        aria-describedby={erro ? idErro : undefined}
-        className={estilosCampo(tom, Boolean(erro))}
-      />
-      <label htmlFor={id} className={estilosRotulo(tom)}>
-        {rotulo}
-      </label>
-      <Erro id={idErro} mensagem={erro} />
+    <div>
+      <div className="relative">
+        <input
+          id={id}
+          name={nome}
+          type={tipo}
+          inputMode={inputMode}
+          autoComplete={autoComplete}
+          required
+          placeholder=" "
+          defaultValue={estado.valores?.[nome] ?? ""}
+          onInput={onInput}
+          onBlur={onBlur}
+          aria-invalid={erro ? true : undefined}
+          aria-describedby={erro ? idErro : undefined}
+          className={estilosCampo(tom, Boolean(erro))}
+        />
+        <label htmlFor={id} className={estilosRotulo(tom)}>
+          {rotulo}
+        </label>
+      </div>
+      <Erro id={idErro} mensagem={erro} tom={tom} />
     </div>
   );
 }
@@ -169,17 +187,11 @@ function Selecao({
   const idErro = `${id}-erro`;
 
   /* O select não usa o rótulo flutuante: ele nunca fica "vazio" aos olhos do
-     CSS — a primeira opção já é um valor —, então o rótulo mora acima o tempo
-     todo. A seta é desenhada aqui porque `appearance-none` remove a nativa. */
+     CSS — a primeira opção já é um valor —, então o rótulo mora no topo da
+     caixa o tempo todo. A seta é desenhada aqui porque `appearance-none`
+     remove a nativa. */
   return (
-    <div className="relative pt-6">
-      <label
-        htmlFor={id}
-        className={`tipo-label absolute top-0 left-0 ${tom === "escuro" ? "text-pedra-claro" : "text-pedra"}`}
-      >
-        {rotulo}
-      </label>
-
+    <div>
       <div className="relative">
         <select
           id={id}
@@ -188,7 +200,7 @@ function Selecao({
           defaultValue={estado.valores?.[nome] ?? ""}
           aria-invalid={erro ? true : undefined}
           aria-describedby={erro ? idErro : undefined}
-          className={`${estilosCampo(tom, Boolean(erro))} cursor-pointer pr-8`}
+          className={`${estilosCampo(tom, Boolean(erro))} cursor-pointer pr-11`}
         >
           <option value="" disabled>
             Selecione
@@ -200,6 +212,13 @@ function Selecao({
           ))}
         </select>
 
+        <label
+          htmlFor={id}
+          className={`pointer-events-none absolute left-4 ${ROTULO_TOPO} ${corRotulo(tom)}`}
+        >
+          {rotulo}
+        </label>
+
         <svg
           aria-hidden
           viewBox="0 0 24 24"
@@ -208,7 +227,7 @@ function Selecao({
           strokeWidth={TRACO}
           strokeLinecap="round"
           strokeLinejoin="round"
-          className={`pointer-events-none absolute right-0 bottom-[14px] h-4 w-4 ${
+          className={`pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 ${
             tom === "escuro" ? "text-pedra-claro" : "text-pedra"
           }`}
         >
@@ -216,8 +235,77 @@ function Selecao({
         </svg>
       </div>
 
-      <Erro id={idErro} mensagem={erro} />
+      <Erro id={idErro} mensagem={erro} tom={tom} />
     </div>
+  );
+}
+
+/**
+ * Poucas opções curtas (Sim / Não) viram botões lado a lado em vez de um
+ * select: um toque só, e as duas respostas à vista. Por baixo continuam
+ * rádios com o mesmo `name`, então o FormData que chega à action é idêntico
+ * ao do select.
+ */
+function Escolha({
+  nome,
+  rotulo,
+  opcoes,
+  tom,
+  estado,
+}: {
+  nome: CampoLead;
+  rotulo: string;
+  opcoes: readonly { value: string; label: string }[];
+  tom: Tom;
+  estado: EstadoLead;
+}) {
+  const id = useId();
+  const erro = estado.erros?.[nome];
+  const idErro = `${id}-erro`;
+
+  const opcao =
+    tom === "escuro"
+      ? "bg-white/[0.04] text-pedra-claro hover:border-white/30 peer-checked:border-dourado-claro peer-checked:bg-dourado-claro/10 peer-checked:text-white peer-focus-visible:ring-4 peer-focus-visible:ring-dourado-claro/20"
+      : "bg-white text-pedra hover:border-cinza peer-checked:border-dourado peer-checked:bg-dourado/10 peer-checked:text-azul-escuro peer-focus-visible:ring-4 peer-focus-visible:ring-dourado/20";
+
+  const borda = erro
+    ? tom === "escuro"
+      ? "border-dourado-claro/70"
+      : "border-dourado-escuro"
+    : tom === "escuro"
+      ? "border-white/15"
+      : "border-linha";
+
+  return (
+    <fieldset aria-describedby={erro ? idErro : undefined}>
+      <legend
+        className={`mb-3 pl-1 text-[10px] font-medium tracking-[0.18em] uppercase ${corRotulo(tom)}`}
+      >
+        {rotulo}
+      </legend>
+
+      <div className="grid grid-cols-2 gap-3">
+        {opcoes.map((item) => (
+          <label key={item.value} className="relative cursor-pointer">
+            <input
+              type="radio"
+              name={nome}
+              value={item.value}
+              required
+              defaultChecked={estado.valores?.[nome] === item.value}
+              className="peer sr-only"
+            />
+            <span
+              className={`flex h-[52px] items-center justify-center rounded-xl border text-[15px] font-light transition-[border-color,background-color,color,box-shadow] duration-300 ${borda} ${opcao}`}
+            >
+              {item.label}
+            </span>
+          </label>
+        ))}
+      </div>
+
+      <Erro id={idErro} mensagem={erro} tom={tom} />
+    </fieldset>
   );
 }
 
@@ -264,19 +352,29 @@ function Sucesso({
       /* `alert` porque a confirmação substitui o formulário: sem isso, quem
          usa leitor de tela envia e não recebe notícia nenhuma de volta */
       role="alert"
-      className={`flex flex-col items-start ${tom === "escuro" ? "text-white" : "text-azul-escuro"}`}
+      className={`flex flex-col items-center py-6 text-center ${
+        tom === "escuro" ? "text-white" : "text-azul-escuro"
+      }`}
     >
       <span
         aria-hidden
-        className="flex h-11 w-11 items-center justify-center rounded-full border border-dourado/50 text-dourado"
+        className={`flex h-16 w-16 items-center justify-center rounded-full border ${
+          tom === "escuro"
+            ? "border-dourado-claro/40 bg-dourado-claro/10 text-dourado-claro"
+            : "border-dourado/40 bg-dourado/10 text-dourado"
+        }`}
       >
-        <Check size={20} strokeWidth={TRACO} />
+        <Check size={28} strokeWidth={TRACO} />
       </span>
 
-      <p className="tipo-lead mt-6 font-[family-name:var(--font-playfair)]">{titulo}</p>
+      <p className="mt-7 font-[family-name:var(--font-playfair)] text-[30px] leading-[1.15]">
+        {titulo}
+      </p>
 
       <p
-        className={`tipo-corpo mt-4 ${tom === "escuro" ? "text-pedra-claro" : "text-pedra"}`}
+        className={`mt-4 max-w-[34ch] text-[16px] leading-[1.6] font-light ${
+          tom === "escuro" ? "text-pedra-claro" : "text-pedra"
+        }`}
       >
         {texto}
       </p>
@@ -291,6 +389,7 @@ export type TextosSucesso = { titulo: string; texto: string };
 export function Formulario({
   origem,
   tom = "claro",
+  titulo,
   rotuloEnvio,
   sucesso,
   aviso,
@@ -298,6 +397,8 @@ export function Formulario({
 }: {
   origem: OrigemLead;
   tom?: Tom;
+  /** título visível acima dos campos; some na tela de sucesso */
+  titulo?: string;
   /** o mesmo texto do CTA da página: os briefs pedem CTA consistente */
   rotuloEnvio: string;
   sucesso: TextosSucesso;
@@ -402,6 +503,22 @@ export function Formulario({
       }}
       className={`flex flex-col ${className}`}
     >
+      {/* Só visual: o nome acessível da janela já é o `<h2>` de
+          `form-modal.tsx`, e repeti-lo aqui faria o leitor de tela ler duas
+          vezes. */}
+      {titulo && (
+        <div aria-hidden className="mb-8">
+          <span className="block h-px w-10 bg-dourado-claro/70" />
+          <p
+            className={`mt-5 font-[family-name:var(--font-playfair)] text-[26px] leading-[1.2] ${
+              tom === "escuro" ? "text-white" : "text-azul-escuro"
+            }`}
+          >
+            {titulo}
+          </p>
+        </div>
+      )}
+
       {/* Armadilha de bot. `tabIndex={-1}` e `aria-hidden` mantêm o campo fora
           do caminho de quem navega por teclado ou leitor de tela; ele é
           invisível por posição, não por `display:none` — que boa parte dos
@@ -437,7 +554,7 @@ export function Formulario({
         ) : null
       )}
 
-      <div className="flex flex-col gap-7">
+      <div className="flex flex-col gap-4">
         <Campo
           nome="nome"
           rotulo="Nome completo"
@@ -491,7 +608,7 @@ export function Formulario({
               estado={estado}
             />
 
-            <Selecao
+            <Escolha
               nome="experiencia"
               rotulo="Já participou de SCP?"
               opcoes={PARTICIPOU_SCP}
@@ -509,7 +626,13 @@ export function Formulario({
       </p>
 
       {estado.mensagem && (
-        <p className="mt-6 text-[13px] font-light text-dourado-escuro">{estado.mensagem}</p>
+        <p
+          className={`mt-6 text-[13px] font-light ${
+            tom === "escuro" ? "text-dourado-claro" : "text-dourado-escuro"
+          }`}
+        >
+          {estado.mensagem}
+        </p>
       )}
 
       <button
@@ -517,14 +640,29 @@ export function Formulario({
         disabled={pendente}
         /* Mesma forma e mesmo peso do CTA que abriu a janela — ver
            `BotaoFormulario`, inclusive sobre escrever a tipografia à mão. */
-        className={`mt-10 inline-flex min-h-[52px] items-center justify-center rounded-lg px-8 py-[18px] text-[11px] leading-none font-bold tracking-[0.2em] uppercase transition-colors duration-300 ease-out disabled:cursor-wait disabled:opacity-70 ${botao}`}
+        className={`group mt-8 inline-flex min-h-[56px] w-full items-center justify-center gap-3 rounded-xl px-8 py-[18px] text-center text-[11px] leading-none font-bold tracking-[0.2em] uppercase transition-colors duration-300 ease-out disabled:cursor-wait disabled:opacity-80 ${botao}`}
       >
-        {pendente ? "Enviando…" : rotuloEnvio}
+        {pendente ? (
+          <>
+            <LoaderCircle size={16} strokeWidth={TRACO} aria-hidden className="animate-spin" />
+            Enviando…
+          </>
+        ) : (
+          <>
+            {rotuloEnvio}
+            <ArrowRight
+              size={16}
+              strokeWidth={TRACO}
+              aria-hidden
+              className="shrink-0 transition-transform duration-300 ease-out group-hover:translate-x-[3px]"
+            />
+          </>
+        )}
       </button>
 
       {aviso && (
         <p
-          className={`mt-5 text-[13px] leading-[1.65] font-light ${
+          className={`mt-5 text-center text-[12px] leading-[1.65] font-light ${
             tom === "escuro" ? "text-pedra-claro" : "text-pedra"
           }`}
         >

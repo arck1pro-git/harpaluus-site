@@ -205,11 +205,9 @@ export function FormularioProvider({
               <X size={20} strokeWidth={TRACO} aria-hidden />
             </button>
 
-            {/* A janela mostra só os campos e o botão: a chamada já foi feita
-                na página, e repeti-la aqui só afasta o primeiro campo.
-                O título sai da tela, mas não do documento — `<dialog>` precisa
-                de um nome acessível, e é ele que o leitor de tela anuncia ao
-                abrir. Sem isto a janela abriria muda. */}
+            {/* O nome acessível da janela — `<dialog>` precisa de um, e é ele
+                que o leitor de tela anuncia ao abrir. O título que se vê fica
+                no formulário, que o esconde na tela de sucesso. */}
             <h2 id={idTitulo} className="sr-only">
               {titulo}
             </h2>
@@ -221,6 +219,7 @@ export function FormularioProvider({
               <Formulario
                 origem={origem}
                 tom="escuro"
+                titulo={titulo}
                 rotuloEnvio={rotuloEnvio}
                 sucesso={sucesso}
                 aviso={aviso}

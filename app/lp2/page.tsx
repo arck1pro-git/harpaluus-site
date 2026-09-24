@@ -82,9 +82,8 @@ const dadosEstruturados = jsonLd(
 );
 
 const SUCESSO: TextosSucesso = {
-  titulo: "Solicitação registrada.",
-  texto:
-    "Nosso time entrará em contato pelo WhatsApp informado para apresentar a operação, suas premissas, prazo, riscos e regras de participação. Nenhuma decisão é esperada nessa conversa.",
+  titulo: "Obrigado!",
+  texto: "Recebemos seus dados. Nossa equipe vai entrar em contato com você em breve.",
 };
 
 /* O bloco dinâmico do "QUANDO" só existe se os três campos estiverem
