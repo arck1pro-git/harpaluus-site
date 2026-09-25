@@ -58,6 +58,11 @@ function limpar(valor: unknown) {
     .slice(0, LIMITE)
     .trim();
 
+  /* `{{campaign.name}}` literal é macro do Meta que não foi substituída —
+     clique vindo da pré-visualização ou de link do anúncio repassado. Não é
+     campanha nenhuma, então vira campo vazio em vez de sujar a ficha. */
+  if (/\{\{.*\}\}/.test(limpo)) return undefined;
+
   return limpo || undefined;
 }
 
