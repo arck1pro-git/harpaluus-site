@@ -2,6 +2,7 @@ import "server-only";
 
 import type { OrigemLead } from "./lead";
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import { PIXEL_ID } from "./meta-eventos";
 import type { Utms } from "./utms";
 import type { Lead } from "./validar";
 
@@ -59,6 +60,8 @@ type PayloadChroma = {
   valor?: string;
   /** Contato · campo "participa_de_uma_scp" */
   scp?: string;
+  /** Id do Pixel do Meta que disparou o Lead na LP — o mesmo nas duas. */
+  pixel_id?: string;
 } & Utms;
 
 /** Quantas vezes tentar no total (a primeira mais duas retentativas). */
@@ -110,6 +113,7 @@ export function payloadChroma(lead: Lead): PayloadChroma {
     email: lead.email,
     valor: rotulo(FAIXAS_CAPITAL, lead.faixaCapital),
     scp: rotulo(PARTICIPOU_SCP, lead.experiencia),
+    pixel_id: PIXEL_ID,
     /* Uma chave por parâmetro, com o nome padrão da UTM. `lead.utm` só
        carrega as que existem, então a visita orgânica não escreve nenhuma —
        nem vazia, que é o que apagaria a campanha de um contato reenviado. */
