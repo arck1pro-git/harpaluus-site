@@ -16,12 +16,10 @@ import { conteudo, nomeDoEvento } from "./meta-eventos";
  *    `components/meta-pixel-base.tsx`);
  *  - `ViewContent_lp1` / `_lp2` — a pessoa chegou ao fim da página;
  *  - `AbriuFormulario_lp1` / `_lp2` — clique em qualquer CTA;
- *  - `Lead` + `Lead_lp1` / `_lp2` — cadastro aceito pelo servidor.
+ *  - `Lead` + `Lead_lp1` / `_lp2` — cadastro aceito. Este NÃO sai daqui: vai
+ *    só pela API de Conversões, a partir do servidor (`meta-capi.ts`).
  *
- * Nada de dado pessoal nos parâmetros do navegador. Nome, e-mail e WhatsApp
- * vão só pela API de Conversões, com hash, a partir do servidor
- * (`meta-capi.ts`) — e o `eventID` compartilhado faz o Meta contar o
- * cadastro uma vez só.
+ * Nada de dado pessoal nos parâmetros do navegador.
  */
 
 type Fbq = ((...argumentos: unknown[]) => void) & {
@@ -66,27 +64,4 @@ export function MetaViuConteudo({ origem }: { origem: OrigemLead }) {
 /** Clique num CTA: a janela do formulário abriu. */
 export function rastrearAbertura(origem: OrigemLead) {
   window.fbq?.("trackCustom", nomeDoEvento("AbriuFormulario", origem), conteudo(origem));
-}
-
-/**
- * Cadastro aceito. Só as respostas de qualificação da LP02 acompanham o
- * evento — elas servem para montar público e otimizar campanha por faixa.
- */
-export function rastrearLead(
-  origem: OrigemLead,
-  envio?: { idEvento?: string; faixaCapital?: string; experiencia?: string }
-) {
-  if (!window.fbq) return;
-
-  const parametros = {
-    ...conteudo(origem),
-    ...(envio?.faixaCapital && { faixa_capital: envio.faixaCapital }),
-    ...(envio?.experiencia && { participou_scp: envio.experiencia }),
-  };
-  const opcoes = envio?.idEvento ? { eventID: envio.idEvento } : undefined;
-
-  /* O padrão e o da LP, com o mesmo `eventID`: o Meta deduplica por nome +
-     id, então cada um se junta ao seu par da API de Conversões. */
-  window.fbq("track", "Lead", parametros, opcoes);
-  window.fbq("trackCustom", nomeDoEvento("Lead", origem), parametros, opcoes);
 }

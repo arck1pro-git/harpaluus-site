@@ -62,9 +62,9 @@ export function pageViewDaRota(caminho: string) {
 }
 
 /**
- * O id que o navegador gera no envio e manda nos dois caminhos. É ele que faz
- * o Meta contar o cadastro uma vez só, e não uma pelo Pixel e outra pelo
- * servidor. Chega por campo oculto, então é conferido antes de ser usado.
+ * O id que o navegador gera no envio e o servidor usa como `event_id` do Lead
+ * na API de Conversões. Chega por campo oculto, então é conferido antes de
+ * ser usado.
  */
 export function idDeEventoValido(valor: string) {
   return /^[\w-]{8,64}$/.test(valor) ? valor : undefined;

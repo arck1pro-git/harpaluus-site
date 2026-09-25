@@ -8,12 +8,11 @@ import type { Lead } from "./validar";
 /**
  * Envio do cadastro à API de Conversões do Meta, pelo servidor.
  *
- * Existe em paralelo ao Pixel porque o navegador perde evento — bloqueador
- * de anúncio, iOS, aba fechada logo depois do envio. Os dois caminhos mandam o
- * mesmo `event_id` (gerado no navegador, ver `formulario.tsx`), e o Meta conta
- * o cadastro uma vez só.
+ * É o único caminho do `Lead`: o Pixel do navegador não dispara esse evento.
+ * O `event_id` (gerado no navegador, ver `formulario.tsx`) vai mesmo assim,
+ * para identificar o envio.
  *
- * Aqui vai o que o Pixel não manda: e-mail, WhatsApp e nome, sempre em SHA-256,
+ * Aqui vão e-mail, WhatsApp e nome, sempre em SHA-256,
  * como o Meta exige — o dado legível nunca sai do servidor.
  *
  * O token vem de `META_CAPI_TOKEN` (só no `.env.local` e na Vercel). Sem ele,
@@ -71,8 +70,7 @@ export async function enviarAoMeta(lead: Lead, contexto: ContextoEvento) {
   const momento = Math.floor(Date.now() / 1000);
 
   const corpo = {
-    // os mesmos dois do Pixel — `Lead` e `Lead_lp1` / `Lead_lp2`: nome e
-    // `event_id` iguais é o que faz o Meta juntar os dois lados num cadastro só
+    // o padrão e o da LP: `Lead` e `Lead_lp1` / `Lead_lp2`
     data: ["Lead", nomeDoEvento("Lead", lead.origem)].map((nome) => ({
       event_name: nome,
       event_time: momento,
