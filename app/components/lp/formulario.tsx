@@ -2,6 +2,7 @@
 
 import {
   useActionState,
+  useEffect,
   useId,
   useMemo,
   useRef,
@@ -19,6 +20,7 @@ import {
   type OrigemLead,
 } from "./lead";
 import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import { rastrearLead } from "./meta-pixel";
 import {
   CAMPOS_UTM,
   SEM_INSCRICAO,
@@ -455,10 +457,21 @@ export function Formulario({
 
   const qualifica = origem === "lp2-interesse";
 
-  /* O Lead vai ao Meta só pelo servidor (API de Conversões, `meta-capi.ts`),
-     depois que o cadastro é aceito — o navegador não dispara `Lead`. */
+  /* O que o evento de Lead precisa e a resposta de sucesso da Server Action
+     não devolve: o id do evento, que também sobe para o servidor e faz o Meta
+     juntar Pixel e API de Conversões num cadastro só, e as respostas de
+     qualificação. Guardado no envio. */
+  const envio = useRef<{ idEvento?: string; faixaCapital?: string; experiencia?: string }>(
+    undefined
+  );
   const campoIdEvento = useRef<HTMLInputElement>(null);
   const campoPagina = useRef<HTMLInputElement>(null);
+
+  /* O Lead só sai quando o servidor aceitou o cadastro — não no clique do
+     botão, que ainda pode voltar com campo a corrigir. */
+  useEffect(() => {
+    if (estado.status === "sucesso") rastrearLead(origem, envio.current);
+  }, [estado.status, origem]);
 
   if (estado.status === "sucesso") {
     return (
@@ -502,8 +515,18 @@ export function Formulario({
         /* Escrito direto no campo oculto: o React monta o FormData da action
            depois deste handler, então o valor já sobe neste envio. Um id novo
            por tentativa — um reenvio depois de erro é outro evento. */
-        if (campoIdEvento.current) campoIdEvento.current.value = crypto.randomUUID();
+        const idEvento = crypto.randomUUID();
+        if (campoIdEvento.current) campoIdEvento.current.value = idEvento;
         if (campoPagina.current) campoPagina.current.value = window.location.href;
+
+        const dados = new FormData(evento.currentTarget);
+        envio.current = {
+          idEvento,
+          ...(qualifica && {
+            faixaCapital: String(dados.get("faixaCapital") ?? ""),
+            experiencia: String(dados.get("experiencia") ?? ""),
+          }),
+        };
       }}
       className={`flex flex-col ${className}`}
     >
