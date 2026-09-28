@@ -2,7 +2,6 @@
 
 import {
   useActionState,
-  useEffect,
   useId,
   useMemo,
   useRef,
@@ -39,9 +38,12 @@ import { ERRO_WHATSAPP, normalizarWhatsApp } from "./validar";
  * de SCP?". Lá o custo do campo compensa — quem preenche está pedindo para
  * conhecer uma operação real, e é isso que o Comercial usa para priorizar.
  *
- * Funciona sem JavaScript: é um `<form>` de verdade apontando para uma Server
- * Action, e o que a pessoa digitou volta pelos `defaultValue` quando a
- * validação recusa. Com JS, ganha estado de envio e mensagens por campo.
+ * É um `<form>` de verdade com uma Server Action por trás, e o que a pessoa
+ * digitou volta pelos `defaultValue` quando a validação recusa. A action
+ * passa por uma função do cliente, que dispara o Lead do Pixel (ver `acao`).
+ * O custo é o envio sem JavaScript: o formulário do hero da LP02 vem no HTML,
+ * mas só envia com o JS carregado. Um envio feito antes da hidratação o React
+ * guarda e repete assim que ela termina.
  */
 
 /* ----------------------------------------------------------------- CAMPOS */
@@ -431,10 +433,39 @@ export function Formulario({
   /* A origem viaja por `bind`, não por campo oculto: campo oculto vai no HTML
      e pode ser reescrito antes do envio, e é ele que diz ao Comercial de qual
      página o lead veio. */
-  const acao = useMemo(() => registrarLead.bind(null, origem), [origem]);
+  const acao = useMemo(() => {
+    const registrar = registrarLead.bind(null, origem);
+
+    /* O Lead do Pixel sai aqui, quando a resposta do servidor chega, e não de
+       um efeito do componente: quem fecha a janela durante o "Enviando…"
+       desmonta o formulário, o efeito nunca rodava e o cadastro chegava ao
+       Meta só pelo servidor. Esta função termina com ou sem formulário na
+       tela. */
+    return async (anterior: EstadoLead, formData: FormData) => {
+      const estado = await registrar(anterior, formData);
+
+      /* Só com o cadastro aceito — não no clique, que ainda pode voltar com
+         campo a corrigir. A armadilha de bot também responde sucesso, mas não
+         vai ao Meta pelo servidor; pelo Pixel também não.
+
+         O id é o mesmo campo oculto que subiu para o servidor, e as respostas
+         de qualificação só existem na LP02 — na LP01 os campos nem estão no
+         formulário. */
+      if (estado.status === "sucesso" && !formData.get("empresa")) {
+        const campo = (nome: string) => String(formData.get(nome) ?? "") || undefined;
+        rastrearLead(origem, {
+          idEvento: campo("event_id"),
+          faixaCapital: campo("faixaCapital"),
+          experiencia: campo("experiencia"),
+        });
+      }
+
+      return estado;
+    };
+  }, [origem]);
   const [estado, enviar, pendente] = useActionState(acao, ESTADO_INICIAL);
 
-  /* A LP01 renderiza este formulário duas vezes (hero e fim da página), então
+  /* A LP02 renderiza este formulário duas vezes (no hero e na janela), então
      nenhum `id` daqui pode ser derivado da origem: seriam dois elementos com
      o mesmo id no documento, e o `for` do rótulo passaria a apontar sempre
      para o primeiro. `useId` dá um valor único por instância. */
@@ -457,21 +488,8 @@ export function Formulario({
 
   const qualifica = origem === "lp2-interesse";
 
-  /* O que o evento de Lead precisa e a resposta de sucesso da Server Action
-     não devolve: o id do evento, que também sobe para o servidor e faz o Meta
-     juntar Pixel e API de Conversões num cadastro só, e as respostas de
-     qualificação. Guardado no envio. */
-  const envio = useRef<{ idEvento?: string; faixaCapital?: string; experiencia?: string }>(
-    undefined
-  );
   const campoIdEvento = useRef<HTMLInputElement>(null);
   const campoPagina = useRef<HTMLInputElement>(null);
-
-  /* O Lead só sai quando o servidor aceitou o cadastro — não no clique do
-     botão, que ainda pode voltar com campo a corrigir. */
-  useEffect(() => {
-    if (estado.status === "sucesso") rastrearLead(origem, envio.current);
-  }, [estado.status, origem]);
 
   if (estado.status === "sucesso") {
     return (
@@ -513,20 +531,11 @@ export function Formulario({
         }
 
         /* Escrito direto no campo oculto: o React monta o FormData da action
-           depois deste handler, então o valor já sobe neste envio. Um id novo
-           por tentativa — um reenvio depois de erro é outro evento. */
-        const idEvento = crypto.randomUUID();
-        if (campoIdEvento.current) campoIdEvento.current.value = idEvento;
+           depois deste handler, então o valor já sobe neste envio — e é desse
+           mesmo FormData que o Pixel lê o id, lá em `acao`. Um id novo por
+           tentativa — um reenvio depois de erro é outro evento. */
+        if (campoIdEvento.current) campoIdEvento.current.value = crypto.randomUUID();
         if (campoPagina.current) campoPagina.current.value = window.location.href;
-
-        const dados = new FormData(evento.currentTarget);
-        envio.current = {
-          idEvento,
-          ...(qualifica && {
-            faixaCapital: String(dados.get("faixaCapital") ?? ""),
-            experiencia: String(dados.get("experiencia") ?? ""),
-          }),
-        };
       }}
       className={`flex flex-col ${className}`}
     >

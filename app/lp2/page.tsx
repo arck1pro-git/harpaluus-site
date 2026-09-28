@@ -12,6 +12,7 @@ import { Reveal } from "../components/landing/reveal";
 import { FundoVideo } from "../components/lp/fundo-video";
 import { BotaoFormulario, FormularioProvider } from "../components/lp/form-modal";
 import type { TextosSucesso } from "../components/lp/formulario";
+import { FormularioNaPagina } from "../components/lp/formulario-na-pagina";
 import { lp2, marca, ROTA_LP2 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
@@ -126,10 +127,15 @@ export default function Lp2() {
             Ela era um card de 4/5 na coluna da direita e virou o fundo do
             bloco inteiro (`FundoHero`), a mesma abertura da home — é a mesma
             foto nos dois lugares, então mantê-la também à direita seria
-            repeti-la contra si mesma. Com a coluna da direita vazia, o hero
-            voltou a ser uma coluna só, e a textura de bolinhas saiu junto:
-            ela existe para dar superfície ao azul chapado das outras seções
+            repeti-la contra si mesma. A textura de bolinhas saiu junto: ela
+            existe para dar superfície ao azul chapado das outras seções
             escuras, e sobre a foto vira ruído.
+
+            A coluna da direita, que a foto deixou vazia, recebe o formulário:
+            no desktop ele fica ao lado do título, sobre a foto, e o botão do
+            hero some — abriria a janela com o mesmo formulário que já está à
+            vista. No celular o formulário vem logo depois do hero, e o botão
+            continua lá, porque a primeira tela é só do texto.
 
             No celular o hero ocupa a primeira tela inteira, como o da home.
             É `min-h`, não `h`: com altura fixa, o título longo somado ao
@@ -140,24 +146,50 @@ export default function Lp2() {
             e não `dvh`: a barra do navegador que aparece e some redimensiona
             o `dvh` no meio da rolagem, e o bloco inteiro pularia junto.
 
+            A foto, no celular, fica só atrás desse texto: esticada até o fim
+            do formulário, o `object-cover` a ampliaria o dobro e ela
+            chegaria borrada. Ela se prende à coluna do texto (que é
+            `relative` só até `lg`) e sai pelas laterais na medida do
+            `--gutter`, para ir de borda a borda; o formulário fica no azul da
+            seção, com um degradê fazendo a passagem, e sem o cartão que o
+            destaca da foto no desktop — ali ele só roubaria largura dos
+            campos. A partir de `lg` a
+            coluna vira `static`, e a mesma foto passa a cobrir a seção
+            inteira — por isso a `faixa` aqui não é `relative`.
+
             A partir de `lg` a altura volta a ser a do conteúdo: na horizontal
             e no desktop, 100svh é uma faixa baixa e larga, e forçar o bloco a
-            ela só afastaria o texto do botão. */}
-        <section className="relative flex min-h-[calc(100svh-var(--header-altura))] flex-col justify-center overflow-hidden bg-azul-escuro text-white lg:block lg:min-h-0">
-          <FundoHero />
+            ela só afastaria o texto do formulário. */}
+        <section className="relative overflow-hidden bg-azul-escuro text-white">
+          <div className="faixa lg:grid lg:grid-cols-[minmax(0,1fr)_minmax(0,460px)] lg:items-center lg:gap-16 lg:py-[clamp(4rem,8vw,6.5rem)] xl:gap-24">
+            <div className="relative flex min-h-[calc(100svh-var(--header-altura))] flex-col justify-center py-[clamp(4rem,8vw,6.5rem)] lg:static lg:block lg:min-h-0 lg:py-0">
+              <div className="absolute inset-y-0 inset-x-[calc(var(--gutter)*-1)] lg:inset-0">
+                <FundoHero />
+                <div className="absolute inset-x-0 bottom-0 h-24 bg-linear-to-b from-transparent to-azul-escuro lg:hidden" />
+              </div>
 
-          <div className="faixa relative z-10 py-[clamp(4rem,8vw,6.5rem)]">
-            <div className="max-w-[640px]">
-              <h1 className="tipo-headline text-white">{lp2.hero.titulo}</h1>
+              <div className="relative z-10 max-w-[640px]">
+                <h1 className="tipo-headline text-white">{lp2.hero.titulo}</h1>
 
-              <Reveal as="p" delay={160} className="tipo-corpo mt-8 max-w-[580px] text-pedra-claro">
-                {lp2.hero.texto}
-              </Reveal>
+                <Reveal as="p" delay={160} className="tipo-corpo mt-8 max-w-[580px] text-pedra-claro">
+                  {lp2.hero.texto}
+                </Reveal>
 
-              <Reveal delay={280} className="mt-10">
-                <BotaoFormulario tom="escuro">{lp2.cta}</BotaoFormulario>
-              </Reveal>
+                <Reveal delay={280} className="mt-10 lg:hidden">
+                  <BotaoFormulario tom="escuro">{lp2.cta}</BotaoFormulario>
+                </Reveal>
+              </div>
             </div>
+
+            <Reveal delay={280} className="relative z-10 pb-[clamp(4rem,8vw,6.5rem)] lg:pb-0">
+              <FormularioNaPagina
+                origem="lp2-interesse"
+                titulo={lp2.formulario.titulo}
+                rotuloEnvio={lp2.cta}
+                sucesso={SUCESSO}
+                className="relative lg:rounded-2xl lg:border lg:border-white/10 lg:bg-azul-escuro/85 lg:p-10 lg:backdrop-blur-sm"
+              />
+            </Reveal>
           </div>
         </section>
 
