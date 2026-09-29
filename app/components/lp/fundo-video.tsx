@@ -23,6 +23,11 @@ import { useEffect, useRef, useState } from "react";
  *    pediu menos movimento — nesse caso o vídeo nunca é baixado, e o que
  *    fica é a mesma cena, parada. Nada do conteúdo depende do movimento.
  *
+ *    Ele também só é escrito perto da tela: `poster` no HTML o navegador
+ *    baixa na hora, mesmo com `preload="none"`. Eram 124 KB, lá embaixo da
+ *    página, disputando o 4G com o Pixel do Meta nos primeiros segundos — e
+ *    o PageView saía meio segundo mais tarde, perdendo quem desiste antes.
+ *
  * 3. Os véus são chapados, e não o degradê de `FundoHero`. No hero o texto
  *    se apoia no rodapé do bloco, então o degradê pode fechar embaixo e
  *    deixar a foto clara em cima. Aqui o texto ocupa a altura toda e a
@@ -38,18 +43,21 @@ export function FundoVideo({
   poster: string;
 }) {
   const video = useRef<HTMLVideoElement>(null);
+  const [perto, setPerto] = useState(false);
   const [fonte, setFonte] = useState<string | undefined>(undefined);
 
   useEffect(() => {
     const node = video.current;
     if (!node) return;
 
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const semMovimento = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
     const observador = new IntersectionObserver(
       ([entrada]) => {
         if (!entrada.isIntersecting) return;
-        setFonte(src);
+        setPerto(true);
+        // quem pediu menos movimento fica só com o pôster
+        if (!semMovimento) setFonte(src);
         observador.disconnect();
       },
       { rootMargin: "300px" }
@@ -64,7 +72,7 @@ export function FundoVideo({
       <video
         ref={video}
         src={fonte}
-        poster={poster}
+        poster={perto ? poster : undefined}
         /* Os quatro juntos são o que permite tocar sozinho: sem `muted` o
            navegador bloqueia o autoplay, e sem `playsInline` o iPhone abre o
            vídeo em tela cheia em vez de deixá-lo no fundo do bloco. */
