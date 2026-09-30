@@ -6,8 +6,8 @@ import PilaresDestaque from "../components/pilares-destaque";
 import PilaresSection from "../components/pilares";
 
 /**
- * Rascunho antigo, fora da navegação: ainda traz telefone e e-mail de exemplo
- * e um rodapé com o nome de outra marca. Fica no repositório como referência,
+ * Rascunho antigo, fora da navegação: ainda traz e-mail de exemplo e um
+ * rodapé com o nome de outra marca. Fica no repositório como referência,
  * mas não pode ser indexado — enquanto estava aberto, era mais uma página
  * competindo pela identidade do site na busca.
  *
@@ -137,7 +137,7 @@ export default function Home() {
           <div>
             <h4 className="font-[family-name:var(--font-playfair)] text-[22px] font-normal mb-9 text-azul-escuro">fale conosco</h4>
             <div className="flex flex-col gap-2.5">
-              <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">(47) 98888-0000</p>
+              <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">(47) 99286-4926</p>
               <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">contato@contato.com</p>
               <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">R. Dorvalino Voltolini, 179<br />Perequê - Porto Belo/SC</p>
               <p className="text-[12px] text-azul tracking-[0.04em] leading-[1.7]">CNPJ: 50.550.515/0001-33</p>

@@ -64,7 +64,7 @@ export const endereco = {
 
 /** Conversa já aberta com a mensagem de origem preenchida. */
 export const WHATSAPP =
-  "https://wa.me/554792006498?text=oi%20eu%20vim%20pelo%20site%20da%20Amaan%20incorporadora";
+  "https://wa.me/5547992864926?text=oi%20eu%20vim%20pelo%20site%20da%20Amaan%20incorporadora";
 /** Portal onde o investidor da SCP acompanha o próprio capital. */
 export const PORTAL = "https://meuari.vercel.app";
 /**
