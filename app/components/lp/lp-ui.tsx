@@ -48,9 +48,13 @@ export function FundoHero() {
         src={hero.image.src}
         alt={hero.image.alt}
         fill
-        /* LCP das duas páginas: é a primeira coisa pintada e está no topo do
-           body. `preload` é o nome do `priority` a partir do Next 16. */
-        preload
+        /* LCP das duas páginas. Era `preload`, que no Next 16 põe o `<link>`
+           no head mas deixa o pedido em prioridade baixa — medido no
+           Lighthouse, a foto baixava atrás das fontes e até do favicon. A
+           prioridade alta é o que a coloca na frente; ela está no topo do
+           body, e o navegador a descobre sem precisar do `<link>`. */
+        loading="eager"
+        fetchPriority="high"
         sizes="100vw"
         className="object-cover"
         style={{ objectPosition: hero.image.position }}
@@ -61,6 +65,34 @@ export function FundoHero() {
 
       {/* véu do azul da marca, mais fechado embaixo: é onde o texto se apoia */}
       <div className="absolute inset-0 bg-linear-to-t from-azul-escuro/80 via-azul-escuro/20 to-azul-escuro/35" />
+    </>
+  );
+}
+
+/* ------------------------------------------------------- FUNDO DE SEÇÃO */
+
+/**
+ * Foto no fundo de uma seção escura, pelo `fundo` da `Secao`.
+ *
+ * Os véus são chapados, e não o degradê de `FundoHero`. No hero o texto se
+ * apoia no rodapé do bloco, então o degradê pode fechar embaixo e deixar a
+ * foto clara em cima. Numa seção o texto ocupa a altura toda, e a foto do uso
+ * atual (a orla de dia) é clara do topo à base — um degradê deixaria o título
+ * sem contraste justamente onde a imagem é mais clara.
+ *
+ * Sem `preload`: é o meio da página, e a foto chega com a rolagem.
+ */
+export function FundoFoto({ src, alt }: { src: string; alt: string }) {
+  return (
+    <>
+      <Image src={src} alt={alt} fill sizes="100vw" className="object-cover" />
+
+      {/* baixa o brilho da foto inteira */}
+      <div className="absolute inset-0 bg-black/40" />
+
+      {/* e o azul da marca por cima, para o bloco continuar sendo uma seção
+          escura do site e não uma foto com texto em cima */}
+      <div className="absolute inset-0 bg-azul-escuro/75" />
     </>
   );
 }
@@ -92,9 +124,9 @@ export function Secao({
    */
   cantoDots?: Canto;
   /**
-   * Peça que ocupa o bloco inteiro atrás do conteúdo — uma foto, um vídeo.
-   * Ela já entra com os próprios véus (ver `FundoVideo`), porque a dosagem
-   * depende do material: filmagem de dia pede mais véu que foto de pôr do
+   * Peça que ocupa o bloco inteiro atrás do conteúdo — uma foto, por
+   * exemplo. Ela já entra com os próprios véus (ver `FundoFoto`), porque a
+   * dosagem depende do material: foto de dia pede mais véu que foto de pôr do
    * sol.
    *
    * Desliga a textura de bolinhas: as duas disputariam a mesma superfície, e

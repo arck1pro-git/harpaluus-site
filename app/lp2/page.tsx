@@ -9,7 +9,6 @@ import {
   trilha,
 } from "../components/landing/dados-estruturados";
 import { Reveal } from "../components/landing/reveal";
-import { FundoVideo } from "../components/lp/fundo-video";
 import { BotaoFormulario, FormularioProvider } from "../components/lp/form-modal";
 import type { TextosSucesso } from "../components/lp/formulario";
 import { FormularioNaPagina } from "../components/lp/formulario-na-pagina";
@@ -17,7 +16,7 @@ import { lp2, marca, ROTA_LP2 } from "../components/lp/lp-config";
 import { LpFooter } from "../components/lp/lp-footer";
 import { LpHeader } from "../components/lp/lp-header";
 import { MetaViuConteudo } from "../components/lp/meta-pixel";
-import { FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
+import { FundoFoto, FundoHero, Paragrafo, Secao, Tese, Titulo } from "../components/lp/lp-ui";
 
 /**
  * LP 02 — Participação em incorporação via SCP (Funil 1).
@@ -221,12 +220,13 @@ export default function Lp2() {
             com a própria fonte e data colada, e a ressalva do modelo fecha o
             bloco antes que alguém leia os números como valorização futura.
 
-            O lugar era uma foto num painel na coluna direita e virou o vídeo
-            de fundo do bloco inteiro (`FundoVideo`) — a mesma aérea da orla,
-            com movimento. Duas consequências, as duas de propósito:
+            O lugar era uma foto num painel na coluna direita e virou o fundo
+            do bloco inteiro (`FundoFoto`) — a aérea da orla. Já foi um vídeo
+            da mesma filmagem; saiu a pedido do cliente, e ficou um quadro
+            dele. Duas consequências, as duas de propósito:
 
             O bloco ficou escuro. É o `tom` que troca a cor do texto, e sem
-            ele o azul-escuro do corpo sumiria contra a filmagem. Isso faz da
+            ele o azul-escuro do corpo sumiria contra a foto. Isso faz da
             LP02 uma página com quatro blocos escuros (hero, aqui, 08 e o
             formulário) onde antes havia três — o limite antes de a virada
             escura virar listra, e o motivo de não haver um quinto.
@@ -237,9 +237,7 @@ export default function Lp2() {
             quem": o vão de `bg-white/12` é o filete entre eles. */}
         <Secao
           tom="escuro"
-          fundo={
-            <FundoVideo src={lp2.onde.video.src} poster={lp2.onde.video.poster} />
-          }
+          fundo={<FundoFoto src={lp2.onde.imagem.src} alt={lp2.onde.imagem.alt} />}
         >
           <div className="max-w-[700px]">
             <Titulo tom="escuro">{lp2.onde.titulo}</Titulo>

@@ -3,8 +3,10 @@
 
    Página longa de conversão: hero com a imagem do empreendimento, o que é a
    SCP (bloco claro), o mercado, o simulador, as perguntas frequentes e o
-   formulário. A paleta é a da Amaan (ver `@theme` em `globals.css`); a
-   tipografia é a Montserrat, carregada só nesta rota (`lp3/layout.tsx`).
+   formulário. Paleta e tipografia são as da Amaan, as mesmas da LP01 e da
+   LP02: Playfair nos títulos e números, Inter no resto. As duas já vêm do
+   layout raiz, que as pré-carrega em toda página — uma fonte própria aqui
+   seria um terceiro arquivo disputando banda com o que pinta a tela.
 
    Tudo aqui mora dentro de `.lp3` — a classe que `lp3/layout.tsx` põe em
    volta das duas páginas da rota. As regras de `section` e `footer`, soltas
@@ -40,7 +42,7 @@
   flex: 1;
   background: var(--bg);
   color: var(--light);
-  font-family: var(--font-montserrat), sans-serif;
+  font-family: var(--font-inter), sans-serif;
   font-weight: 400;
   line-height: 1.72;
   overflow-x: clip;
@@ -90,10 +92,11 @@
 }
 
 .lp3 .hero-h1 {
+  font-family: var(--font-playfair), serif;
   font-size: clamp(2.2rem, 3.5vw, 4rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.1;
-  letter-spacing: -0.022em;
+  letter-spacing: -0.012em;
   margin-bottom: 1.5rem;
   color: #ffffff;
 }
@@ -192,8 +195,9 @@
 }
 
 .lp3 .section-h2 {
+  font-family: var(--font-playfair), serif;
   font-size: clamp(1.9rem, 3.2vw, 2.9rem);
-  font-weight: 300;
+  font-weight: 400;
   line-height: 1.15;
   letter-spacing: -0.015em;
   margin-bottom: 0.85rem;
@@ -283,6 +287,7 @@
   background: rgba(var(--escuro-rgb), 0.05);
 }
 .lp3 .scp-hl-number {
+  font-family: var(--font-playfair), serif;
   font-size: clamp(1.8rem, 2.5vw, 2.4rem);
   font-weight: 300;
   color: var(--gold-sobre-claro);
@@ -350,6 +355,7 @@
   padding-left: 1.25rem;
 }
 .lp3 .stat-number {
+  font-family: var(--font-playfair), serif;
   font-size: clamp(1.6rem, 2.5vw, 2.2rem);
   font-weight: 300;
   color: var(--gold);
@@ -594,6 +600,7 @@
   margin-bottom: 0.75rem;
 }
 .lp3 .sim-main-value {
+  font-family: var(--font-playfair), serif;
   font-size: clamp(2.4rem, 4vw, 3.6rem);
   font-weight: 300;
   color: var(--gold);

@@ -11,14 +11,39 @@ import { PAGEVIEW_POR_ROTA, PIXEL_ID } from "./lp/meta-eventos";
  * LPs sai também o personalizado, `PageView_lp1` ou `PageView_lp2`, escolhido
  * pelo caminho da URL. Os PageViews das navegações internas saem de
  * `MetaPageViewNavegacao`, e os eventos das LPs, de `lp/meta-pixel.tsx`.
+ *
+ * A única diferença para o snippet oficial é QUANDO o `fbevents.js` baixa.
+ * O `fbq` nasce aqui na hora, e tudo que for chamado nele — o PageView logo
+ * abaixo, o Lead, os eventos das LPs — entra na fila dele. O script do Meta
+ * (~240 KB somando o arquivo de configuração do Pixel) só é buscado na
+ * primeira interação (toque, rolagem, clique, tecla) ou, sem nenhuma,
+ * `ESPERA_MS` depois do `load`, e ao chegar esvazia a fila na ordem. Nada se
+ * perde, só sai mais tarde.
+ *
+ * O motivo: baixado e executado junto com a página, ele era o maior custo do
+ * celular — ~800 ms de bloqueio na thread principal, e a primeira pintura das
+ * LPs ficava esperando por ele. Medido com Lighthouse (celular), era a
+ * diferença entre ~50 e ~85 de nota.
+ *
+ * O custo: quem sai antes de interagir e antes da espera não chega a enviar
+ * o PageView. O Lead não corre esse risco — quem envia o formulário já
+ * interagiu, e ele também vai pela API de Conversões (`meta-capi.ts`).
  */
+const ESPERA_MS = 5000;
+
 const SNIPPET = `!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
 n.callMethod.apply(n,arguments):n.queue.push(arguments)};
 if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
-n.queue=[];t=b.createElement(e);t.async=!0;
+n.queue=[];
+var ev=['pointerdown','keydown','scroll','touchstart','wheel'],op={once:true,passive:true,capture:true};
+function carregar(){if(t)return;t=b.createElement(e);t.async=!0;
 t.src=v;s=b.getElementsByTagName(e)[0];
-s.parentNode.insertBefore(t,s)}(window, document,'script',
+s.parentNode.insertBefore(t,s);
+ev.forEach(function(x){f.removeEventListener(x,carregar,op)})}
+ev.forEach(function(x){f.addEventListener(x,carregar,op)});
+f.addEventListener('load',function(){setTimeout(carregar,${ESPERA_MS})})
+}(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '${PIXEL_ID}');
 var p=${JSON.stringify(PAGEVIEW_POR_ROTA)}[location.pathname.replace(/[/]+$/,'')];

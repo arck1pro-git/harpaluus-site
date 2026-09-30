@@ -270,27 +270,16 @@ export const lp2 = {
     abertura:
       "A AMAAN atua no litoral de Santa Catarina, região que concentra «algumas das praças imobiliárias de maior valor do Brasil». A força imobiliária se conecta a turismo, mobilidade e atratividade regional.",
     /**
-     * O lugar, filmado, no fundo do bloco que fala dele.
+     * O lugar, no fundo do bloco que fala dele: aérea da orla verticalizada
+     * encontrando o mar. O modelo pede repertório de lugar real — uma foto
+     * genérica de praia diria "litoral" sem dizer "este litoral".
      *
-     * Substituiu a foto `/fotos/site4.jpg`, que ocupava um painel na coluna
-     * direita: é a mesma leitura, aérea da orla verticalizada encontrando o
-     * mar, com o movimento que a foto parada não tinha. Continua valendo a
-     * regra que escolheu a foto — o modelo pede repertório de lugar real, e
-     * uma filmagem genérica de praia diria "litoral" sem dizer "este
-     * litoral".
-     *
-     * `poster` é um quadro do próprio arquivo, extraído em 0,5s. É o que a
-     * seção mostra antes de o vídeo chegar e para quem pediu menos
-     * movimento, então precisa ser deste vídeo e não de outra imagem.
-     *
-     * ⚠️ O arquivo está num bucket do Supabase que responde
-     * `Cache-Control: no-cache`, ou seja, o navegador revalida a cada visita
-     * em vez de reusar o que já baixou. Se o vídeo for ficar, vale servi-lo
-     * de `/public` ou ajustar o cache do bucket.
+     * Era um vídeo (a mesma filmagem) e saiu a pedido do cliente. A foto é
+     * um quadro dele, então o bloco ficou com a mesma cena, parada.
      */
-    video: {
-      src: "https://vlxejpotqiodxdlmmqel.supabase.co/storage/v1/object/public/videos/hero.mp4",
-      poster: "/fotos/onde-video-poster.jpg",
+    imagem: {
+      src: "/fotos/onde-orla.jpg",
+      alt: "Vista aérea da orla verticalizada do litoral catarinense, com o morro ao fundo",
     },
     /**
      * Regra 4 do modelo: o dado precisa de fonte e data. Por isso cada item

@@ -166,6 +166,9 @@ export default function Lp3() {
                 width={logoClaro.width}
                 height={logoClaro.height}
                 loading="eager"
+                /* a largura exibida (ver `.hero-logo img` em lp3.css): sem
+                   isto o Next servia o arquivo de 1920/3840 px */
+                sizes="(max-width: 480px) 240px, 288px"
               />
             </div>
 
@@ -184,15 +187,18 @@ export default function Lp3() {
 
             <div className="hero-divider" aria-hidden />
 
-            {/* Só no celular: a imagem entre o título e o texto. `lazy` porque
-                no desktop esta caixa fica em `display: none`, e aí o
-                navegador nem chega a buscar o arquivo. */}
+            {/* Só no celular: a imagem entre o título e o texto, na largura
+                da coluna (a tela menos o respiro lateral de 1,75rem). `eager`
+                porque no celular ela está na primeira tela; no desktop a caixa
+                some, e o `sizes` de 1px faz o navegador buscar a menor versão
+                do arquivo, de poucos bytes. */}
             <div className="hero-midia-inline">
               <Image
                 src={hero.image.src}
                 alt={hero.image.alt}
                 fill
-                sizes="(max-width: 960px) 100vw, 1px"
+                loading="eager"
+                sizes="(max-width: 960px) calc(100vw - 3.5rem), 1px"
                 style={{ objectPosition: hero.image.position }}
               />
             </div>
@@ -205,12 +211,16 @@ export default function Lp3() {
             <CtaLp3>Quero conhecer a SCP</CtaLp3>
           </div>
 
-          {/* Coluna direita — o empreendimento. Some no celular (ver acima). */}
+          {/* Coluna direita — o empreendimento, e a LCP do desktop: por isso
+              `eager` e prioridade alta. Some no celular (ver acima), onde o
+              `sizes` de 1px reduz o pedido à menor versão do arquivo. */}
           <div className="hero-img-box">
             <Image
               src={IMAGEM_HERO.src}
               alt={IMAGEM_HERO.alt}
               fill
+              loading="eager"
+              fetchPriority="high"
               sizes="(max-width: 960px) 1px, 50vw"
               style={{ objectPosition: "center 30%" }}
             />

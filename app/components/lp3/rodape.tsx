@@ -20,6 +20,7 @@ export function RodapeLp3() {
               alt=""
               width={256}
               height={256}
+              sizes="40px"
               className="footer-logo-simbolo"
             />
             <span className="footer-logos-sep" aria-hidden />
@@ -28,6 +29,7 @@ export function RodapeLp3() {
               alt={marca}
               width={logoClaro.width}
               height={logoClaro.height}
+              sizes="128px"
               className="footer-logo-nome"
             />
           </div>
