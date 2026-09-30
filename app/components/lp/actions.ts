@@ -90,6 +90,9 @@ export async function registrarLead(
     email: texto(formData, "email"),
     experiencia: texto(formData, "experiencia"),
     faixaCapital: texto(formData, "faixaCapital"),
+    modalidade: texto(formData, "modalidade"),
+    prazoDecisao: texto(formData, "prazoDecisao"),
+    profissao: texto(formData, "profissao"),
   };
 
   /* As UTMs chegam por campo oculto, preenchido no navegador a partir da URL

@@ -1,5 +1,11 @@
 import type { CampoLead, EstadoLead, OrigemLead } from "./lead";
-import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import {
+  FAIXAS_CAPITAL,
+  FAIXAS_CAPITAL_LP3,
+  MODALIDADES_LP3,
+  PARTICIPOU_SCP,
+  PRAZOS_DECISAO_LP3,
+} from "./lp-config";
 import type { Utms } from "./utms";
 
 /**
@@ -93,6 +99,10 @@ export type Lead = {
   whatsapp: string;
   experiencia?: string;
   faixaCapital?: string;
+  /** só na LP03 (SCP), como os dois de baixo */
+  modalidade?: string;
+  prazoDecisao?: string;
+  profissao?: string;
   /** a campanha que trouxe a visita; ausente quando não veio nenhuma */
   utm?: Utms;
   enviadoEm: string;
@@ -123,6 +133,9 @@ export function validarLead(
   const email = entrada.email.trim().toLowerCase();
   const experiencia = entrada.experiencia.trim();
   const faixaCapital = entrada.faixaCapital.trim();
+  const modalidade = entrada.modalidade.trim();
+  const prazoDecisao = entrada.prazoDecisao.trim();
+  const profissao = entrada.profissao.trim();
 
   const erros: NonNullable<EstadoLead["erros"]> = {};
 
@@ -148,6 +161,23 @@ export function validarLead(
     }
   }
 
+  /* A LP03 pede os quatro como obrigatórios. As faixas são outras — o aporte
+     mínimo ali é R$ 50 mil —, então a lista conferida também é outra. */
+  if (origem === "lp3-scp") {
+    if (!daLista(faixaCapital, FAIXAS_CAPITAL_LP3)) {
+      erros.faixaCapital = "Selecione uma faixa.";
+    }
+    if (!daLista(modalidade, MODALIDADES_LP3)) {
+      erros.modalidade = "Selecione uma opção.";
+    }
+    if (!daLista(prazoDecisao, PRAZOS_DECISAO_LP3)) {
+      erros.prazoDecisao = "Selecione uma opção.";
+    }
+    if (profissao.length < 2) {
+      erros.profissao = "Informe sua profissão.";
+    }
+  }
+
   if (Object.keys(erros).length > 0 || !whatsapp) {
     return { ok: false, erros };
   }
@@ -161,6 +191,9 @@ export function validarLead(
       whatsapp,
       /* só existem na LP02; ficam fora do payload da LP01 em vez de irem vazios */
       ...(origem === "lp2-interesse" ? { experiencia, faixaCapital } : {}),
+      ...(origem === "lp3-scp"
+        ? { faixaCapital, modalidade, prazoDecisao, profissao: profissao.slice(0, 120) }
+        : {}),
       /* mesma ideia da linha de cima: a chave não existe quando não há valor */
       ...(utm ? { utm } : {}),
       enviadoEm: new Date().toISOString(),

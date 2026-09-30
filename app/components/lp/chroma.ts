@@ -1,7 +1,13 @@
 import "server-only";
 
 import type { OrigemLead } from "./lead";
-import { FAIXAS_CAPITAL, PARTICIPOU_SCP } from "./lp-config";
+import {
+  FAIXAS_CAPITAL,
+  FAIXAS_CAPITAL_LP3,
+  MODALIDADES_LP3,
+  PARTICIPOU_SCP,
+  PRAZOS_DECISAO_LP3,
+} from "./lp-config";
 import { PIXEL_ID } from "./meta-eventos";
 import type { Utms } from "./utms";
 import type { Lead } from "./validar";
@@ -35,6 +41,11 @@ const WEBHOOKS: Record<OrigemLead, string | undefined> = {
   /* Webhook "LPs amaan - sem doc" — cópia da de cima, com uma etapa própria:
      novo contato - sem doc. */
   "lp2-interesse": process.env.CHROMA_WEBHOOK_LP2,
+  /* LP03 (SCP). Enquanto `CHROMA_WEBHOOK_LP3` não existir no ambiente, os
+     leads dela entram pela webhook da LP02 — etapa errada, mas no CRM. É a
+     troca consciente contra a alternativa, que seria o lead ficar só no log
+     esperando reenvio manual. Criada a webhook própria, basta a variável. */
+  "lp3-scp": process.env.CHROMA_WEBHOOK_LP3 || process.env.CHROMA_WEBHOOK_LP2,
 };
 
 /**
@@ -62,6 +73,16 @@ type PayloadChroma = {
   scp?: string;
   /** Id do Pixel do Meta que disparou o Lead na LP — o mesmo nas duas. */
   pixel_id?: string;
+  /**
+   * ⚠️ As três de baixo são da LP03 (SCP) e AINDA NÃO foram conferidas contra
+   * a ficha do contato: enquanto o CRM não tiver campos com exatamente estes
+   * nomes, elas são descartadas em silêncio — o lead entra, sem as três
+   * respostas. Criar os campos no Chroma (ou renomear aqui para os que já
+   * existirem) e mandar um envio de teste.
+   */
+  modalidade?: string;
+  prazo_decisao?: string;
+  profissao?: string;
 } & Utms;
 
 /** Quantas vezes tentar no total (a primeira mais duas retentativas). */
@@ -105,14 +126,21 @@ function rotulo(
  * CRM, e mandar string vazia só escreveria vazio por cima da ficha.
  */
 export function payloadChroma(lead: Lead): PayloadChroma {
+  /* A LP03 tem faixas próprias; o mesmo `value` ("100k-300k") existe nas
+     duas listas, então a lista certa sai da origem, não de uma busca geral. */
+  const faixas = lead.origem === "lp3-scp" ? FAIXAS_CAPITAL_LP3 : FAIXAS_CAPITAL;
+
   return {
     nome: lead.nome,
     /* `normalizarWhatsApp` já devolve E.164 sem símbolos (`5547999998888`),
        que é exatamente o que a webhook pede: só dígitos, com DDI e DDD. */
     whatsapp: lead.whatsapp,
     email: lead.email,
-    valor: rotulo(FAIXAS_CAPITAL, lead.faixaCapital),
+    valor: rotulo(faixas, lead.faixaCapital),
     scp: rotulo(PARTICIPOU_SCP, lead.experiencia),
+    modalidade: rotulo(MODALIDADES_LP3, lead.modalidade),
+    prazo_decisao: rotulo(PRAZOS_DECISAO_LP3, lead.prazoDecisao),
+    profissao: lead.profissao,
     pixel_id: PIXEL_ID,
     /* Uma chave por parâmetro, com o nome padrão da UTM. `lead.utm` só
        carrega as que existem, então a visita orgânica não escreve nenhuma —

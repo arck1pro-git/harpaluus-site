@@ -1,0 +1,1208 @@
+/* ═══════════════════════════════════════════════════════════
+   LP03 — Investimento em SCP, na identidade da Amaan.
+
+   Página longa de conversão: hero com a imagem do empreendimento, o que é a
+   SCP (bloco claro), o mercado, o simulador, as perguntas frequentes e o
+   formulário. A paleta é a da Amaan (ver `@theme` em `globals.css`); a
+   tipografia é a Montserrat, carregada só nesta rota (`lp3/layout.tsx`).
+
+   Tudo aqui mora dentro de `.lp3` — a classe que `lp3/layout.tsx` põe em
+   volta das duas páginas da rota. As regras de `section` e `footer`, soltas
+   no app, reformatariam a home e as outras LPs na primeira navegação que
+   passasse por aqui.
+═══════════════════════════════════════════════════════════ */
+
+.lp3 {
+  /* Os tokens da Amaan, com um degrau intermediário entre o azul-escuro e o
+     azul-profundo para as seções alternadas: o azul-profundo puro dobraria o
+     contraste entre elas. `--light` é o pedra-claro, o texto das seções
+     escuras da Amaan. */
+  --bg: #111729;
+  --surface: #172039;
+  --surface-2: #1f2e50;
+  --gold: #caa063;
+  --gold-2: #f0c991;
+  --light: #dde3ed;
+  --light-70: rgba(221, 227, 237, 0.7);
+  --light-40: rgba(221, 227, 237, 0.4);
+  --light-15: rgba(221, 227, 237, 0.15);
+  --light-06: rgba(221, 227, 237, 0.06);
+  --gold-line: rgba(202, 160, 99, 0.25);
+  --gold-glow: rgba(202, 160, 99, 0.07);
+  /* a seção clara: o branco das seções claras da Amaan, com o azul-escuro
+     no texto e o dourado da marca — o medio some sobre o branco */
+  --claro: #ffffff;
+  --escuro: #111729;
+  --escuro-rgb: 17, 23, 41;
+  --gold-sobre-claro: #af8951;
+
+  width: 100%;
+  flex: 1;
+  background: var(--bg);
+  color: var(--light);
+  font-family: var(--font-montserrat), sans-serif;
+  font-weight: 400;
+  line-height: 1.72;
+  overflow-x: clip;
+  -webkit-font-smoothing: antialiased;
+}
+
+.lp3 a {
+  text-decoration: none;
+}
+
+.lp3 :focus-visible {
+  outline: 2px solid var(--gold);
+  outline-offset: 3px;
+}
+
+/* ─── HERO ─────────────────────────────────────────────── */
+.lp3 .hero {
+  min-height: 100svh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  align-items: stretch;
+  padding: 0;
+  position: relative;
+  overflow: hidden;
+}
+
+.lp3 .hero-copy {
+  position: relative;
+  z-index: 2;
+  padding: 4rem 4rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lp3 .hero-logo {
+  margin-bottom: 2rem;
+}
+/* O lettering da Amaan é quatro vezes mais largo que alto: 72px de altura
+   dão ~290px de largura, o bastante para a marca abrir a página sem
+   competir com o título. */
+.lp3 .hero-logo img {
+  height: 72px;
+  width: auto;
+  display: block;
+}
+
+.lp3 .hero-h1 {
+  font-size: clamp(2.2rem, 3.5vw, 4rem);
+  font-weight: 300;
+  line-height: 1.1;
+  letter-spacing: -0.022em;
+  margin-bottom: 1.5rem;
+  color: #ffffff;
+}
+.lp3 .hero-h1 .accent {
+  color: var(--gold);
+  font-weight: 500;
+}
+
+.lp3 .hero-divider {
+  width: 48px;
+  height: 1px;
+  background: var(--gold-line);
+  margin-bottom: 1.5rem;
+}
+
+.lp3 .hero-sub {
+  font-size: clamp(1rem, 1.3vw, 1.1rem);
+  font-weight: 300;
+  color: var(--light);
+  max-width: 440px;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+}
+
+/* Coluna direita do hero — a imagem do empreendimento, com o corte diagonal
+   na borda esquerda */
+.lp3 .hero-img-box {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
+  background: var(--surface-2);
+}
+.lp3 .hero-img-box img {
+  object-fit: cover;
+}
+
+/* No celular a coluna da direita some, e a imagem entra entre o título e o
+   texto, em 16:9 */
+.lp3 .hero-midia-inline {
+  display: none;
+}
+
+/* ─── BOTÕES ────────────────────────────────────────────── */
+.lp3 .btn {
+  display: inline-block;
+  background: var(--gold);
+  color: var(--bg);
+  padding: 1rem 2.4rem;
+  font-family: inherit;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  line-height: 1.72;
+  text-transform: uppercase;
+  border: none;
+  cursor: pointer;
+  transition:
+    opacity 0.22s,
+    transform 0.18s;
+}
+.lp3 .btn:hover {
+  opacity: 0.88;
+  transform: translateY(-1px);
+}
+
+/* ─── SEÇÃO — BASE ──────────────────────────────────────── */
+.lp3 section {
+  padding: 7rem 5rem;
+  position: relative;
+}
+
+.lp3 .section-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.lp3 .section-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 0.9rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.5rem;
+}
+.lp3 .eyebrow-center {
+  justify-content: center;
+}
+
+.lp3 .eyebrow-line {
+  width: 32px;
+  height: 1px;
+  background: var(--gold);
+  flex-shrink: 0;
+}
+
+.lp3 .section-h2 {
+  font-size: clamp(1.9rem, 3.2vw, 2.9rem);
+  font-weight: 300;
+  line-height: 1.15;
+  letter-spacing: -0.015em;
+  margin-bottom: 0.85rem;
+  color: #ffffff;
+}
+.lp3 .section-h2 .accent {
+  color: var(--gold);
+}
+
+.lp3 .section-lead {
+  font-size: clamp(1rem, 1.4vw, 1.1rem);
+  color: var(--light-70);
+  max-width: 600px;
+  line-height: 1.9;
+  margin-bottom: 3rem;
+  font-weight: 300;
+}
+
+.lp3 .gold-rule {
+  width: 100%;
+  height: 1px;
+  background: var(--gold-line);
+}
+
+/* ─── SEÇÃO SCP (fundo claro) ───────────────────────────── */
+.lp3 .scp-section {
+  background: var(--claro);
+}
+.lp3 .scp-section .section-eyebrow {
+  color: rgba(var(--escuro-rgb), 0.45);
+  justify-content: center;
+}
+.lp3 .scp-section .eyebrow-line {
+  background: rgba(var(--escuro-rgb), 0.25);
+}
+.lp3 .scp-section .section-h2 {
+  color: var(--escuro);
+  text-align: center;
+}
+.lp3 .scp-section .section-h2 .accent {
+  color: var(--gold-sobre-claro);
+}
+.lp3 .scp-section .section-lead {
+  color: rgba(var(--escuro-rgb), 0.6);
+  margin-bottom: 2rem;
+  text-align: center;
+  max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.lp3 .scp-body-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3rem;
+  align-items: start;
+}
+
+.lp3 .scp-body p {
+  font-size: 1.05rem;
+  color: rgba(var(--escuro-rgb), 0.68);
+  line-height: 1.95;
+  margin-bottom: 1.75rem;
+  font-weight: 300;
+  text-align: justify;
+}
+.lp3 .scp-body p strong {
+  color: var(--escuro);
+  font-weight: 500;
+}
+
+.lp3 .scp-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+  margin-top: 3rem;
+}
+
+.lp3 .scp-cta {
+  margin-top: 2.5rem;
+  text-align: center;
+}
+
+.lp3 .scp-hl {
+  border-left: 2px solid var(--gold-sobre-claro);
+  padding: 1.5rem 1.75rem;
+  background: rgba(var(--escuro-rgb), 0.05);
+}
+.lp3 .scp-hl-number {
+  font-size: clamp(1.8rem, 2.5vw, 2.4rem);
+  font-weight: 300;
+  color: var(--gold-sobre-claro);
+  line-height: 1;
+  margin-bottom: 0.5rem;
+}
+.lp3 .scp-hl-label {
+  font-size: 1rem;
+  color: rgba(var(--escuro-rgb), 0.6);
+  line-height: 1.5;
+  font-weight: 300;
+}
+
+/* ─── SEÇÃO LITORAL ─────────────────────────────────────── */
+/* Sem padding: a imagem sangra até a borda esquerda da tela */
+.lp3 .litoral-section {
+  background: var(--bg);
+  padding: 0;
+  overflow: hidden;
+}
+
+.lp3 .litoral-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: stretch;
+  min-height: 720px;
+}
+
+/* A borda direita da foto vai de 100% no topo a 82% na base: diagonal \ */
+.lp3 .litoral-img-box {
+  position: relative;
+  overflow: hidden;
+  clip-path: polygon(0 0, 100% 0, 82% 100%, 0 100%);
+}
+.lp3 .litoral-img-box img {
+  object-fit: cover;
+}
+.lp3 .litoral-img-label {
+  position: absolute;
+  bottom: 1rem;
+  left: 1rem;
+  font-size: 0.75rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  background: rgba(var(--escuro-rgb), 0.85);
+  padding: 0.35rem 0.8rem;
+  z-index: 1;
+}
+
+.lp3 .litoral-content {
+  position: relative;
+  z-index: 1;
+  padding: 7rem 5rem;
+}
+
+.lp3 .litoral-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  margin-bottom: 2.75rem;
+}
+.lp3 .stat-box {
+  border-left: 2px solid var(--gold);
+  padding-left: 1.25rem;
+}
+.lp3 .stat-number {
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 0.35rem;
+}
+.lp3 .stat-label {
+  font-size: 0.99rem;
+  color: var(--light);
+  line-height: 1.5;
+  font-weight: 400;
+}
+.lp3 .stat-source {
+  font-size: 0.83rem;
+  color: var(--light);
+  line-height: 1.4;
+  font-weight: 400;
+  margin-top: 0.25rem;
+}
+
+.lp3 .litoral-text {
+  font-size: 1rem;
+  color: var(--light);
+  line-height: 1.9;
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+}
+
+/* ─── SIMULADOR ─────────────────────────────────────────── */
+.lp3 .simulator-section {
+  background: var(--surface);
+}
+
+.lp3 .simulator-header {
+  text-align: center;
+  margin-bottom: 3.5rem;
+}
+.lp3 .simulator-header .section-eyebrow {
+  justify-content: center;
+}
+.lp3 .simulator-header .section-h2 {
+  margin: 0 auto;
+}
+.lp3 .simulator-header .section-lead {
+  margin: 0.5rem auto 0;
+  text-align: center;
+}
+
+.lp3 .sim-box {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border: 1px solid var(--gold-line);
+  overflow: hidden;
+}
+
+.lp3 .sim-controls {
+  padding: 3rem;
+  background: var(--bg);
+  border-right: 1px solid var(--gold-line);
+  display: flex;
+  flex-direction: column;
+  gap: 2.5rem;
+}
+
+.lp3 .sim-field-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 1.1rem;
+  display: block;
+}
+
+.lp3 .sim-capital-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--gold-line);
+  background: var(--surface);
+  overflow: hidden;
+}
+.lp3 .sim-capital-prefix {
+  padding: 0.85rem 1.1rem;
+  font-size: 1rem;
+  color: var(--gold);
+  font-weight: 500;
+  border-right: 1px solid var(--gold-line);
+  white-space: nowrap;
+  background: var(--gold-glow);
+}
+.lp3 .sim-capital-input {
+  flex: 1;
+  min-width: 0;
+  background: none;
+  border: none;
+  outline: none;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--light);
+  padding: 0.85rem 1.1rem;
+}
+.lp3 .sim-capital-input::placeholder {
+  color: var(--light-40);
+}
+
+.lp3 input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 2px;
+  background: var(--gold-line);
+  outline: none;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+.lp3 input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 20px;
+  height: 20px;
+  background: var(--gold);
+  border-radius: 50%;
+  border: 2.5px solid var(--bg);
+  box-shadow: 0 0 0 1px var(--gold);
+  cursor: pointer;
+  transition: transform 0.15s;
+}
+.lp3 input[type="range"]::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+.lp3 input[type="range"]::-moz-range-thumb {
+  width: 20px;
+  height: 20px;
+  background: var(--gold);
+  border-radius: 50%;
+  border: 2.5px solid var(--bg);
+  cursor: pointer;
+}
+
+.lp3 .sim-range-ticks {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 0.6rem;
+}
+.lp3 .sim-range-tick {
+  font-size: 0.78rem;
+  color: var(--light-40);
+}
+
+.lp3 .sim-toggle-group {
+  display: flex;
+  border: 1px solid var(--gold-line);
+  overflow: hidden;
+}
+.lp3 .sim-toggle {
+  flex: 1;
+  padding: 0.85rem 0.5rem;
+  background: none;
+  border: none;
+  border-right: 1px solid var(--gold-line);
+  font-family: inherit;
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--light-40);
+  cursor: pointer;
+  transition:
+    background 0.2s,
+    color 0.2s;
+  text-align: center;
+}
+.lp3 .sim-toggle:last-child {
+  border-right: none;
+}
+.lp3 .sim-toggle.active {
+  background: var(--gold);
+  color: var(--bg);
+}
+.lp3 .sim-toggle:not(.active):hover {
+  background: var(--gold-glow);
+  color: var(--light);
+}
+
+.lp3 .sim-min-warning {
+  font-size: 0.82rem;
+  color: #ff8a80;
+  margin-top: 0.55rem;
+  font-weight: 400;
+  line-height: 1.4;
+}
+
+.lp3 .sim-modo-desc {
+  font-size: 0.82rem;
+  color: var(--light);
+  margin-top: 0.85rem;
+  line-height: 1.55;
+  font-weight: 300;
+}
+
+.lp3 .sim-results {
+  padding: 3rem;
+  background: var(--surface);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.lp3 .sim-taxa-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  border: 1px solid var(--gold-line);
+  padding: 0.5rem 1rem;
+  margin-bottom: 2rem;
+  align-self: flex-start;
+}
+.lp3 .sim-taxa-badge-label {
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--light-40);
+}
+.lp3 .sim-taxa-badge-value {
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--gold);
+}
+
+.lp3 .sim-main-result {
+  text-align: center;
+  padding: 2rem 0;
+  border-top: 1px solid var(--gold-line);
+  border-bottom: 1px solid var(--gold-line);
+  margin-bottom: 2rem;
+}
+.lp3 .sim-main-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.75rem;
+}
+.lp3 .sim-main-value {
+  font-size: clamp(2.4rem, 4vw, 3.6rem);
+  font-weight: 300;
+  color: var(--gold);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+.lp3 .sim-main-sub {
+  font-size: 0.82rem;
+  color: var(--light-40);
+  margin-top: 0.6rem;
+  font-weight: 300;
+}
+
+.lp3 .sim-rows {
+  display: flex;
+  flex-direction: column;
+}
+.lp3 .sim-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 0;
+  border-bottom: 1px solid var(--light-06);
+}
+.lp3 .sim-row:last-child {
+  border-bottom: none;
+}
+.lp3 .sim-row-label {
+  font-size: 0.88rem;
+  color: var(--light);
+  font-weight: 300;
+}
+.lp3 .sim-row-value {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--light);
+}
+.lp3 .sim-row-value.hi {
+  color: var(--gold);
+}
+
+.lp3 .sim-disclaimer {
+  font-size: 0.9rem;
+  color: var(--light);
+  text-align: center;
+  margin-top: 1.75rem;
+  font-weight: 300;
+  line-height: 1.65;
+}
+
+.lp3 .simulator-cta {
+  text-align: center;
+  margin-top: 3rem;
+}
+
+/* ─── FAQ ───────────────────────────────────────────────── */
+.lp3 .faq-section {
+  background: var(--bg);
+}
+
+.lp3 .faq-grid {
+  display: grid;
+  grid-template-columns: 1fr 2.2fr;
+  gap: 5rem;
+  align-items: start;
+}
+
+.lp3 .faq-sidebar .section-h2 {
+  margin-bottom: 1rem;
+}
+.lp3 .faq-sidebar p {
+  font-size: 1rem;
+  color: var(--light);
+  line-height: 1.85;
+  margin-bottom: 2rem;
+  font-weight: 300;
+}
+
+.lp3 .faq-list {
+  list-style: none;
+}
+.lp3 .faq-item {
+  border-bottom: 1px solid var(--light-06);
+}
+.lp3 .faq-btn {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  padding: 1.25rem 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 400;
+  color: var(--light);
+  transition: color 0.2s;
+}
+.lp3 .faq-btn:hover {
+  color: var(--gold);
+}
+
+.lp3 .faq-icon {
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+  border: 1px solid var(--gold-line);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  font-style: normal;
+  color: var(--gold);
+  transition: transform 0.28s;
+  user-select: none;
+}
+
+.lp3 .faq-answer {
+  display: none;
+  padding-bottom: 1.4rem;
+  font-size: 1rem;
+  color: var(--light);
+  line-height: 1.9;
+  font-weight: 300;
+}
+
+.lp3 .faq-item.open .faq-answer {
+  display: block;
+}
+.lp3 .faq-item.open .faq-icon {
+  transform: rotate(45deg);
+}
+
+.lp3 .faq-bottom {
+  text-align: center;
+  margin-top: 4rem;
+  padding-top: 4rem;
+  border-top: 1px solid var(--gold-line);
+}
+
+/* ─── FORMULÁRIO CTA ────────────────────────────────────── */
+.lp3 .cta-section {
+  background: var(--surface);
+  text-align: center;
+}
+
+.lp3 .cta-section .section-h2 {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.lp3 .cta-sub {
+  font-size: 1rem;
+  color: var(--light-70);
+  margin: 1.25rem auto 0;
+  max-width: 480px;
+  line-height: 1.9;
+  font-weight: 300;
+}
+
+.lp3 .cta-form {
+  position: relative;
+  max-width: 540px;
+  margin: 3rem auto 0;
+  text-align: left;
+}
+
+.lp3 .form-row {
+  margin-bottom: 1.35rem;
+}
+
+.lp3 .form-label {
+  display: block;
+  font-size: 0.78rem;
+  font-weight: 600;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.55rem;
+}
+
+.lp3 .form-input,
+.lp3 .form-select {
+  width: 100%;
+  background: var(--bg);
+  border: 1px solid var(--gold-line);
+  border-radius: 0;
+  color: var(--light);
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 300;
+  padding: 0.95rem 1.2rem;
+  outline: none;
+  transition: border-color 0.22s;
+  -webkit-appearance: none;
+  appearance: none;
+}
+.lp3 .form-input::placeholder {
+  color: var(--light-40);
+}
+.lp3 .form-input:focus,
+.lp3 .form-select:focus {
+  border-color: var(--gold);
+}
+.lp3 .form-select option {
+  background: var(--bg);
+}
+
+.lp3 .form-input--err,
+.lp3 .form-input--err:focus {
+  border-color: rgba(220, 50, 50, 0.7);
+}
+.lp3 .form-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.82rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #ffaaaa;
+}
+
+/* Honeypot: fora da tela em vez de display:none, que robô costuma pular */
+.lp3 .form-hp {
+  position: absolute;
+  left: -10000px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.lp3 .form-submit {
+  width: 100%;
+  margin-top: 0.25rem;
+}
+.lp3 .form-submit:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+}
+
+.lp3 .form-feedback {
+  padding: 1rem 1.2rem;
+  font-size: 0.9rem;
+  font-weight: 400;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  border-left: 3px solid;
+}
+.lp3 .form-feedback--ok {
+  background: rgba(202, 160, 99, 0.1);
+  border-color: var(--gold);
+  color: var(--gold-2);
+}
+.lp3 .form-feedback--err {
+  background: rgba(220, 50, 50, 0.08);
+  border-color: rgba(220, 50, 50, 0.6);
+  color: #ffaaaa;
+}
+
+/* ─── RODAPÉ ────────────────────────────────────────────── */
+.lp3 footer {
+  background: #0b1020;
+  padding: 2.75rem 5rem;
+  border-top: 1px solid var(--gold-line);
+}
+
+.lp3 .footer-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 2rem;
+  flex-wrap: wrap;
+}
+
+.lp3 .footer-brand-block {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  flex-shrink: 0;
+}
+
+.lp3 .footer-logos {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+}
+
+/* O símbolo dourado e o lettering da Amaan, lado a lado */
+.lp3 .footer-logo-simbolo {
+  height: 40px;
+  width: auto;
+}
+
+.lp3 .footer-logo-nome {
+  height: 32px;
+  width: auto;
+}
+
+.lp3 .footer-logos-sep {
+  width: 1px;
+  height: 28px;
+  background: var(--gold-line);
+  flex-shrink: 0;
+}
+
+.lp3 .footer-social {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.lp3 .footer-social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--gold-line);
+  color: var(--light-40);
+  transition:
+    color 0.22s,
+    border-color 0.22s;
+}
+
+.lp3 .footer-social-link svg {
+  width: 16px;
+  height: 16px;
+}
+
+.lp3 .footer-social-link:hover {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+
+.lp3 .footer-legal {
+  font-size: 0.82rem;
+  color: var(--light-40);
+  line-height: 1.75;
+  max-width: 640px;
+  font-weight: 300;
+}
+
+/* ─── RESPONSIVO ────────────────────────────────────────── */
+@media (max-width: 960px) {
+  .lp3 section {
+    padding: 5rem 1.75rem;
+  }
+
+  .lp3 .hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+    gap: 0;
+  }
+
+  .lp3 .hero-copy {
+    padding: 4rem 1.75rem;
+    text-align: center;
+    align-items: center;
+  }
+
+  .lp3 .hero-logo img {
+    margin: 0 auto;
+  }
+
+  .lp3 .hero-img-box {
+    display: none;
+  }
+
+  .lp3 .hero-midia-inline {
+    display: block;
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 6px;
+    overflow: hidden;
+    margin: 1.5rem 0;
+  }
+  .lp3 .hero-midia-inline img {
+    object-fit: cover;
+  }
+
+  .lp3 .litoral-grid {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+
+  /* sem diagonal no celular, e aspect-ratio para dar altura à foto */
+  .lp3 .litoral-img-box {
+    aspect-ratio: 16/9;
+    clip-path: none;
+  }
+
+  .lp3 .litoral-content {
+    padding: 4rem 1.75rem;
+  }
+
+  .lp3 .faq-grid {
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  .lp3 .litoral-stats {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .lp3 .scp-body-grid {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+
+  .lp3 .scp-highlights {
+    grid-template-columns: 1fr;
+  }
+
+  .lp3 .sim-box {
+    grid-template-columns: 1fr;
+  }
+  .lp3 .sim-controls {
+    padding: 1.5rem;
+    gap: 1.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--gold-line);
+  }
+  .lp3 .sim-results {
+    padding: 1.5rem;
+  }
+  .lp3 .sim-taxa-badge {
+    margin-bottom: 1.25rem;
+  }
+  .lp3 .sim-main-result {
+    padding: 1.25rem 0;
+    margin-bottom: 1.25rem;
+  }
+  .lp3 .sim-row {
+    flex-wrap: wrap;
+    gap: 0.2rem;
+  }
+
+  .lp3 footer {
+    padding: 2.5rem 1.75rem;
+  }
+  .lp3 .footer-inner {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 480px) {
+  .lp3 .hero-h1 {
+    font-size: 2.5rem;
+  }
+  .lp3 .hero-logo img {
+    height: 60px;
+  }
+  .lp3 .litoral-stats {
+    grid-template-columns: 1fr;
+  }
+
+  .lp3 .sim-controls {
+    padding: 0.5rem;
+    gap: 1.25rem;
+  }
+  .lp3 .sim-results {
+    padding: 1.1rem;
+  }
+  .lp3 .sim-main-value {
+    font-size: clamp(1.8rem, 9vw, 2.4rem);
+  }
+  .lp3 .sim-range-tick {
+    font-size: 0.7rem;
+  }
+  .lp3 .sim-row-label {
+    font-size: 0.8rem;
+  }
+  .lp3 .sim-row-value {
+    font-size: 0.88rem;
+    white-space: nowrap;
+  }
+  .lp3 .sim-toggle {
+    font-size: 0.78rem;
+    padding: 0.75rem 0.3rem;
+  }
+}
+
+/* ─── PÁGINA OBRIGADO ──────────────────────────────────── */
+.lp3 .obrigado-main {
+  display: flex;
+  align-items: center;
+  min-height: calc(100svh - 9rem); /* desconta a altura do rodapé */
+}
+
+.lp3 .obrigado-section {
+  width: 100%;
+  text-align: center;
+}
+
+.lp3 .obrigado-badge {
+  width: 76px;
+  height: 76px;
+  margin: 0 auto 2rem;
+  border: 1px solid var(--gold-line);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  background: var(--gold-glow);
+  box-shadow: 0 0 0 10px rgba(202, 160, 99, 0.04);
+}
+
+.lp3 .obrigado-badge svg {
+  width: 34px;
+  height: 34px;
+}
+
+.lp3 .obrigado-h1 {
+  max-width: 680px;
+  margin: 0 auto 0.85rem;
+}
+
+.lp3 .obrigado-lead {
+  margin: 0 auto;
+  max-width: 520px;
+}
+
+.lp3 .obrigado-lead strong {
+  color: var(--light);
+  font-weight: 500;
+}
+
+.lp3 .obrigado-steps {
+  list-style: none;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.25rem;
+  max-width: 900px;
+  margin: 3.5rem auto 0;
+  text-align: left;
+}
+
+.lp3 .obrigado-step {
+  background: var(--light-06);
+  border: 1px solid var(--light-15);
+  border-top: 1px solid var(--gold-line);
+  padding: 1.75rem 1.6rem;
+}
+
+.lp3 .obrigado-step-num {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.3em;
+  color: var(--gold);
+  margin-bottom: 0.85rem;
+}
+
+.lp3 .obrigado-step-title {
+  font-size: 0.95rem;
+  font-weight: 500;
+  line-height: 1.4;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.lp3 .obrigado-step-text {
+  font-size: 0.85rem;
+  color: var(--light-70);
+  line-height: 1.75;
+  font-weight: 300;
+}
+
+.lp3 .obrigado-actions {
+  margin-top: 3.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.5rem;
+}
+
+@media (max-width: 960px) {
+  .lp3 .obrigado-main {
+    min-height: auto;
+    padding: 1rem 0;
+  }
+  .lp3 .obrigado-steps {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+    margin-top: 2.75rem;
+  }
+  .lp3 .obrigado-actions {
+    margin-top: 2.75rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .lp3 .obrigado-badge {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 1.5rem;
+  }
+  .lp3 .obrigado-badge svg {
+    width: 28px;
+    height: 28px;
+  }
+  /* O botão ocupa a largura total para facilitar o toque */
+  .lp3 .obrigado-actions .btn {
+    width: 100%;
+    text-align: center;
+  }
+}

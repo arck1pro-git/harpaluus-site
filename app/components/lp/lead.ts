@@ -9,9 +9,18 @@
  */
 
 /** De qual LP veio — vai junto no payload; o brief da LP02 pede origem identificada. */
-export type OrigemLead = "lp1-checklist" | "lp2-interesse";
+export type OrigemLead = "lp1-checklist" | "lp2-interesse" | "lp3-scp";
 
-export type CampoLead = "nome" | "whatsapp" | "email" | "experiencia" | "faixaCapital";
+/* Os três últimos só existem no formulário da LP03 (SCP). */
+export type CampoLead =
+  | "nome"
+  | "whatsapp"
+  | "email"
+  | "experiencia"
+  | "faixaCapital"
+  | "modalidade"
+  | "prazoDecisao"
+  | "profissao";
 
 export type EstadoLead = {
   status: "inicial" | "erro" | "sucesso";

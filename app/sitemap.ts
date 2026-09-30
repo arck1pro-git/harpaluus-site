@@ -1,12 +1,12 @@
 import type { MetadataRoute } from "next";
 
-import { ROTA_LP1, ROTA_LP2 } from "./components/lp/lp-config";
+import { ROTA_LP1, ROTA_LP2, ROTA_LP3 } from "./components/lp/lp-config";
 import { SITE_URL } from "./components/landing/site-config";
 
 /**
  * Gera /sitemap.xml.
  *
- * Três URLs, e nenhuma âncora: as seções do menu da home (`/#sobre`,
+ * Quatro URLs, e nenhuma âncora: as seções do menu da home (`/#sobre`,
  * `/#empreendimentos`) continuam de fora porque listar âncora como URL faria
  * o Google tratá-las como páginas duplicadas da home.
  *
@@ -32,6 +32,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
     },
     {
       url: `${SITE_URL}${ROTA_LP2}`,
+      lastModified: agora,
+      changeFrequency: "yearly",
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}${ROTA_LP3}`,
       lastModified: agora,
       changeFrequency: "yearly",
       priority: 0.8,

@@ -1,5 +1,5 @@
 import type { OrigemLead } from "./lead";
-import { ROTA_LP1, ROTA_LP2 } from "./lp-config";
+import { ROTA_LP1, ROTA_LP2, ROTA_LP3 } from "./lp-config";
 
 /**
  * O que o Pixel (navegador) e a API de Conversões (servidor) precisam dizer
@@ -22,6 +22,7 @@ export const PIXEL_ID = "1124238353883498";
 const CONTEUDO: Record<OrigemLead, string> = {
   "lp1-checklist": "lp1",
   "lp2-interesse": "lp2",
+  "lp3-scp": "lp3",
 };
 
 export function conteudo(origem: OrigemLead) {
@@ -39,6 +40,7 @@ export function nomeDoEvento(evento: EventoLp, origem: OrigemLead) {
 const ORIGEM_DA_ROTA: Record<string, OrigemLead> = {
   [ROTA_LP1]: "lp1-checklist",
   [ROTA_LP2]: "lp2-interesse",
+  [ROTA_LP3]: "lp3-scp",
 };
 
 /**

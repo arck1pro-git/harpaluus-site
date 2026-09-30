@@ -27,9 +27,11 @@ import { marca, SITE_URL } from "../landing/site-config";
 
 export { marca, SITE_URL };
 
-/** Rotas das duas páginas, num lugar só: metadata, sitemap e links leem daqui. */
+/** Rotas das páginas, num lugar só: metadata, sitemap e links leem daqui. */
 export const ROTA_LP1 = "/lp1";
 export const ROTA_LP2 = "/lp2";
+/** LP03 — investimento em SCP. A copy dela mora na própria página: ver `lp3/page.tsx`. */
+export const ROTA_LP3 = "/lp3";
 
 /**
  * Aviso legal da LP01, no fecho.
@@ -487,4 +489,35 @@ export const FAIXAS_CAPITAL = [
   { value: "500k-1m", label: "De R$ 500 mil a R$ 1 milhão" },
   { value: "acima-1m", label: "Acima de R$ 1 milhão" },
   { value: "prefiro-conversar", label: "Prefiro avaliar conversando" },
+] as const;
+
+/* ------------------------------------------------------------ FORM · LP03
+   As opções do formulário da LP03 (investimento em SCP). Moram aqui, e não
+   na página, pelo mesmo motivo das listas de cima — `validar.ts` e
+   `chroma.ts` conferem e traduzem o que chega contra elas. Os `value` são
+   estáveis de propósito: o comercial filtra por eles no CRM. */
+
+/** "Capital disponível para investimento" — o aporte mínimo é R$ 50 mil. */
+export const FAIXAS_CAPITAL_LP3 = [
+  { value: "50k-100k", label: "De R$ 50 mil a R$ 100 mil" },
+  { value: "100k-300k", label: "De R$ 100 mil a R$ 300 mil" },
+  { value: "300k-500k", label: "De R$ 300 mil a R$ 500 mil" },
+  { value: "500k-1M", label: "De R$ 500 mil a R$ 1 milhão" },
+  { value: "1M+", label: "Acima de R$ 1 milhão" },
+] as const;
+
+/** "Onde você investe hoje?" */
+export const MODALIDADES_LP3 = [
+  { value: "imoveis", label: "Imóveis" },
+  { value: "renda-fixa", label: "Renda fixa" },
+  { value: "fundos-imobiliarios", label: "Fundos imobiliários" },
+  { value: "nao-investe", label: "Ainda não invisto" },
+] as const;
+
+/** "Em quanto tempo pretende investir?" */
+export const PRAZOS_DECISAO_LP3 = [
+  { value: "15-dias", label: "Em até 15 dias" },
+  { value: "30-dias", label: "Em até 30 dias" },
+  { value: "60-dias", label: "Em até 60 dias" },
+  { value: "avaliando", label: "Ainda estou avaliando" },
 ] as const;
