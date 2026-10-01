@@ -108,11 +108,6 @@ export default function Lp3() {
               />
             </div>
 
-            <p className="section-eyebrow">
-              <span className="eyebrow-line" aria-hidden />
-              Investimento em incorporação imobiliária
-            </p>
-
             <h1 className="hero-h1" id="hero-titulo">
               Invista diretamente no <span className="accent">desenvolvimento</span> de
               empreendimentos imobiliários.
@@ -120,18 +115,15 @@ export default function Lp3() {
 
             <div className="hero-divider" aria-hidden />
 
-            {/* Só no celular: a imagem entre o título e o texto, na largura
-                da coluna (a tela menos o respiro lateral de 1,75rem). `eager`
-                porque no celular ela está na primeira tela; no desktop a caixa
-                some, e o `sizes` de 1px faz o navegador buscar a menor versão
-                do arquivo, de poucos bytes. */}
+            {/* Imagem inline apenas em telas de uma coluna com altura sobrando.
+                O CTA tem prioridade nas telas menores. */}
             <div className="hero-midia-inline">
               <Image
                 src={hero.image.src}
                 alt={hero.image.alt}
                 fill
                 loading="eager"
-                sizes="(max-width: 960px) calc(100vw - 3.5rem), 1px"
+                sizes="(max-width: 960px) and (min-height: 1001px) min(440px, calc(100vw - 3.5rem)), 1px"
                 style={{ objectPosition: hero.image.position }}
               />
             </div>
@@ -152,11 +144,7 @@ export default function Lp3() {
 
             <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
 
-            <p className="nota-legal hero-nota">
-              Potencial projetado. As condições e os resultados dependem do valor, prazo,
-              modalidade e operação. Projeções não constituem garantia de resultado e o
-              investimento envolve riscos próprios da atividade de incorporação.
-            </p>
+           
           </div>
 
           {/* Coluna direita — o empreendimento, e a LCP do desktop: por isso
@@ -190,37 +178,41 @@ export default function Lp3() {
             </p>
 
             <div className="scp-body-grid">
-              <div className="scp-body">
+              <div className="scp-body rounded-lg">
+                <h3 className="scp-body-title">Busque resultados maiores.</h3>
                 <p>
-                  <strong>Busque resultados maiores.</strong> Condições que podem variar de{" "}
+                  Condições que podem variar de{" "}
                   <strong>1,5% a 3% ao mês</strong>, conforme valor, prazo e operação.
                 </p>
+              </div>
+
+              <div className="scp-body rounded-lg">
+                <h3 className="scp-body-title">Invista na economia real.</h3>
                 <p>
-                  <strong>Invista na economia real.</strong> Seu capital participa do
+                  Seu capital participa do
                   desenvolvimento de um <strong>empreendimento imobiliário real</strong>, com ativos
                   e garantias aplicáveis a cada operação.
                 </p>
               </div>
 
-              <div className="scp-body">
+              <div className="scp-body rounded-lg">
+                <h3 className="scp-body-title">Participe onde o valor é criado.</h3>
                 <p>
-                  <strong>Participe onde o valor é criado.</strong> Participe economicamente da
+                  Participe economicamente da
                   operação que <strong>desenvolve e comercializa o empreendimento.</strong>
                 </p>
+              </div>
+
+              <div className="scp-body rounded-lg">
+                <h3 className="scp-body-title">Invista em uma região de destaque nacional.</h3>
                 <p>
-                  <strong>Invista em uma região de destaque nacional.</strong> O litoral de Santa
+                  O litoral de Santa
                   Catarina concentra alguns dos{" "}
                   <strong>mercados imobiliários mais valorizados do Brasil</strong> e segue atraindo
                   moradores, investidores e novos empreendimentos.
                 </p>
               </div>
             </div>
-
-            <p className="nota-legal">
-              *As condições variam conforme valor, prazo e operação disponível. Projeções e
-              condições apresentadas não constituem garantia de resultado. O investimento envolve
-              riscos próprios da atividade de incorporação.
-            </p>
 
             <div className="scp-cta">
               <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
@@ -291,9 +283,7 @@ export default function Lp3() {
 
             <FormularioLp3 />
 
-            <p className="nota-legal nota-formulario">
-              O cadastro não garante acesso ou participação em uma operação.
-            </p>
+           
           </div>
         </section>
       </main>
