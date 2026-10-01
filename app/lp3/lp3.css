@@ -946,6 +946,86 @@
   font-weight: 300;
 }
 
+/* ─── TEXTOS DO ROTEIRO DE CAPTAÇÃO ─────────────────────── */
+.lp3 .hero-sub strong {
+  color: #ffffff;
+  font-weight: 500;
+}
+
+/* A faixa de prova rápida do hero: três parâmetros entre filetes dourados. */
+.lp3 .hero-params {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  justify-content: start;
+  margin: 0 0 2.25rem;
+  border-top: 1px solid var(--gold-line);
+  border-bottom: 1px solid var(--gold-line);
+}
+.lp3 .hero-param {
+  padding: 1rem 1.25rem;
+  border-left: 1px solid var(--gold-line);
+}
+.lp3 .hero-param:first-child {
+  padding-left: 0;
+  border-left: none;
+}
+.lp3 .hero-param dt {
+  font-size: 0.72rem;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--light-70);
+  margin-bottom: 0.35rem;
+}
+.lp3 .hero-param dd {
+  margin: 0;
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(1.05rem, 1.35vw, 1.3rem);
+  line-height: 1.25;
+  color: var(--gold);
+}
+
+/* Notas das alegações de potencial: perto da alegação e legíveis, como pede
+   o roteiro — o tom do texto secundário, nunca o cinza que esconde. */
+.lp3 .nota-legal {
+  font-size: 0.8rem;
+  line-height: 1.65;
+  font-weight: 300;
+  color: var(--light-70);
+  max-width: 560px;
+}
+.lp3 .hero-nota {
+  margin-top: 1.5rem;
+}
+.lp3 .scp-section .nota-legal {
+  color: rgba(var(--escuro-rgb), 0.68);
+  max-width: 720px;
+  margin: 0.5rem auto 0;
+  text-align: center;
+}
+.lp3 .cta-section .nota-formulario {
+  margin: 1.25rem auto 0;
+  max-width: 540px;
+}
+
+@media (max-width: 960px) {
+  .lp3 .hero-params {
+    grid-template-columns: repeat(3, 1fr);
+    width: 100%;
+    max-width: 420px;
+  }
+  .lp3 .hero-param,
+  .lp3 .hero-param:first-child {
+    padding: 0.85rem 0.5rem;
+  }
+  .lp3 .hero-param dt {
+    font-size: 0.66rem;
+    letter-spacing: 0.14em;
+  }
+  .lp3 .hero-param dd {
+    font-size: 1.02rem;
+  }
+}
+
 /* ─── RESPONSIVO ────────────────────────────────────────── */
 @media (max-width: 960px) {
   .lp3 section {

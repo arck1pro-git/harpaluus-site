@@ -23,11 +23,11 @@ const PASSOS = [
   },
   {
     titulo: "Conversa com um especialista",
-    texto: "Tiramos suas dúvidas sobre a SCP e sobre o momento de cada operação.",
+    texto: "Tiramos suas dúvidas sobre o investimento e sobre o momento de cada operação.",
   },
   {
     titulo: "Apresentação da operação",
-    texto: "Você recebe os detalhes da SCP: contrato, garantias, prazos e projeções.",
+    texto: "Você recebe os detalhes da operação: contrato, garantias, prazos e projeções.",
   },
 ];
 

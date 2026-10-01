@@ -12,32 +12,34 @@ import { hero, logoClaro, marca } from "../components/landing/site-config";
 import { ROTA_LP3 } from "../components/lp/lp-config";
 import { MetaViuConteudo } from "../components/lp/meta-pixel";
 import { CtaLp3 } from "../components/lp3/cta";
-import { FaqLp3 } from "../components/lp3/faq";
 import { FormularioLp3 } from "../components/lp3/formulario";
 import { RodapeLp3 } from "../components/lp3/rodape";
-import { SimuladorScp } from "../components/lp3/simulador";
 
 /**
- * LP 03 — Investimento em SCP, marca Amaan.
+ * LP 03 — Captação de investidores, marca Amaan.
  *
- * Página longa de conversão, feita para tráfego pago: apresenta a SCP como a
- * forma de o investidor virar sócio das incorporações da Amaan, com o retorno
- * da operação, a garantia real, o mercado de Porto Belo, um simulador e as
- * perguntas frequentes, e fecha num formulário de qualificação.
+ * Textos do roteiro `AMAAN_LP_Captacao_2_Secoes_Roteiro_Orientacoes_Designer`,
+ * sobre o layout que a página já tinha: hero, benefícios (bloco claro),
+ * seletividade (bloco com a foto de Porto Belo) e formulário. O fluxo é o
+ * que o roteiro recomenda — hero → potencial → benefícios → seletividade →
+ * formulário.
  *
- * A copy está aqui na página, e não em `lp-config.ts` como a das LP01/LP02,
- * porque não veio de um brief: o markup (quebras, destaques em dourado,
- * negritos) faz parte do texto, e a página ainda não tem versão aprovada.
- * Só as opções do formulário moram em `lp-config.ts`, porque o servidor as
- * confere.
+ * Três regras do roteiro moldam o texto:
+ * - a AMAAN aparece como incorporadora, não como plataforma financeira — e a
+ *   sigla SCP não aparece na página, nem no título, nem no card do link;
+ * - a promessa é sempre potencial, nunca garantia: toda alegação de
+ *   resultado leva asterisco, e a nota fica perto dela, legível;
+ * - só imagens oficiais de empreendimentos da AMAAN.
  *
  * O formulário sai pela mesma Server Action das outras LPs (CRM Chroma + API
  * de Conversões do Meta), com os eventos do Pixel com sufixo `_lp3`.
  */
 
-const TITULO = "Investimento em SCP no litoral catarinense";
+/* Sem números no título, na descrição e no card do link: fora da página,
+   a taxa apareceria sem o asterisco e a nota que a qualificam. */
+const TITULO = "Investimento em incorporação imobiliária no litoral catarinense";
 const DESCRICAO =
-  "Seja sócio de incorporações da Amaan no litoral catarinense por meio de uma SCP, com retorno prefixado em contrato, rendimento isento de IR e garantia real em imóveis registrados em cartório.";
+  "Invista no desenvolvimento de empreendimentos imobiliários da Amaan no litoral catarinense. O acesso às operações é seletivo: deixe seus dados para avaliarmos o seu perfil.";
 
 export const metadata: Metadata = {
   title: TITULO,
@@ -64,7 +66,7 @@ const dadosEstruturados = jsonLd(
   organizacao,
   site,
   paginaWeb({ caminho: ROTA_LP3, titulo: TITULO, descricao: DESCRICAO }),
-  trilha({ caminho: ROTA_LP3, titulo: "Investimento em SCP" })
+  trilha({ caminho: ROTA_LP3, titulo: "Investimento em incorporação imobiliária" })
 );
 
 /** O render oficial do Tourmaline Tower: vertical, para a coluna alta do hero. */
@@ -73,77 +75,11 @@ const IMAGEM_HERO = {
   alt: "Tourmaline Tower, empreendimento da Amaan em Porto Belo, iluminado ao anoitecer",
 };
 
-const DESTAQUES = [
-  { numero: "200%", texto: "do capital aportado em garantia, com imóveis registrados em cartório" },
-  { numero: "0% IR", texto: "sobre o rendimento: o valor do contrato é o valor que você recebe" },
-  { numero: "R$50k", texto: "de aporte mínimo para participar" },
-];
-
-/* ⚠️ Dados de mercado com fonte: conferir de novo na data de publicação. */
-const INDICADORES = [
-  {
-    numero: "+132%",
-    texto: "foi a valorização do metro quadrado em Porto Belo nos últimos dois anos.",
-    fonte: "Fonte: DWV Inteligência de Mercado",
-  },
-  {
-    numero: "#1",
-    texto: "Porto Belo teve o maior VGV lançado do Brasil em 2024: R$ 11,45 bilhões.",
-    fonte: "Fonte: ABRAINC/GeoBrain",
-  },
-  {
-    numero: "R$ 13,47 bi",
-    texto: "em VGV estão sendo desenvolvidos hoje no litoral catarinense.",
-    fonte: "Fonte: DWV Inteligência de Mercado",
-  },
-  {
-    numero: "100x",
-    texto: "foi quanto o mercado imobiliário de Porto Belo cresceu em quatro anos.",
-    fonte: "Fonte: ABRAINC/GeoBrain",
-  },
-];
-
-const PERGUNTAS = [
-  {
-    pergunta: "O que é uma SCP?",
-    resposta:
-      "É a Sociedade em Conta de Participação, prevista nos artigos 991 a 996 do Código Civil. Nela, a AMAAN é a sócia ostensiva, que conduz o negócio em nome próprio, e o investidor é o sócio participante, que entra com o capital e participa do resultado da operação.",
-  },
-  {
-    pergunta: "Como o meu capital fica protegido?",
-    resposta:
-      "A participação tem três camadas de garantia: o contrato de SCP, regido pelo Código Civil; unidades futuras do próprio empreendimento, que somam 200% do valor aportado; e um imóvel físico da incorporadora, reservado como garantia em seu nome.",
-  },
-  {
-    pergunta: "O rendimento é mesmo isento de Imposto de Renda?",
-    resposta:
-      "Sim. O resultado da SCP chega ao sócio participante dentro das regras legais que isentam esse tipo de rendimento — não é uma brecha, é a forma correta de estruturar a operação. O valor previsto em contrato é o valor que você recebe.",
-  },
-  {
-    pergunta: "Qual a diferença entre receber todo mês e no final?",
-    resposta: (
-      <>
-        No modelo <strong>Mensal</strong>, o rendimento é pago mês a mês ao longo do prazo
-        contratado. No modelo <strong>Final</strong>, capital e rendimento são pagos juntos no
-        vencimento — e, como o dinheiro fica mais tempo na operação, a taxa aplicada é maior.
-      </>
-    ),
-  },
-  {
-    pergunta: "Qual é o aporte mínimo?",
-    resposta:
-      "R$ 50 mil. Para aportes maiores, as condições podem ser negociadas diretamente com a equipe da AMAAN.",
-  },
-  {
-    pergunta: "Preciso entender de mercado imobiliário?",
-    resposta:
-      "Não. A AMAAN conduz a incorporação inteira — terreno, projeto, aprovações, obra, gestão e venda das unidades. Você participa do resultado sem precisar operar no mercado.",
-  },
-  {
-    pergunta: "Quem é a AMAAN?",
-    resposta:
-      "Uma incorporadora de Porto Belo, SC. Identificamos oportunidades, desenvolvemos produtos imobiliários, estruturamos e executamos incorporações e criamos Empreendimentos Vivos: prédios pensados para continuar servindo as pessoas e produzindo valor depois da entrega.",
-  },
+/** A faixa de prova rápida do hero: leitura secundária, mas evidente. */
+const PARAMETROS = [
+  { rotulo: "A partir de", valor: "R$ 50 mil" },
+  { rotulo: "Prazos de", valor: "18, 24 ou 36 meses" },
+  { rotulo: "Condições de", valor: "1,5% a 3% ao mês*" },
 ];
 
 export default function Lp3() {
@@ -155,7 +91,7 @@ export default function Lp3() {
       />
 
       <main id="conteudo">
-        {/* ═══════ HERO ═══════ */}
+        {/* ═══════ SEÇÃO 1 · HERO ═══════ */}
         <section className="hero" id="inicio" aria-labelledby="hero-titulo">
           {/* Coluna esquerda — Texto */}
           <div className="hero-copy">
@@ -172,17 +108,14 @@ export default function Lp3() {
               />
             </div>
 
+            <p className="section-eyebrow">
+              <span className="eyebrow-line" aria-hidden />
+              Investimento em incorporação imobiliária
+            </p>
+
             <h1 className="hero-h1" id="hero-titulo">
-              <span className="accent">
-                Seja sócio de
-                <br /> incorporações
-              </span>
-              <br />
-              no litoral catarinense,
-              <br />
-              com <span className="accent">até 3% ao mês</span>
-              <br />
-              <span className="accent">isento de IR.</span>
+              Invista diretamente no <span className="accent">desenvolvimento</span> de
+              empreendimentos imobiliários.
             </h1>
 
             <div className="hero-divider" aria-hidden />
@@ -204,11 +137,26 @@ export default function Lp3() {
             </div>
 
             <p className="hero-sub">
-              Por meio de uma SCP, você participa do resultado dos empreendimentos da AMAAN em Porto
-              Belo, com garantia real de 200% do valor investido em imóveis registrados em cartório.
+              Invista em incorporações da AMAAN no litoral catarinense, com{" "}
+              <strong>potencial de dobrar o capital investido em até 3 anos.</strong>
             </p>
 
-            <CtaLp3>Quero conhecer a SCP</CtaLp3>
+            <dl className="hero-params">
+              {PARAMETROS.map((item) => (
+                <div key={item.rotulo} className="hero-param">
+                  <dt>{item.rotulo}</dt>
+                  <dd>{item.valor}</dd>
+                </div>
+              ))}
+            </dl>
+
+            <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
+
+            <p className="nota-legal hero-nota">
+              Potencial projetado. As condições e os resultados dependem do valor, prazo,
+              modalidade e operação. Projeções não constituem garantia de resultado e o
+              investimento envolve riscos próprios da atividade de incorporação.
+            </p>
           </div>
 
           {/* Coluna direita — o empreendimento, e a LCP do desktop: por isso
@@ -229,69 +177,61 @@ export default function Lp3() {
 
         <div className="gold-rule" aria-hidden />
 
-        {/* ═══════ O QUE É A SCP ═══════ */}
-        <section className="scp-section" id="scp" aria-labelledby="scp-titulo">
+        {/* ═══════ SEÇÃO 2 · VALOR PARA O INVESTIDOR ═══════ */}
+        <section className="scp-section" id="oportunidade" aria-labelledby="valor-titulo">
           <div className="section-inner">
-            <div className="section-eyebrow" aria-hidden>
-              <span className="eyebrow-line" />
-              Como funciona
-            </div>
-
-            <h2 className="section-h2" id="scp-titulo">
-              Investir em <span className="accent">SCP</span>
+            <h2 className="section-h2" id="valor-titulo">
+              Coloque seu capital para trabalhar em um dos{" "}
+              <span className="accent">mercados imobiliários mais valorizados do Brasil.</span>
             </h2>
             <p className="section-lead">
-              O caminho para entrar no mercado imobiliário pelo lado de quem constrói.
+              A AMAAN desenvolve empreendimentos no litoral de Santa Catarina e abre oportunidades
+              para investidores participarem economicamente dessas incorporações.
             </p>
 
             <div className="scp-body-grid">
               <div className="scp-body">
                 <p>
-                  A <strong>Sociedade em Conta de Participação (SCP)</strong> é um formato previsto no
-                  Código Civil em que dois lados se unem em torno de um negócio: a AMAAN, como sócia
-                  ostensiva, conduz a incorporação; você, como sócio participante, entra com o capital
-                  e recebe a sua parte do resultado.
+                  <strong>Busque resultados maiores.</strong> Condições que podem variar de{" "}
+                  <strong>1,5% a 3% ao mês</strong>, conforme valor, prazo e operação.
                 </p>
                 <p>
-                  Na prática, o seu dinheiro trabalha na etapa em que o valor imobiliário é criado —
-                  terreno, projeto, aprovação, obra e venda —, e não na compra de uma unidade pronta. O
-                  retorno é prefixado em contrato e acompanha a performance do empreendimento.
+                  <strong>Invista na economia real.</strong> Seu capital participa do
+                  desenvolvimento de um <strong>empreendimento imobiliário real</strong>, com ativos
+                  e garantias aplicáveis a cada operação.
                 </p>
               </div>
 
               <div className="scp-body">
                 <p>
-                  Cada participação tem <strong>lastro em imóveis</strong>: a garantia equivale a 200%
-                  do capital aportado, em unidades do próprio empreendimento, com registro em
-                  cartório. É uma camada de proteção que aplicações como CRI, FII ou debêntures não
-                  oferecem da mesma maneira.
+                  <strong>Participe onde o valor é criado.</strong> Participe economicamente da
+                  operação que <strong>desenvolve e comercializa o empreendimento.</strong>
                 </p>
                 <p>
-                  O rendimento, entre <strong>1,5% e 3% ao mês</strong>, é isento de Imposto de Renda:
-                  a isenção decorre da forma como a SCP é estruturada, dentro da lei.
+                  <strong>Invista em uma região de destaque nacional.</strong> O litoral de Santa
+                  Catarina concentra alguns dos{" "}
+                  <strong>mercados imobiliários mais valorizados do Brasil</strong> e segue atraindo
+                  moradores, investidores e novos empreendimentos.
                 </p>
               </div>
             </div>
 
-            <div className="scp-highlights" aria-label="Destaques da SCP">
-              {DESTAQUES.map((item) => (
-                <div key={item.numero} className="scp-hl">
-                  <div className="scp-hl-number">{item.numero}</div>
-                  <div className="scp-hl-label">{item.texto}</div>
-                </div>
-              ))}
-            </div>
+            <p className="nota-legal">
+              *As condições variam conforme valor, prazo e operação disponível. Projeções e
+              condições apresentadas não constituem garantia de resultado. O investimento envolve
+              riscos próprios da atividade de incorporação.
+            </p>
 
             <div className="scp-cta">
-              <CtaLp3>Quero entender a SCP</CtaLp3>
+              <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
             </div>
           </div>
         </section>
 
         <div className="gold-rule" aria-hidden />
 
-        {/* ═══════ O MERCADO ═══════ */}
-        <section className="litoral-section" id="mercado" aria-labelledby="mercado-titulo">
+        {/* ═══════ SELETIVIDADE ═══════ */}
+        <section className="litoral-section" id="seletivo" aria-labelledby="seletivo-titulo">
           <div className="litoral-grid">
             {/* A foto ocupa a altura toda da coluna esquerda e sangra pela borda */}
             <div className="litoral-img-box">
@@ -307,101 +247,24 @@ export default function Lp3() {
             </div>
 
             <div className="litoral-content">
-              <div className="section-eyebrow" aria-hidden>
-                <span className="eyebrow-line" />
-                Onde a AMAAN atua
-              </div>
-
-              <h2 className="section-h2" id="mercado-titulo">
-                Um mercado em
+              <h2 className="section-h2" id="seletivo-titulo">
+                O acesso às operações
                 <br />
-                <span className="accent">plena expansão</span>
+                <span className="accent">é seletivo</span>
               </h2>
-
-              <div className="litoral-stats" aria-label="Dados do mercado imobiliário de Porto Belo">
-                {INDICADORES.map((item) => (
-                  <div key={item.numero} className="stat-box">
-                    <div className="stat-number">{item.numero}</div>
-                    <div className="stat-label">{item.texto}</div>
-                    <div className="stat-source">{item.fonte}</div>
-                  </div>
-                ))}
-              </div>
 
               <p className="litoral-text">
-                É nesse cenário que a AMAAN desenvolve os seus empreendimentos. Com a SCP, você acessa o
-                crescimento do litoral catarinense por dentro das incorporações, com retorno definido
-                em contrato e garantia real sobre o capital.
+                A AMAAN não abre suas oportunidades indiscriminadamente ao mercado. Antes de
+                apresentar uma operação, buscamos entender{" "}
+                <strong>quem é o investidor e se existe compatibilidade dos dois lados.</strong>
               </p>
 
-              <CtaLp3>Quero investir no litoral</CtaLp3>
-            </div>
-          </div>
-        </section>
-
-        <div className="gold-rule" aria-hidden />
-
-        {/* ═══════ SIMULADOR ═══════ */}
-        <section className="simulator-section" id="simulador" aria-labelledby="sim-titulo">
-          <div className="section-inner">
-            <div className="simulator-header">
-              <div className="section-eyebrow" aria-hidden>
-                <span className="eyebrow-line" />
-                Simulador SCP
-                <span className="eyebrow-line" />
-              </div>
-              <h2 className="section-h2" id="sim-titulo">
-                Simule o seu
-                <br />
-                <span className="accent">retorno</span>
-              </h2>
-              <p className="section-lead">
-                Veja quanto o seu capital pode render antes de falar com a nossa equipe.
+              <p className="litoral-text">
+                <strong>
+                  Não buscamos apenas capital. Buscamos investidores que façam sentido para construir
+                  uma relação com a AMAAN.
+                </strong>
               </p>
-            </div>
-
-            <SimuladorScp />
-
-            <p className="sim-disclaimer">
-              Simulação ilustrativa, com base nas taxas praticadas nas operações de SCP da AMAAN.
-              <br />
-              Rentabilidade passada não garante resultado futuro. Valores arredondados.
-            </p>
-
-            <div className="simulator-cta">
-              <CtaLp3>Quero investir</CtaLp3>
-            </div>
-          </div>
-        </section>
-
-        <div className="gold-rule" aria-hidden />
-
-        {/* ═══════ FAQ ═══════ */}
-        <section className="faq-section" id="faq" aria-labelledby="faq-titulo">
-          <div className="section-inner">
-            <div className="faq-grid">
-              <div className="faq-sidebar">
-                <div className="section-eyebrow" aria-hidden>
-                  <span className="eyebrow-line" />
-                  Perguntas frequentes
-                </div>
-                <h2 className="section-h2" id="faq-titulo">
-                  O que você
-                  <br />
-                  <span className="accent">precisa saber</span>
-                </h2>
-                <p>
-                  Não encontrou o que procurava? Deixe seus dados no formulário e a equipe da AMAAN
-                  fala com você.
-                </p>
-                <CtaLp3>Falar com a equipe comercial</CtaLp3>
-              </div>
-
-              <FaqLp3 itens={PERGUNTAS} />
-            </div>
-
-            <div className="faq-bottom">
-              <CtaLp3>Quero falar com a equipe</CtaLp3>
             </div>
           </div>
         </section>
@@ -411,32 +274,31 @@ export default function Lp3() {
         {/* ═══════ FORMULÁRIO ═══════ */}
         <section className="cta-section" id="formulario" aria-labelledby="form-titulo">
           <div className="section-inner">
-            <div className="section-eyebrow eyebrow-center" aria-hidden>
-              <span className="eyebrow-line" />
-              Próximo passo
-              <span className="eyebrow-line" />
-            </div>
-
             <h2 className="section-h2" id="form-titulo">
-              Garanta a sua participação
-              <br />
-              no <span className="accent">litoral de SC</span>
+              Solicite acesso a <span className="accent">uma oportunidade</span>
             </h2>
 
             <p className="cta-sub">
-              Deixe seus dados e um especialista da AMAAN entra em contato para apresentar as
-              operações disponíveis.
+              Preencha seus dados para entendermos seu perfil e avaliarmos se existe compatibilidade
+              com uma das operações disponíveis.
             </p>
 
+            {/* ViewContent: a pessoa leu o texto de conversão. Fica aqui, e
+                não no fim da página como na LP01 e na LP02: o formulário vem
+                antes do rodapé, e quem preenche não precisa rolar até lá —
+                o ViewContent sairia depois do Lead, ou nem sairia. */}
+            <MetaViuConteudo origem="lp3-scp" />
+
             <FormularioLp3 />
+
+            <p className="nota-legal nota-formulario">
+              O cadastro não garante acesso ou participação em uma operação.
+            </p>
           </div>
         </section>
       </main>
 
       <RodapeLp3 />
-
-      {/* ViewContent: a pessoa chegou ao fim da página */}
-      <MetaViuConteudo origem="lp3-scp" />
     </>
   );
 }

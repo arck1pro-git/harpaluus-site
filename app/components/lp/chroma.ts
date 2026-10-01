@@ -15,17 +15,19 @@ import type { Lead } from "./validar";
 /**
  * Envio do lead ao CRM Chroma — uma webhook por LP.
  *
- * São duas webhooks irmãs, de corpo idêntico, e a única diferença está do
- * lado do CRM: cada uma faz o contato nascer numa etapa diferente do funil.
- * Por isso o destino é escolhido pela origem do lead, e não por uma constante
- * única — trocar as duas de lugar não daria erro nenhum aqui, nem no CRM: os
- * leads apenas cairiam na etapa errada, e só o Comercial notaria, dias
- * depois.
+ * As da LP01 e da LP02 são webhooks irmãs, de corpo idêntico, e a única
+ * diferença está do lado do CRM: cada uma faz o contato nascer numa etapa
+ * diferente do funil. Por isso o destino é escolhido pela origem do lead, e
+ * não por uma constante única — trocar as duas de lugar não daria erro nenhum
+ * aqui, nem no CRM: os leads apenas cairiam na etapa errada, e só o Comercial
+ * notaria, dias depois. A da LP03 ("LP3", formulário de investimento) é de
+ * outra família, com chaves próprias — ver `PayloadChromaLp3`.
  *
  * O segredo de cada webhook viaja na query string, então a URL inteira é o
- * segredo — e por isso as duas vêm do ambiente (`CHROMA_WEBHOOK_LP1` e
- * `CHROMA_WEBHOOK_LP2`, no `.env.local` e na Vercel), e não do repositório.
- * Trocar uma delas é trocar a variável e publicar de novo.
+ * segredo — e por isso todas vêm do ambiente (`CHROMA_WEBHOOK_LP1`,
+ * `CHROMA_WEBHOOK_LP2` e `CHROMA_WEBHOOK_LP3`, no `.env.local` e na Vercel),
+ * e não do repositório. Trocar uma delas é trocar a variável e publicar de
+ * novo.
  *
  * O `import "server-only"` da primeira linha continua de guarda: importar
  * este módulo de um componente cliente quebra o build, em vez de deixar o
@@ -41,12 +43,15 @@ const WEBHOOKS: Record<OrigemLead, string | undefined> = {
   /* Webhook "LPs amaan - sem doc" — cópia da de cima, com uma etapa própria:
      novo contato - sem doc. */
   "lp2-interesse": process.env.CHROMA_WEBHOOK_LP2,
-  /* LP03 (SCP). Enquanto `CHROMA_WEBHOOK_LP3` não existir no ambiente, os
-     leads dela entram pela webhook da LP02 — etapa errada, mas no CRM. É a
-     troca consciente contra a alternativa, que seria o lead ficar só no log
-     esperando reenvio manual. Criada a webhook própria, basta a variável. */
-  "lp3-scp": process.env.CHROMA_WEBHOOK_LP3 || process.env.CHROMA_WEBHOOK_LP2,
+  /* LP03 sem a webhook própria no ambiente: entra pela da LP02, no corpo da
+     LP02 — etapa errada, mas no CRM. É a troca consciente contra a
+     alternativa, que seria o lead ficar só no log esperando reenvio manual.
+     Com `CHROMA_WEBHOOK_LP3` presente, quem decide é `destino`. */
+  "lp3-scp": process.env.CHROMA_WEBHOOK_LP2,
 };
+
+/** Webhook "LP3" do Chroma (formulário de investimento). */
+const WEBHOOK_LP3 = process.env.CHROMA_WEBHOOK_LP3;
 
 /**
  * As chaves que a webhook lê.
@@ -74,11 +79,11 @@ type PayloadChroma = {
   /** Id do Pixel do Meta que disparou o Lead na LP — o mesmo nas duas. */
   pixel_id?: string;
   /**
-   * ⚠️ As três de baixo são da LP03 (SCP) e AINDA NÃO foram conferidas contra
-   * a ficha do contato: enquanto o CRM não tiver campos com exatamente estes
-   * nomes, elas são descartadas em silêncio — o lead entra, sem as três
-   * respostas. Criar os campos no Chroma (ou renomear aqui para os que já
-   * existirem) e mandar um envio de teste.
+   * As três de baixo são da LP03 e só viajam neste corpo quando ela cai na
+   * webhook da LP02, sem `CHROMA_WEBHOOK_LP3` no ambiente. ⚠️ Nunca foram
+   * conferidas contra a ficha daquela webhook: se ela não tiver campos com
+   * estes nomes, as três respostas são descartadas em silêncio — o lead
+   * entra mesmo assim.
    */
   modalidade?: string;
   prazo_decisao?: string;
@@ -150,6 +155,57 @@ export function payloadChroma(lead: Lead): PayloadChroma {
 }
 
 /**
+ * As chaves da webhook "LP3" (formulário de investimento), como a
+ * especificação do Chroma as define em 01/10/2026. São outras que as das
+ * LP01/LP02, e a regra é a mesma: chave fora da lista o CRM descarta em
+ * silêncio. `nome_completo` e `whatsapp` são obrigatórias — sem elas a
+ * webhook responde 422 —, e `validarLead` já não deixa nenhuma das duas
+ * chegar vazia.
+ */
+type PayloadChromaLp3 = {
+  /** Contato · Nome */
+  nome_completo: string;
+  /** Contato · WhatsApp — só dígitos, com DDI e DDD */
+  whatsapp: string;
+  /** Contato · E-mail */
+  email?: string;
+  /** Contato · campo "valor_inicial" */
+  quanto_pretende_investir?: string;
+  /** Contato · campo "ja_investe" */
+  onde_investe_hoje?: string;
+  /** Contato · campo "pronto_para_investir" */
+  em_quanto_tempo_pretende_investir?: string;
+  /** Contato · campo "profissao" */
+  profissao?: string;
+} & Utms;
+
+/** O lead da LP03 no corpo da webhook "LP3" — rótulos, como nas outras. */
+export function payloadChromaLp3(lead: Lead): PayloadChromaLp3 {
+  return {
+    nome_completo: lead.nome,
+    whatsapp: lead.whatsapp,
+    email: lead.email,
+    quanto_pretende_investir: rotulo(FAIXAS_CAPITAL_LP3, lead.faixaCapital),
+    onde_investe_hoje: rotulo(MODALIDADES_LP3, lead.modalidade),
+    em_quanto_tempo_pretende_investir: rotulo(PRAZOS_DECISAO_LP3, lead.prazoDecisao),
+    profissao: lead.profissao,
+    ...lead.utm,
+  };
+}
+
+/**
+ * Para onde vai o lead, e em que formato. A LP03 só usa a webhook e o corpo
+ * próprios quando `CHROMA_WEBHOOK_LP3` existe; sem ela, segue o caminho da
+ * LP02 (ver `WEBHOOKS`).
+ */
+function destino(lead: Lead) {
+  if (lead.origem === "lp3-scp" && WEBHOOK_LP3) {
+    return { webhook: WEBHOOK_LP3, corpo: payloadChromaLp3(lead) };
+  }
+  return { webhook: WEBHOOKS[lead.origem], corpo: payloadChroma(lead) };
+}
+
+/**
  * Posta o lead na webhook da LP de onde ele veio. Nunca lança: quem chama
  * está em `after()`, onde uma exceção não teria a quem ser contada.
  *
@@ -166,8 +222,8 @@ export function payloadChroma(lead: Lead): PayloadChroma {
  * uma integração estava fora do ar.
  */
 export async function enviarAoChroma(lead: Lead) {
-  const corpo = JSON.stringify(payloadChroma(lead));
-  const webhook = WEBHOOKS[lead.origem];
+  const { webhook, corpo: payload } = destino(lead);
+  const corpo = JSON.stringify(payload);
 
   /* Variável faltando é erro de configuração, não motivo para perder o
      cadastro: o lead vai para o log, como em qualquer outra falha. */

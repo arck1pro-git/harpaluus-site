@@ -161,13 +161,15 @@ export function validarLead(
     }
   }
 
-  /* A LP03 pede os quatro como obrigatórios. As faixas são outras — o aporte
-     mínimo ali é R$ 50 mil —, então a lista conferida também é outra. */
+  /* A LP03 pede faixa, prazo e profissão como obrigatórios. As faixas são
+     outras — o aporte mínimo ali é R$ 50 mil —, então a lista conferida
+     também é outra. A modalidade saiu do formulário com o roteiro de
+     captação: não é mais exigida, mas se vier, só vale da lista. */
   if (origem === "lp3-scp") {
     if (!daLista(faixaCapital, FAIXAS_CAPITAL_LP3)) {
       erros.faixaCapital = "Selecione uma faixa.";
     }
-    if (!daLista(modalidade, MODALIDADES_LP3)) {
+    if (modalidade && !daLista(modalidade, MODALIDADES_LP3)) {
       erros.modalidade = "Selecione uma opção.";
     }
     if (!daLista(prazoDecisao, PRAZOS_DECISAO_LP3)) {

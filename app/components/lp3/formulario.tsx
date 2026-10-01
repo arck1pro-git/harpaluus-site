@@ -5,18 +5,15 @@ import { useRouter } from "next/navigation";
 
 import { registrarLead } from "../lp/actions";
 import { ESTADO_INICIAL, type CampoLead, type EstadoLead } from "../lp/lead";
-import {
-  FAIXAS_CAPITAL_LP3,
-  MODALIDADES_LP3,
-  PRAZOS_DECISAO_LP3,
-  ROTA_LP3,
-} from "../lp/lp-config";
+import { FAIXAS_CAPITAL_LP3, PRAZOS_DECISAO_LP3, ROTA_LP3 } from "../lp/lp-config";
 import { rastrearLead } from "../lp/meta-pixel";
 import { CAMPOS_UTM, SEM_INSCRICAO, utmsDaVisita, utmsNoServidor } from "../lp/utms";
 import { normalizarWhatsApp } from "../lp/validar";
+import { abrirFormularioLp3 } from "./cta";
 
 /**
- * Formulário da LP03 (investimento em SCP).
+ * Formulário da LP03 (captação de investidores), com os textos do roteiro
+ * `AMAAN_LP_Captacao_2_Secoes_Roteiro_Orientacoes_Designer`.
  *
  * Por baixo é o mesmo caminho das outras LPs: a Server Action
  * `registrarLead`, que valida de novo no servidor, manda ao CRM e à API de
@@ -29,7 +26,7 @@ import { normalizarWhatsApp } from "../lp/validar";
  */
 
 const ORIGEM = "lp3-scp";
-const ROTULO_ENVIO = "Quero investir em SCP";
+const ROTULO_ENVIO = "Quero solicitar acesso";
 const ERRO_ENVIO = "Não conseguimos enviar agora. Tente de novo em instantes.";
 
 /* ---------------------------------------------------------------- TELEFONE */
@@ -202,6 +199,8 @@ export function FormularioLp3() {
       className="cta-form"
       action={enviar}
       noValidate
+      /* Quem chega rolando e começa a preencher também abriu o formulário. */
+      onFocus={abrirFormularioLp3}
       onSubmit={(evento) => {
         /* O erro do telefone entra na validação nativa antes da checagem, e
            o `reportValidity()` leva o foco ao primeiro campo inválido na
@@ -248,7 +247,7 @@ export function FormularioLp3() {
 
       <div className="form-row">
         <label className="form-label" htmlFor="tel">
-          WhatsApp com DDD
+          WhatsApp
         </label>
         <input
           ref={campoTelefone}
@@ -315,33 +314,6 @@ export function FormularioLp3() {
         <ErroCampo id="email-erro" mensagem={erroServidor("email")} />
       </div>
 
-      <Selecao
-        nome="faixaCapital"
-        id="capital-form"
-        rotulo="Quanto pretende investir?"
-        vazio="Selecione uma faixa"
-        opcoes={FAIXAS_CAPITAL_LP3}
-        estado={estado}
-      />
-
-      <Selecao
-        nome="modalidade"
-        id="modalidade"
-        rotulo="Onde você investe hoje?"
-        vazio="Selecione"
-        opcoes={MODALIDADES_LP3}
-        estado={estado}
-      />
-
-      <Selecao
-        nome="prazoDecisao"
-        id="prazo-decisao"
-        rotulo="Em quanto tempo pretende investir?"
-        vazio="Selecione"
-        opcoes={PRAZOS_DECISAO_LP3}
-        estado={estado}
-      />
-
       <div className="form-row">
         <label className="form-label" htmlFor="profissao">
           Profissão
@@ -360,6 +332,24 @@ export function FormularioLp3() {
         />
         <ErroCampo id="profissao-erro" mensagem={erroServidor("profissao")} />
       </div>
+
+      <Selecao
+        nome="faixaCapital"
+        id="capital-form"
+        rotulo="Quanto você tem disponível para investir?"
+        vazio="Selecione uma faixa"
+        opcoes={FAIXAS_CAPITAL_LP3}
+        estado={estado}
+      />
+
+      <Selecao
+        nome="prazoDecisao"
+        id="prazo-decisao"
+        rotulo="Em quanto tempo pretende realizar um novo investimento?"
+        vazio="Selecione"
+        opcoes={PRAZOS_DECISAO_LP3}
+        estado={estado}
+      />
 
       {/* Armadilha de bot: fora da tela, fora do Tab e do leitor de tela.
           O nome `empresa` é o que `registrarLead` confere. */}

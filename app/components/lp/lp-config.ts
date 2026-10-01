@@ -486,16 +486,17 @@ export const FAIXAS_CAPITAL = [
    `chroma.ts` conferem e traduzem o que chega contra elas. Os `value` são
    estáveis de propósito: o comercial filtra por eles no CRM. */
 
-/** "Capital disponível para investimento" — o aporte mínimo é R$ 50 mil. */
+/** "Quanto você tem disponível para investir?" — o aporte mínimo é R$ 50 mil. */
 export const FAIXAS_CAPITAL_LP3 = [
-  { value: "50k-100k", label: "De R$ 50 mil a R$ 100 mil" },
-  { value: "100k-300k", label: "De R$ 100 mil a R$ 300 mil" },
-  { value: "300k-500k", label: "De R$ 300 mil a R$ 500 mil" },
-  { value: "500k-1M", label: "De R$ 500 mil a R$ 1 milhão" },
+  { value: "50k-100k", label: "R$ 50 mil a R$ 100 mil" },
+  { value: "100k-200k", label: "R$ 100 mil a R$ 200 mil" },
+  { value: "200k-400k", label: "R$ 200 mil a R$ 400 mil" },
+  { value: "400k-1M", label: "R$ 400 mil a R$ 1 milhão" },
   { value: "1M+", label: "Acima de R$ 1 milhão" },
 ] as const;
 
-/** "Onde você investe hoje?" */
+/** "Onde você investe hoje?" — saiu do formulário com o roteiro de captação;
+    fica aqui porque o CRM ainda tem o campo e lead antigo pode trazê-lo. */
 export const MODALIDADES_LP3 = [
   { value: "imoveis", label: "Imóveis" },
   { value: "renda-fixa", label: "Renda fixa" },
@@ -503,10 +504,11 @@ export const MODALIDADES_LP3 = [
   { value: "nao-investe", label: "Ainda não invisto" },
 ] as const;
 
-/** "Em quanto tempo pretende investir?" */
+/** "Em quanto tempo pretende realizar um novo investimento?" */
 export const PRAZOS_DECISAO_LP3 = [
-  { value: "15-dias", label: "Em até 15 dias" },
-  { value: "30-dias", label: "Em até 30 dias" },
-  { value: "60-dias", label: "Em até 60 dias" },
-  { value: "avaliando", label: "Ainda estou avaliando" },
+  { value: "imediato", label: "Imediatamente" },
+  { value: "30-dias", label: "Nos próximos 30 dias" },
+  { value: "1-3-meses", label: "De 1 a 3 meses" },
+  { value: "mais-3-meses", label: "Mais de 3 meses" },
+  { value: "conhecendo", label: "Estou apenas conhecendo oportunidades" },
 ] as const;
