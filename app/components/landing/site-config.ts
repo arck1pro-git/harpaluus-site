@@ -62,9 +62,15 @@ export const endereco = {
   pais: "BR",
 };
 
-/** Conversa já aberta com a mensagem de origem preenchida. */
-export const WHATSAPP =
-  "https://wa.me/5547992864926?text=oi%20eu%20vim%20pelo%20site%20da%20Amaan%20incorporadora";
+/**
+ * Conversa já aberta com a mensagem de origem preenchida. É o único link de
+ * WhatsApp do site: header, rodapé da home e rodapé da LP03 apontam todos
+ * para cá, então trocar o texto aqui troca em todas as CTAs.
+ */
+const MENSAGEM_WHATSAPP =
+  "Olá! Vim pelo site da AMAAN Incorporadora e gostaria de mais informações sobre os empreendimentos.";
+
+export const WHATSAPP = `https://wa.me/5547992864926?text=${encodeURIComponent(MENSAGEM_WHATSAPP)}`;
 /** Portal onde o investidor da SCP acompanha o próprio capital. */
 export const PORTAL = "https://meuari.vercel.app";
 /**
