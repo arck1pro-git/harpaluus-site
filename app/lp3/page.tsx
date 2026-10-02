@@ -69,9 +69,10 @@ const dadosEstruturados = jsonLd(
   trilha({ caminho: ROTA_LP3, titulo: "Investimento em incorporação imobiliária" })
 );
 
-/** O render oficial do Tourmaline Tower: vertical, para a coluna alta do hero. */
+/** O render oficial do Tourmaline Tower ao anoitecer (1122×1402), para a
+    coluna alta do hero — a proporção dela está em `.lp3 .hero`, no CSS. */
 const IMAGEM_HERO = {
-  src: "/fotos/tourmaline3.jpg",
+  src: "/fotos/tourmaline-anoitecer.webp",
   alt: "Tourmaline Tower, empreendimento da Amaan em Porto Belo, iluminado ao anoitecer",
 };
 
@@ -157,8 +158,7 @@ export default function Lp3() {
               fill
               loading="eager"
               fetchPriority="high"
-              sizes="(max-width: 960px) 1px, 50vw"
-              style={{ objectPosition: "center 30%" }}
+              sizes="(max-width: 960px) 1px, 80vh"
             />
           </div>
         </section>

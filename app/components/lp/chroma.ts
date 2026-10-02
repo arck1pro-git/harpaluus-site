@@ -24,34 +24,35 @@ import type { Lead } from "./validar";
  * outra família, com chaves próprias — ver `PayloadChromaLp3`.
  *
  * O segredo de cada webhook viaja na query string, então a URL inteira é o
- * segredo — e por isso todas vêm do ambiente (`CHROMA_WEBHOOK_LP1`,
- * `CHROMA_WEBHOOK_LP2` e `CHROMA_WEBHOOK_LP3`, no `.env.local` e na Vercel),
- * e não do repositório. Trocar uma delas é trocar a variável e publicar de
- * novo.
+ * segredo. As da LP01 e da LP02 vêm do ambiente (`CHROMA_WEBHOOK_LP1` e
+ * `CHROMA_WEBHOOK_LP2`, no `.env.local` e na Vercel); a da LP03 fica fixa
+ * aqui (ver `WEBHOOK_LP3`). Trocar qualquer uma é publicar de novo.
  *
- * O `import "server-only"` da primeira linha continua de guarda: importar
- * este módulo de um componente cliente quebra o build, em vez de deixar o
- * código que lê as URLs chegar ao pacote do navegador.
+ * O `import "server-only"` da primeira linha é o que segura esses segredos no
+ * servidor: importar este módulo de um componente cliente quebra o build, em
+ * vez de deixar as URLs chegarem ao pacote do navegador.
  *
  * Nada aqui barra a tela de sucesso: a chamada roda em `after()` (ver
  * `actions.ts`), depois da resposta já ter saído. Quem preencheu não espera o
  * CRM, e as retentativas cabem sem segurar o formulário.
  */
+/**
+ * Webhook "LP3" do Chroma (formulário de investimento), com o segredo na
+ * query string. Fica no código, e não no ambiente, por causa de um problema
+ * do lado do CRM com a configuração por variável. Não importe esta constante
+ * fora deste módulo.
+ */
+const WEBHOOK_LP3 =
+  "https://chromacrm.vercel.app/api/webhooks/formulario-de-investimento-8356a3?secret=2e5b804403e5558e717cddf83db5f12ac8b559baa92d1c831f6c2a8b64ca108b";
+
 const WEBHOOKS: Record<OrigemLead, string | undefined> = {
   /* Webhook "LPs amaan" — o contato entra na etapa novo contato. */
   "lp1-checklist": process.env.CHROMA_WEBHOOK_LP1,
   /* Webhook "LPs amaan - sem doc" — cópia da de cima, com uma etapa própria:
      novo contato - sem doc. */
   "lp2-interesse": process.env.CHROMA_WEBHOOK_LP2,
-  /* LP03 sem a webhook própria no ambiente: entra pela da LP02, no corpo da
-     LP02 — etapa errada, mas no CRM. É a troca consciente contra a
-     alternativa, que seria o lead ficar só no log esperando reenvio manual.
-     Com `CHROMA_WEBHOOK_LP3` presente, quem decide é `destino`. */
-  "lp3-scp": process.env.CHROMA_WEBHOOK_LP2,
+  "lp3-scp": WEBHOOK_LP3,
 };
-
-/** Webhook "LP3" do Chroma (formulário de investimento). */
-const WEBHOOK_LP3 = process.env.CHROMA_WEBHOOK_LP3;
 
 /**
  * As chaves que a webhook lê.
@@ -78,16 +79,6 @@ type PayloadChroma = {
   scp?: string;
   /** Id do Pixel do Meta que disparou o Lead na LP — o mesmo nas duas. */
   pixel_id?: string;
-  /**
-   * As três de baixo são da LP03 e só viajam neste corpo quando ela cai na
-   * webhook da LP02, sem `CHROMA_WEBHOOK_LP3` no ambiente. ⚠️ Nunca foram
-   * conferidas contra a ficha daquela webhook: se ela não tiver campos com
-   * estes nomes, as três respostas são descartadas em silêncio — o lead
-   * entra mesmo assim.
-   */
-  modalidade?: string;
-  prazo_decisao?: string;
-  profissao?: string;
 } & Utms;
 
 /** Quantas vezes tentar no total (a primeira mais duas retentativas). */
@@ -131,21 +122,14 @@ function rotulo(
  * CRM, e mandar string vazia só escreveria vazio por cima da ficha.
  */
 export function payloadChroma(lead: Lead): PayloadChroma {
-  /* A LP03 tem faixas próprias; o mesmo `value` ("100k-300k") existe nas
-     duas listas, então a lista certa sai da origem, não de uma busca geral. */
-  const faixas = lead.origem === "lp3-scp" ? FAIXAS_CAPITAL_LP3 : FAIXAS_CAPITAL;
-
   return {
     nome: lead.nome,
     /* `normalizarWhatsApp` já devolve E.164 sem símbolos (`5547999998888`),
        que é exatamente o que a webhook pede: só dígitos, com DDI e DDD. */
     whatsapp: lead.whatsapp,
     email: lead.email,
-    valor: rotulo(faixas, lead.faixaCapital),
+    valor: rotulo(FAIXAS_CAPITAL, lead.faixaCapital),
     scp: rotulo(PARTICIPOU_SCP, lead.experiencia),
-    modalidade: rotulo(MODALIDADES_LP3, lead.modalidade),
-    prazo_decisao: rotulo(PRAZOS_DECISAO_LP3, lead.prazoDecisao),
-    profissao: lead.profissao,
     pixel_id: PIXEL_ID,
     /* Uma chave por parâmetro, com o nome padrão da UTM. `lead.utm` só
        carrega as que existem, então a visita orgânica não escreve nenhuma —
@@ -156,11 +140,14 @@ export function payloadChroma(lead: Lead): PayloadChroma {
 
 /**
  * As chaves da webhook "LP3" (formulário de investimento), como a
- * especificação do Chroma as define em 01/10/2026. São outras que as das
+ * especificação do Chroma as define em 02/10/2026. São outras que as das
  * LP01/LP02, e a regra é a mesma: chave fora da lista o CRM descarta em
- * silêncio. `nome_completo` e `whatsapp` são obrigatórias — sem elas a
- * webhook responde 422 —, e `validarLead` já não deixa nenhuma das duas
- * chegar vazia.
+ * silêncio. Para o CRM nenhuma é obrigatória, mas sem nome e contato o lead
+ * entra sem como ser respondido — por isso as duas primeiras ficam
+ * obrigatórias aqui, e `validarLead` não deixa nenhuma chegar vazia.
+ *
+ * `onde_investe_hoje` só viaja quando o lead traz `modalidade`: a pergunta
+ * saiu do formulário com o roteiro de captação (ver `MODALIDADES_LP3`).
  */
 type PayloadChromaLp3 = {
   /** Contato · Nome */
@@ -193,16 +180,12 @@ export function payloadChromaLp3(lead: Lead): PayloadChromaLp3 {
   };
 }
 
-/**
- * Para onde vai o lead, e em que formato. A LP03 só usa a webhook e o corpo
- * próprios quando `CHROMA_WEBHOOK_LP3` existe; sem ela, segue o caminho da
- * LP02 (ver `WEBHOOKS`).
- */
+/** Para onde vai o lead, e em que formato: a LP03 tem corpo próprio. */
 function destino(lead: Lead) {
-  if (lead.origem === "lp3-scp" && WEBHOOK_LP3) {
-    return { webhook: WEBHOOK_LP3, corpo: payloadChromaLp3(lead) };
-  }
-  return { webhook: WEBHOOKS[lead.origem], corpo: payloadChroma(lead) };
+  return {
+    webhook: WEBHOOKS[lead.origem],
+    corpo: lead.origem === "lp3-scp" ? payloadChromaLp3(lead) : payloadChroma(lead),
+  };
 }
 
 /**

@@ -64,7 +64,11 @@
   height: 100vh;
   height: 100dvh;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  /* A coluna da foto tem a proporção do render (1122×1402), então a torre
+     cabe inteira na altura da tela; o texto fica com o resto da largura.
+     Trocar a foto é trocar a proporção aqui também. */
+  grid-template-columns: minmax(0, 1fr) min(calc(100vh * 1122 / 1402), 50vw);
+  grid-template-columns: minmax(0, 1fr) min(calc(100dvh * 1122 / 1402), 50vw);
   grid-template-rows: minmax(0, 1fr);
   gap: 0;
   align-items: stretch;
@@ -965,7 +969,9 @@
 
 .lp3 .footer-legal {
   font-size: 0.82rem;
-  color: var(--light-40);
+  /* 55% e não o `--light-40`: a 40% o texto ficava em 3,2:1 sobre o fundo do
+     rodapé, abaixo dos 4,5:1 que texto pequeno pede (e o Lighthouse cobra). */
+  color: rgba(221, 227, 237, 0.55);
   line-height: 1.75;
   max-width: 640px;
   font-weight: 300;
