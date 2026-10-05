@@ -445,13 +445,12 @@ export function Formulario({
       const estado = await registrar(anterior, formData);
 
       /* Só com o cadastro aceito — não no clique, que ainda pode voltar com
-         campo a corrigir. A armadilha de bot também responde sucesso, mas não
-         vai ao Meta pelo servidor; pelo Pixel também não.
+         campo a corrigir.
 
          O id é o mesmo campo oculto que subiu para o servidor, e as respostas
          de qualificação só existem na LP02 — na LP01 os campos nem estão no
          formulário. */
-      if (estado.status === "sucesso" && !formData.get("empresa")) {
+      if (estado.status === "sucesso") {
         const campo = (nome: string) => String(formData.get(nome) ?? "") || undefined;
         rastrearLead(origem, {
           idEvento: campo("event_id"),
@@ -464,12 +463,6 @@ export function Formulario({
     };
   }, [origem]);
   const [estado, enviar, pendente] = useActionState(acao, ESTADO_INICIAL);
-
-  /* A LP02 renderiza este formulário duas vezes (no hero e na janela), então
-     nenhum `id` daqui pode ser derivado da origem: seriam dois elementos com
-     o mesmo id no documento, e o `for` do rótulo passaria a apontar sempre
-     para o primeiro. `useId` dá um valor único por instância. */
-  const idArmadilha = useId();
 
   /* A recusa do WhatsApp vive no cliente porque é a única que dá para dar na
      hora: as outras dependem de regra que só o servidor conhece. */
@@ -555,20 +548,6 @@ export function Formulario({
         </div>
       )}
 
-      {/* Armadilha de bot. `tabIndex={-1}` e `aria-hidden` mantêm o campo fora
-          do caminho de quem navega por teclado ou leitor de tela; ele é
-          invisível por posição, não por `display:none` — que boa parte dos
-          robôs já sabe ignorar. */}
-      <div aria-hidden className="absolute h-px w-px overflow-hidden opacity-0">
-        <label htmlFor={idArmadilha}>Empresa</label>
-        <input
-          id={idArmadilha}
-          name="empresa"
-          type="text"
-          tabIndex={-1}
-          autoComplete="off"
-        />
-      </div>
 
       {/* As UTMs da visita, uma por campo oculto.
           Campo oculto e não `bind` como a origem: a origem o servidor sabe

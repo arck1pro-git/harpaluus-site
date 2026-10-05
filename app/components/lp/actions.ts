@@ -77,13 +77,6 @@ export async function registrarLead(
   _anterior: EstadoLead,
   formData: FormData
 ): Promise<EstadoLead> {
-  /* Armadilha de bot: um campo que ninguém vê e, portanto, ninguém preenche.
-     Preenchido, respondemos sucesso e descartamos — um erro aqui só ensinaria
-     o robô a tentar de novo. */
-  if (texto(formData, "empresa")) {
-    return { status: "sucesso" };
-  }
-
   const entrada = {
     nome: texto(formData, "nome"),
     whatsapp: texto(formData, "whatsapp"),

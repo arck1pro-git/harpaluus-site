@@ -150,17 +150,12 @@ export function FormularioLp3() {
         };
       }
 
-      /* A armadilha de bot também responde sucesso — e também vai para a tela
-         de obrigado, para o robô não descobrir que foi barrado —, mas não
-         dispara o Lead. */
       if (estado.status === "sucesso") {
-        if (!formData.get("empresa")) {
-          const campo = (nome: string) => String(formData.get(nome) ?? "") || undefined;
-          rastrearLead(ORIGEM, {
-            idEvento: campo("event_id"),
-            faixaCapital: campo("faixaCapital"),
-          });
-        }
+        const campo = (nome: string) => String(formData.get(nome) ?? "") || undefined;
+        rastrearLead(ORIGEM, {
+          idEvento: campo("event_id"),
+          faixaCapital: campo("faixaCapital"),
+        });
         router.push(`${ROTA_LP3}/obrigado`);
       }
 
@@ -350,13 +345,6 @@ export function FormularioLp3() {
         opcoes={PRAZOS_DECISAO_LP3}
         estado={estado}
       />
-
-      {/* Armadilha de bot: fora da tela, fora do Tab e do leitor de tela.
-          O nome `empresa` é o que `registrarLead` confere. */}
-      <div className="form-hp" aria-hidden>
-        <label htmlFor="site-empresa">Empresa</label>
-        <input type="text" id="site-empresa" name="empresa" tabIndex={-1} autoComplete="off" />
-      </div>
 
       {(estado.mensagem || estado.status === "sucesso") && (
         <div
