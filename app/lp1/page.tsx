@@ -72,6 +72,13 @@ const SUCESSO: TextosSucesso = {
     "Em instantes você recebe no seu WhatsApp o material “7 perguntas antes de participar de uma SCP imobiliária”.",
     "Fique de olho nas mensagens: o envio vem do número da AMAAN Incorporadora.",
   ],
+  jaEnviado: {
+    titulo: "Você já enviou seu cadastro.",
+    paragrafos: [
+      "O material “7 perguntas antes de participar de uma SCP imobiliária” vai para o WhatsApp que você informou.",
+      "Procure a mensagem do número da AMAAN Incorporadora.",
+    ],
+  },
 };
 
 export default function Lp1() {

@@ -856,11 +856,36 @@
 .lp3 .form-submit {
   width: 100%;
   margin-top: 0.25rem;
+  /* flex para o giro do "Enviando…" ficar alinhado ao lado do texto */
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
 }
 .lp3 .form-submit:disabled {
   opacity: 0.6;
   cursor: not-allowed;
   transform: none;
+}
+/* Enviando: desativado, mas sem o ar de "proibido" — é só esperar. */
+.lp3 .form-submit[aria-busy="true"] {
+  opacity: 0.8;
+  cursor: wait;
+}
+
+.lp3 .form-spinner {
+  flex-shrink: 0;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  border-radius: 50%;
+  animation: lp3-girar 0.8s linear infinite;
+}
+@keyframes lp3-girar {
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .lp3 .form-feedback {

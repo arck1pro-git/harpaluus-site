@@ -12,6 +12,7 @@ import { ArrowRight, Check, LoaderCircle } from "lucide-react";
 
 import { TRACO } from "../landing/icones";
 import { registrarLead } from "./actions";
+import { marcarLeadEnviado, useLeadJaEnviado } from "./ja-enviou";
 import {
   ESTADO_INICIAL,
   type CampoLead,
@@ -402,10 +403,55 @@ function Sucesso({
   );
 }
 
+/* -------------------------------------------------------- ENVIO EM CURSO */
+
+/**
+ * Um envio por vez na página, valendo para todas as cópias do formulário.
+ *
+ * O `pendente` do `useActionState` desativa o botão, mas só a partir da
+ * renderização seguinte: um duplo clique ou um Enter repetido antes dela
+ * enfileiram um segundo envio — outro cadastro no CRM e outro Lead, com
+ * outro `event_id`, que o Meta não deduplica. A trava é marcada no próprio
+ * `onSubmit`, sem esperar renderização, e fecha essa janela.
+ *
+ * Mora no módulo, e não num `useRef`, porque a janela remonta o formulário a
+ * cada abertura (ver `form-modal.tsx`): quem fecha durante o "Enviando…" e
+ * reabre encontraria um formulário novo, livre para mandar tudo de novo. É
+ * lida por `useSyncExternalStore` para que esse formulário novo já nasça
+ * mostrando o envio em curso.
+ */
+let envioEmCurso = false;
+const ouvintesEnvio = new Set<() => void>();
+
+function marcarEnvio(valor: boolean) {
+  envioEmCurso = valor;
+  ouvintesEnvio.forEach((avisar) => avisar());
+}
+
+function inscreverEnvio(avisar: () => void) {
+  ouvintesEnvio.add(avisar);
+  return () => {
+    ouvintesEnvio.delete(avisar);
+  };
+}
+
+const lerEnvio = () => envioEmCurso;
+const lerEnvioNoServidor = () => false;
+
 /* ------------------------------------------------------------ FORMULÁRIO */
 
-/** A confirmação depois do envio: um título e um parágrafo por item. */
-export type TextosSucesso = { titulo: string; paragrafos: readonly string[] };
+/**
+ * A confirmação depois do envio: um título e um parágrafo por item. Em
+ * `jaEnviado`, o que fica no lugar do formulário para quem volta à LP depois
+ * de já ter mandado o cadastro (ver `ja-enviou.ts`) — texto à parte porque o
+ * da hora do envio fala em "em instantes", e quem volta pode estar voltando
+ * dias depois.
+ */
+export type TextosSucesso = {
+  titulo: string;
+  paragrafos: readonly string[];
+  jaEnviado: { titulo: string; paragrafos: readonly string[] };
+};
 
 export function Formulario({
   origem,
@@ -442,27 +488,42 @@ export function Formulario({
        Meta só pelo servidor. Esta função termina com ou sem formulário na
        tela. */
     return async (anterior: EstadoLead, formData: FormData) => {
-      const estado = await registrar(anterior, formData);
+      try {
+        const estado = await registrar(anterior, formData);
 
-      /* Só com o cadastro aceito — não no clique, que ainda pode voltar com
-         campo a corrigir.
+        /* Só com o cadastro aceito — não no clique, que ainda pode voltar com
+           campo a corrigir.
 
-         O id é o mesmo campo oculto que subiu para o servidor, e as respostas
-         de qualificação só existem na LP02 — na LP01 os campos nem estão no
-         formulário. */
-      if (estado.status === "sucesso") {
-        const campo = (nome: string) => String(formData.get(nome) ?? "") || undefined;
-        rastrearLead(origem, {
-          idEvento: campo("event_id"),
-          faixaCapital: campo("faixaCapital"),
-          experiencia: campo("experiencia"),
-        });
+           O id é o mesmo campo oculto que subiu para o servidor, e as
+           respostas de qualificação só existem na LP02 — na LP01 os campos
+           nem estão no formulário. */
+        if (estado.status === "sucesso") {
+          marcarLeadEnviado(origem);
+          const campo = (nome: string) => String(formData.get(nome) ?? "") || undefined;
+          rastrearLead(origem, {
+            idEvento: campo("event_id"),
+            faixaCapital: campo("faixaCapital"),
+            experiencia: campo("experiencia"),
+          });
+        }
+
+        return estado;
+      } finally {
+        /* Solta a trava em qualquer desfecho: no sucesso a confirmação já
+           toma o lugar do formulário, e no erro a pessoa precisa poder
+           corrigir e reenviar. */
+        marcarEnvio(false);
       }
-
-      return estado;
     };
   }, [origem]);
   const [estado, enviar, pendente] = useActionState(acao, ESTADO_INICIAL);
+
+  /* O botão fica em "Enviando…" desde o clique até a resposta — inclusive
+     num formulário que acabou de montar enquanto outro envio está saindo. */
+  const enviando = useSyncExternalStore(inscreverEnvio, lerEnvio, lerEnvioNoServidor);
+  const ocupado = pendente || enviando;
+
+  const jaEnviou = useLeadJaEnviado(origem);
 
   /* A recusa do WhatsApp vive no cliente porque é a única que dá para dar na
      hora: as outras dependem de regra que só o servidor conhece. */
@@ -497,6 +558,22 @@ export function Formulario({
     );
   }
 
+  /* Quem volta depois de já ter mandado. Nunca durante um envio: a marca é
+     gravada antes de a resposta virar estado, e o formulário em "Enviando…"
+     não pode piscar para o "já enviou" antes da confirmação de agora. */
+  if (jaEnviou && !ocupado) {
+    return (
+      <div className={className}>
+        <Sucesso
+          titulo={sucesso.jaEnviado.titulo}
+          paragrafos={sucesso.jaEnviado.paragrafos}
+          tom={tom}
+          onFechar={onFechar}
+        />
+      </div>
+    );
+  }
+
   const botao =
     tom === "escuro"
       ? "bg-white text-azul-escuro hover:bg-dourado-claro"
@@ -510,6 +587,12 @@ export function Formulario({
          A Server Action valida de novo do outro lado — este gate existe para
          responder na hora, não para substituir aquela. */
       onSubmit={(evento) => {
+        /* Já tem um envio saindo: este clique (ou Enter) não vira outro. */
+        if (envioEmCurso) {
+          evento.preventDefault();
+          return;
+        }
+
         const campo = evento.currentTarget.elements.namedItem(
           "whatsapp"
         ) as HTMLInputElement | null;
@@ -527,6 +610,7 @@ export function Formulario({
            depois deste handler, então o valor já sobe neste envio — e é desse
            mesmo FormData que o Pixel lê o id, lá em `acao`. Um id novo por
            tentativa — um reenvio depois de erro é outro evento. */
+        marcarEnvio(true);
         if (campoIdEvento.current) campoIdEvento.current.value = crypto.randomUUID();
         if (campoPagina.current) campoPagina.current.value = window.location.href;
       }}
@@ -652,12 +736,12 @@ export function Formulario({
 
       <button
         type="submit"
-        disabled={pendente}
+        disabled={ocupado}
         /* Mesma forma e mesmo peso do CTA que abriu a janela — ver
            `BotaoFormulario`, inclusive sobre escrever a tipografia à mão. */
         className={`group mt-8 inline-flex min-h-[56px] w-full items-center justify-center gap-3 rounded-xl px-8 py-[18px] text-center text-[11px] leading-none font-bold tracking-[0.2em] uppercase transition-colors duration-300 ease-out disabled:cursor-wait disabled:opacity-80 ${botao}`}
       >
-        {pendente ? (
+        {ocupado ? (
           <>
             <LoaderCircle size={16} strokeWidth={TRACO} aria-hidden className="animate-spin" />
             Enviando…

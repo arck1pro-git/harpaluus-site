@@ -14,6 +14,7 @@ import { ArrowRight, X } from "lucide-react";
 
 import { TRACO } from "../landing/icones";
 import type { TextosSucesso } from "./formulario";
+import { leadJaEnviado } from "./ja-enviou";
 import type { OrigemLead } from "./lead";
 import { rastrearAbertura } from "./meta-pixel";
 import { utmsDaVisita } from "./utms";
@@ -136,7 +137,9 @@ export function FormularioProvider({
        é só uma caixa no fluxo — e nenhum dos comportamentos de modal existe. */
     dialogo.current?.showModal();
     setAberto(true);
-    rastrearAbertura(origem);
+    /* Quem já mandou o cadastro vê o "já enviou" na janela: não é uma
+       abertura de formulário, e contá-la sujaria o funil no Meta. */
+    if (!leadJaEnviado(origem)) rastrearAbertura(origem);
   }, [origem]);
 
   const fechar = useCallback(() => {

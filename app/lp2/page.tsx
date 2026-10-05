@@ -87,6 +87,12 @@ const SUCESSO: TextosSucesso = {
     "Obrigado pelo interesse em conhecer a oportunidade da AMAAN Incorporadora.",
     "Nossa equipe vai falar com você pelo WhatsApp em breve para apresentar a operação e tirar suas dúvidas.",
   ],
+  jaEnviado: {
+    titulo: "Você já enviou seu cadastro.",
+    paragrafos: [
+      "Nossa equipe vai falar com você pelo WhatsApp que você informou para apresentar a operação e tirar suas dúvidas.",
+    ],
+  },
 };
 
 /* O bloco dinâmico do "QUANDO" só existe se os três campos estiverem

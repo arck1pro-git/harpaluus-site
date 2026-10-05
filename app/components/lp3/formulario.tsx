@@ -4,6 +4,7 @@ import { useActionState, useMemo, useRef, useState, useSyncExternalStore } from 
 import { useRouter } from "next/navigation";
 
 import { registrarLead } from "../lp/actions";
+import { marcarLeadEnviado, useLeadJaEnviado } from "../lp/ja-enviou";
 import { ESTADO_INICIAL, type CampoLead, type EstadoLead } from "../lp/lead";
 import { FAIXAS_CAPITAL_LP3, PRAZOS_DECISAO_LP3, ROTA_LP3 } from "../lp/lp-config";
 import { rastrearLead } from "../lp/meta-pixel";
@@ -131,6 +132,14 @@ function Selecao({
 export function FormularioLp3() {
   const router = useRouter();
 
+  /* Um envio por clique. O `pendente` desativa o botão só a partir da
+     renderização seguinte, e um duplo clique ou um Enter repetido antes dela
+     enfileirariam um segundo cadastro — outro lead no CRM e outro Lead, com
+     outro `event_id`, que o Meta não deduplica. A trava é marcada no
+     `onSubmit`, sem esperar renderização, e só se solta quando o envio volta
+     com erro: no sucesso a página já está indo para o obrigado. */
+  const enviando = useRef(false);
+
   const acao = useMemo(() => {
     const registrar = registrarLead.bind(null, ORIGEM);
 
@@ -139,6 +148,7 @@ export function FormularioLp3() {
       try {
         estado = await registrar(anterior, formData);
       } catch {
+        enviando.current = false;
         /* Rede caiu ou o servidor falhou: a mensagem de erro geral, e o que
            foi digitado continua nos campos. */
         return {
@@ -151,12 +161,15 @@ export function FormularioLp3() {
       }
 
       if (estado.status === "sucesso") {
+        marcarLeadEnviado(ORIGEM);
         const campo = (nome: string) => String(formData.get(nome) ?? "") || undefined;
         rastrearLead(ORIGEM, {
           idEvento: campo("event_id"),
           faixaCapital: campo("faixaCapital"),
         });
         router.push(`${ROTA_LP3}/obrigado`);
+      } else {
+        enviando.current = false;
       }
 
       return estado;
@@ -164,6 +177,12 @@ export function FormularioLp3() {
   }, [router]);
 
   const [estado, enviar, pendente] = useActionState(acao, ESTADO_INICIAL);
+
+  /* O carregando fica até a página trocar: depois do sucesso ainda há a
+     navegação para o obrigado, e o botão não pode voltar a parecer clicável. */
+  const ocupado = pendente || estado.status === "sucesso";
+
+  const jaEnviou = useLeadJaEnviado(ORIGEM);
 
   const utms = useSyncExternalStore(SEM_INSCRICAO, utmsDaVisita, utmsNoServidor);
 
@@ -189,6 +208,20 @@ export function FormularioLp3() {
 
   const erroServidor = (nome: CampoLead) => estado.erros?.[nome];
 
+  /* Quem volta depois de já ter solicitado — inclusive pelo "Voltar para a
+     página" do obrigado. Nunca durante um envio: a marca é gravada antes de a
+     resposta virar estado, e o botão em "Enviando…" fica até a página trocar. */
+  if (jaEnviou && !ocupado) {
+    return (
+      <div className="cta-form" role="status">
+        <p className="form-feedback form-feedback--ok">
+          <strong>Você já solicitou acesso.</strong> Um especialista da AMAAN vai falar com você
+          pelo WhatsApp informado em até 24 horas úteis.
+        </p>
+      </div>
+    );
+  }
+
   return (
     <form
       className="cta-form"
@@ -197,6 +230,12 @@ export function FormularioLp3() {
       /* Quem chega rolando e começa a preencher também abriu o formulário. */
       onFocus={abrirFormularioLp3}
       onSubmit={(evento) => {
+        /* Já tem um envio saindo: este clique (ou Enter) não vira outro. */
+        if (enviando.current) {
+          evento.preventDefault();
+          return;
+        }
+
         /* O erro do telefone entra na validação nativa antes da checagem, e
            o `reportValidity()` leva o foco ao primeiro campo inválido na
            ordem do formulário — o telefone, só se nada antes dele falhar.
@@ -209,6 +248,7 @@ export function FormularioLp3() {
 
         /* Um id novo por tentativa, escrito antes de o React montar o
            FormData: é o mesmo que sobe para o servidor e que o Pixel usa. */
+        enviando.current = true;
         if (campoIdEvento.current) campoIdEvento.current.value = crypto.randomUUID();
         if (campoPagina.current) campoPagina.current.value = window.location.href;
       }}
@@ -358,8 +398,20 @@ export function FormularioLp3() {
         </div>
       )}
 
-      <button type="submit" className="btn form-submit" disabled={pendente || estado.status === "sucesso"}>
-        {pendente ? "Enviando…" : ROTULO_ENVIO}
+      <button
+        type="submit"
+        className="btn form-submit"
+        disabled={ocupado}
+        aria-busy={ocupado || undefined}
+      >
+        {ocupado ? (
+          <>
+            <span className="form-spinner" aria-hidden />
+            Enviando…
+          </>
+        ) : (
+          ROTULO_ENVIO
+        )}
       </button>
     </form>
   );

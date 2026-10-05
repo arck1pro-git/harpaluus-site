@@ -3,6 +3,7 @@
 import { useId, useRef } from "react";
 
 import { Formulario, type TextosSucesso } from "./formulario";
+import { leadJaEnviado } from "./ja-enviou";
 import type { OrigemLead } from "./lead";
 import { rastrearAbertura } from "./meta-pixel";
 
@@ -39,7 +40,8 @@ export function FormularioNaPagina({
     <section
       aria-labelledby={idTitulo}
       onFocus={() => {
-        if (abriu.current) return;
+        /* Quem já mandou o cadastro vê o "já enviou", não um formulário. */
+        if (abriu.current || leadJaEnviado(origem)) return;
         abriu.current = true;
         rastrearAbertura(origem);
       }}

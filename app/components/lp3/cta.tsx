@@ -2,6 +2,7 @@
 
 import type { ReactNode } from "react";
 
+import { leadJaEnviado } from "../lp/ja-enviou";
 import { rastrearAbertura } from "../lp/meta-pixel";
 
 /**
@@ -18,6 +19,8 @@ import { rastrearAbertura } from "../lp/meta-pixel";
  * visita nova volta a contar.
  */
 export function abrirFormularioLp3() {
+  /* Quem já solicitou chega ao "já solicitou", não a um formulário. */
+  if (leadJaEnviado("lp3-scp")) return;
   const secao = document.getElementById("formulario");
   if (secao?.dataset.abriu) return;
   if (secao) secao.dataset.abriu = "true";
