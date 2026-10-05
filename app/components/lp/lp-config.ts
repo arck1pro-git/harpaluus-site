@@ -486,8 +486,9 @@ export const FAIXAS_CAPITAL = [
    `chroma.ts` conferem e traduzem o que chega contra elas. Os `value` são
    estáveis de propósito: o comercial filtra por eles no CRM. */
 
-/** "Quanto você tem disponível para investir?" — o aporte mínimo é R$ 50 mil. */
+/** Inclui interessados com até R$ 50 mil, conforme o briefing da LP03 de 05/10/2026. */
 export const FAIXAS_CAPITAL_LP3 = [
+  { value: "ate-50k", label: "Até R$ 50 mil" },
   { value: "50k-100k", label: "R$ 50 mil a R$ 100 mil" },
   { value: "100k-200k", label: "R$ 100 mil a R$ 200 mil" },
   { value: "200k-400k", label: "R$ 200 mil a R$ 400 mil" },

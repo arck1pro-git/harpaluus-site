@@ -18,25 +18,20 @@ import { RodapeLp3 } from "../components/lp3/rodape";
 /**
  * LP 03 — Captação de investidores, marca Amaan.
  *
- * Textos do roteiro `AMAAN_LP_Captacao_2_Secoes_Roteiro_Orientacoes_Designer`,
- * sobre o layout que a página já tinha: hero, benefícios (bloco claro),
- * seletividade (bloco com a foto de Porto Belo) e formulário. O fluxo é o
- * que o roteiro recomenda — hero → potencial → benefícios → seletividade →
- * formulário.
+ * Textos atualizados pelo briefing `LP3_ajustes_designer_AMAAN`, de 05/10/2026:
+ * hero → pilares → participação → seletividade → formulário.
  *
  * Três regras do roteiro moldam o texto:
  * - a AMAAN aparece como incorporadora, não como plataforma financeira — e a
  *   sigla SCP não aparece na página, nem no título, nem no card do link;
- * - a promessa é sempre potencial, nunca garantia: toda alegação de
- *   resultado leva asterisco, e a nota fica perto dela, legível;
+ * - os parâmetros distinguem potencial de resultado e garantia em imóveis;
  * - só imagens oficiais de empreendimentos da AMAAN.
  *
  * O formulário sai pela mesma Server Action das outras LPs (CRM Chroma + API
  * de Conversões do Meta), com os eventos do Pixel com sufixo `_lp3`.
  */
 
-/* Sem números no título, na descrição e no card do link: fora da página,
-   a taxa apareceria sem o asterisco e a nota que a qualificam. */
+/* Título, descrição e card do link apresentam a oportunidade sem taxas. */
 const TITULO = "Investimento em incorporação imobiliária no litoral catarinense";
 const DESCRICAO =
   "Invista no desenvolvimento de empreendimentos imobiliários da Amaan no litoral catarinense. O acesso às operações é seletivo: deixe seus dados para avaliarmos o seu perfil.";
@@ -80,7 +75,27 @@ const IMAGEM_HERO = {
 const PARAMETROS = [
   { rotulo: "A partir de", valor: "R$ 50 mil" },
   { rotulo: "Prazos de", valor: "18, 24 ou 36 meses" },
-  { rotulo: "Condições de", valor: "1,5% a 3% ao mês*" },
+  { rotulo: "Potencial de", valor: "1,5% a 3% ao mês" },
+  { rotulo: "Garantia de", valor: "200% do valor aportado em imóveis" },
+];
+
+const PASSOS = [
+  {
+    titulo: "A AMAAN conduz a operação.",
+    texto: "Compra o terreno, aprova o projeto, constrói, vende e responde pelo empreendimento.",
+  },
+  {
+    titulo: "Você aporta capital e participa do resultado.",
+    texto: "Sua participação, o prazo e a forma de remuneração ficam definidos em contrato.",
+  },
+  {
+    titulo: "Sua remuneração entra na conta antes da obra.",
+    texto: "Na análise de viabilidade, a remuneração prevista do investidor é tratada como custo, assim como o terreno e a obra. Se a conta não fecha num cenário conservador, a operação não sai do papel.",
+  },
+  {
+    titulo: "Seu aporte tem garantia de 200% em imóveis.",
+    texto: "Cada participação conta com garantia real em imóveis equivalente a 200% do valor aportado, conforme o contrato.",
+  },
 ];
 
 export default function Lp3() {
@@ -110,8 +125,8 @@ export default function Lp3() {
             </div>
 
             <h1 className="hero-h1" id="hero-titulo">
-              Invista diretamente no <span className="accent">desenvolvimento</span> de
-              empreendimentos imobiliários.
+              Invista <span className="accent">do outro lado da mesa:</span> no desenvolvimento
+              de empreendimentos imobiliários.
             </h1>
 
             <div className="hero-divider" aria-hidden />
@@ -130,8 +145,8 @@ export default function Lp3() {
             </div>
 
             <p className="hero-sub">
-              Invista em incorporações da AMAAN no litoral catarinense, com{" "}
-              <strong>potencial de dobrar o capital investido em até 3 anos.</strong>
+              Participe economicamente de incorporações da AMAAN no litoral catarinense e esteja
+              do lado de quem desenvolve, constrói e vende.
             </p>
 
             <dl className="hero-params">
@@ -144,8 +159,6 @@ export default function Lp3() {
             </dl>
 
             <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
-
-           
           </div>
 
           {/* Coluna direita — o empreendimento, e a LCP do desktop: por isso
@@ -189,9 +202,8 @@ export default function Lp3() {
               <div className="scp-body rounded-lg">
                 <h3 className="scp-body-title">Invista na economia real.</h3>
                 <p>
-                  Seu capital participa do
-                  desenvolvimento de um <strong>empreendimento imobiliário real</strong>, com ativos
-                  e garantias aplicáveis a cada operação.
+                  Seu capital participa de um <strong>empreendimento imobiliário real</strong>,
+                  com garantia de 200% do valor aportado em imóveis.
                 </p>
               </div>
 
@@ -217,6 +229,29 @@ export default function Lp3() {
             <div className="scp-cta">
               <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
             </div>
+          </div>
+        </section>
+
+        <div className="gold-rule" aria-hidden />
+
+        <section className="participacao-section" id="participacao" aria-labelledby="participacao-titulo">
+          <div className="section-inner">
+            <h2 className="section-h2" id="participacao-titulo">
+              Como funciona <span className="accent">a sua participação</span>
+            </h2>
+            <ol className="participacao-passos" role="list">
+              {PASSOS.map((passo, indice) => (
+                <li className="participacao-passo" key={passo.titulo}>
+                  <span className="participacao-numero" aria-hidden="true">
+                    {String(indice + 1).padStart(2, "0")}
+                  </span>
+                  <div>
+                    <h3>{passo.titulo}</h3>
+                    <p>{passo.texto}</p>
+                  </div>
+                </li>
+              ))}
+            </ol>
           </div>
         </section>
 
@@ -257,6 +292,9 @@ export default function Lp3() {
                   uma relação com a AMAAN.
                 </strong>
               </p>
+              <p className="litoral-text litoral-cotas">
+                Cada operação tem um número limitado de cotas.
+              </p>
             </div>
           </div>
         </section>
@@ -270,11 +308,6 @@ export default function Lp3() {
               Solicite acesso a <span className="accent">uma oportunidade</span>
             </h2>
 
-            <p className="cta-sub">
-              Preencha seus dados para entendermos seu perfil e avaliarmos se existe compatibilidade
-              com uma das operações disponíveis.
-            </p>
-
             {/* ViewContent: a pessoa leu o texto de conversão. Fica aqui, e
                 não no fim da página como na LP01 e na LP02: o formulário vem
                 antes do rodapé, e quem preenche não precisa rolar até lá —
@@ -282,8 +315,6 @@ export default function Lp3() {
             <MetaViuConteudo origem="lp3-scp" />
 
             <FormularioLp3 />
-
-           
           </div>
         </section>
       </main>

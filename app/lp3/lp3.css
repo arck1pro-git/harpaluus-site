@@ -1,9 +1,8 @@
 /* ═══════════════════════════════════════════════════════════
-   LP03 — Investimento em SCP, na identidade da Amaan.
+   LP03 — Captação de investidores, na identidade da Amaan.
 
-   Página longa de conversão: hero com a imagem do empreendimento, o que é a
-   SCP (bloco claro), o mercado, o simulador, as perguntas frequentes e o
-   formulário. Paleta e tipografia são as da Amaan, as mesmas da LP01 e da
+   Hero, pilares, passos da participação, seletividade e formulário.
+   Paleta e tipografia são as da Amaan, as mesmas da LP01 e da
    LP02: Playfair nos títulos e números, Inter no resto. As duas já vêm do
    layout raiz, que as pré-carrega em toda página — uma fonte própria aqui
    seria um terceiro arquivo disputando banda com o que pinta a tela.
@@ -60,16 +59,16 @@
 
 /* ─── HERO ─────────────────────────────────────────────── */
 .lp3 .hero {
-  /* Equivalente a h-screen; dvh acompanha as barras do navegador mobile. */
-  height: 100vh;
-  height: 100dvh;
+  /* Cresce com o conteúdo para manter os quatro parâmetros e a nota legíveis. */
+  min-height: 100vh;
+  min-height: 100dvh;
   display: grid;
   /* A coluna da foto tem a proporção do render (1122×1402), então a torre
      cabe inteira na altura da tela; o texto fica com o resto da largura.
      Trocar a foto é trocar a proporção aqui também. */
   grid-template-columns: minmax(0, 1fr) min(calc(100vh * 1122 / 1402), 50vw);
   grid-template-columns: minmax(0, 1fr) min(calc(100dvh * 1122 / 1402), 50vw);
-  grid-template-rows: minmax(0, 1fr);
+  grid-template-rows: auto;
   gap: 0;
   align-items: stretch;
   padding: 0;
@@ -87,7 +86,6 @@
   flex-direction: column;
   justify-content: center;
   gap: clamp(0.5rem, 1.6dvh, 1.5rem);
-  overflow-y: auto;
 }
 
 /* O espaçamento acompanha a altura disponível, sem acumular margens. */
@@ -149,6 +147,7 @@
 /* No celular a imagem só entra entre o título e o texto quando há altura. */
 .lp3 .hero-midia-inline {
   display: none;
+  position: relative;
 }
 
 /* ─── BOTÕES ────────────────────────────────────────────── */
@@ -308,6 +307,58 @@
 .lp3 .scp-cta {
   margin-top: 2.5rem;
   text-align: center;
+}
+
+/* ─── COMO FUNCIONA A PARTICIPAÇÃO ─────────────────────── */
+.lp3 .participacao-section {
+  background: var(--surface);
+}
+.lp3 .participacao-section .section-h2 {
+  max-width: 720px;
+  margin: 0 auto 3rem;
+  text-align: center;
+}
+.lp3 .participacao-passos {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 2.5rem 3rem;
+  padding: 0;
+  margin: 0;
+  list-style: none;
+}
+.lp3 .participacao-passo {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.25rem;
+  border-top: 1px solid var(--gold-line);
+  padding-top: 1.5rem;
+}
+.lp3 .participacao-numero {
+  flex-shrink: 0;
+  font-family: var(--font-playfair), serif;
+  font-size: 2rem;
+  line-height: 1;
+  color: var(--gold);
+}
+.lp3 .participacao-passo h3 {
+  margin: 0 0 0.75rem;
+  font-family: var(--font-playfair), serif;
+  font-size: 1.4rem;
+  font-weight: 500;
+  line-height: 1.35;
+  color: #ffffff;
+}
+.lp3 .participacao-passo p {
+  margin: 0;
+  font-size: 1rem;
+  line-height: 1.8;
+  color: var(--light);
+}
+.lp3 .litoral-text.litoral-cotas {
+  border-top: 1px solid var(--gold-line);
+  padding-top: 1.5rem;
+  margin-bottom: 0;
+  color: var(--gold-2);
 }
 
 .lp3 .scp-hl {
@@ -999,11 +1050,11 @@
   font-weight: 500;
 }
 
-/* A faixa de prova rápida do hero: três parâmetros entre filetes dourados. */
+/* Quatro parâmetros com a mesma hierarquia, inclusive em telas baixas. */
 .lp3 .hero-params {
   display: grid;
-  grid-template-columns: repeat(3, auto);
-  justify-content: start;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  width: 100%;
   margin: 0 0 2.25rem;
   border-top: 1px solid var(--gold-line);
   border-bottom: 1px solid var(--gold-line);
@@ -1012,9 +1063,12 @@
   padding: 1rem 1.25rem;
   border-left: 1px solid var(--gold-line);
 }
-.lp3 .hero-param:first-child {
+.lp3 .hero-param:nth-child(odd) {
   padding-left: 0;
   border-left: none;
+}
+.lp3 .hero-param:nth-child(n + 3) {
+  border-top: 1px solid var(--gold-line);
 }
 .lp3 .hero-param dt {
   font-size: 0.72rem;
@@ -1041,7 +1095,9 @@
   max-width: 560px;
 }
 .lp3 .hero-nota {
-  margin-top: 1.5rem;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--light);
 }
 .lp3 .scp-section .nota-legal {
   color: rgba(var(--escuro-rgb), 0.68);
@@ -1056,12 +1112,12 @@
 
 @media (max-width: 960px) {
   .lp3 .hero-params {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, minmax(0, 1fr));
     width: 100%;
     max-width: 420px;
   }
   .lp3 .hero-param,
-  .lp3 .hero-param:first-child {
+  .lp3 .hero-param:nth-child(odd) {
     padding: 0.85rem 0.5rem;
   }
   .lp3 .hero-param dt {
@@ -1113,7 +1169,6 @@
 
   .lp3 .hero-midia-inline {
     display: block;
-    position: relative;
     width: 100%;
     height: 16dvh;
     max-width: 440px;
@@ -1151,6 +1206,11 @@
   .lp3 .scp-body-grid {
     grid-template-columns: 1fr;
     gap: 1rem;
+  }
+
+  .lp3 .participacao-passos {
+    grid-template-columns: 1fr;
+    gap: 2rem;
   }
 
   .lp3 .scp-highlights {
@@ -1221,7 +1281,7 @@
   }
 }
 
-/* Em telas baixas, o CTA tem prioridade sobre imagem e dados secundários. */
+/* Em telas baixas, só a imagem decorativa cede espaço ao conteúdo. */
 @media (max-width: 960px) and (max-height: 1000px) {
   .lp3 .hero-midia-inline {
     display: none;
@@ -1235,26 +1295,15 @@
   }
 }
 
-@media (min-width: 961px) and (max-height: 740px) {
-  .lp3 .hero-params {
-    display: none;
-  }
-}
-
 @media (max-width: 960px) and (max-height: 740px) {
   .lp3 .hero-param,
-  .lp3 .hero-param:first-child {
+  .lp3 .hero-param:nth-child(odd) {
     padding: 0.5rem;
   }
 }
 
-/* Paisagem: a alegação e sua nota saem juntas; título e CTA permanecem. */
+/* Paisagem: compacta a marca e o título, preservando parâmetros e nota. */
 @media (max-height: 500px) {
-  .lp3 .hero-sub,
-  .lp3 .hero-nota {
-    display: none;
-  }
-
   .lp3 .hero-logo img {
     height: 2rem;
   }
