@@ -176,7 +176,7 @@ export default function Lp2() {
               <div className="relative z-10 max-w-[640px]">
                 <h1 className="tipo-headline text-white">{lp2.hero.titulo}</h1>
 
-                <Reveal as="p" delay={160} className="tipo-corpo mt-8 max-w-[580px] text-pedra-claro">
+                <Reveal as="p" delay={160} className="tipo-corpo mt-8 max-w-[580px] text-white">
                   {lp2.hero.texto}
                 </Reveal>
 
@@ -263,17 +263,17 @@ export default function Lp2() {
                 delay={i * 110}
                 className="flex flex-col bg-azul-escuro px-7 py-9 sm:px-8"
               >
-                <p className="font-[family-name:var(--font-playfair)] text-[34px] leading-[1.05] text-white">
+                <p className="text-[34px] leading-[1.05] text-white">
                   {indicador.dado}
                 </p>
 
-                <p className="tipo-corpo-curto mt-5 flex-1 text-pedra-claro">
+                <p className="tipo-corpo-curto mt-5 flex-1 text-white">
                   {indicador.texto}
                 </p>
 
                 {/* a fonte é parte do dado, não nota de rodapé: o modelo pede
                     fonte e data visíveis junto do número */}
-                <p className="mt-6 border-t border-white/12 pt-4 text-[12px] leading-[1.6] font-light text-pedra-claro/80">
+                <p className="mt-6 border-t border-white/12 pt-4 text-[12px] leading-[1.6] font-light text-white">
                   {indicador.fonte}
                 </p>
               </Reveal>
@@ -339,7 +339,7 @@ export default function Lp2() {
                   {item.etapa}
                 </h3>
 
-                <p className="tipo-corpo-curto col-start-2 text-pedra-claro sm:col-start-3 sm:pt-[3px]">
+                <p className="tipo-corpo-curto col-start-2 text-white sm:col-start-3 sm:pt-[3px]">
                   {item.logica}
                 </p>
               </Reveal>
@@ -402,8 +402,8 @@ export default function Lp2() {
               <dl className="mt-7 grid gap-px bg-linha md:grid-cols-3">
                 {lp2.quando.janela.itens.map((item, i) => (
                   <Reveal key={item.rotulo} delay={i * 100} className="bg-fundo px-7 py-8">
-                    <dt className="tipo-corpo-curto text-pedra">{item.rotulo}</dt>
-                    <dd className="mt-4 font-[family-name:var(--font-playfair)] text-[22px] leading-[1.25] text-azul-escuro">
+                    <dt className="tipo-corpo-curto text-azul-escuro">{item.rotulo}</dt>
+                    <dd className="mt-4 text-[22px] leading-[1.25] text-azul-escuro">
                       {item.valor}
                     </dd>
                   </Reveal>
@@ -439,7 +439,7 @@ export default function Lp2() {
                   <h3 className="tipo-label text-dourado-escuro">{lado.titulo}</h3>
                 </div>
 
-                <p className="tipo-corpo mt-6 text-pedra">{lado.texto}</p>
+                <p className="tipo-corpo mt-6 text-azul-escuro">{lado.texto}</p>
               </Reveal>
             ))}
           </div>

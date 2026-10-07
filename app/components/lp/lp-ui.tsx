@@ -219,7 +219,7 @@ export function Paragrafo({
   delay?: number;
   className?: string;
 }) {
-  const cor = tom === "escuro" ? "text-pedra-claro" : "text-pedra";
+  const cor = tom === "escuro" ? "text-white" : "text-azul-escuro";
 
   return (
     <Reveal as="p" delay={delay} className={`tipo-corpo ${cor} ${className}`}>
@@ -250,7 +250,7 @@ export function Tese({
   return (
     <Reveal className={`border-l border-dourado/45 pl-6 md:pl-8 ${className}`}>
       <p
-        className={`tipo-lead font-[family-name:var(--font-playfair)] ${
+        className={`tipo-lead ${
           tom === "escuro" ? "text-white" : "text-azul-escuro"
         }`}
       >

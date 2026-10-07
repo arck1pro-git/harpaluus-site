@@ -49,7 +49,7 @@ export function LpFooter({
           <p className="tipo-label mt-7 text-dourado-claro">{titulo}</p>
 
           {tese && (
-            <p className="tipo-lead mt-6 font-[family-name:var(--font-playfair)] text-white">
+            <p className="tipo-lead mt-6 text-white">
               {tese}
             </p>
           )}
@@ -66,12 +66,12 @@ export function LpFooter({
         >
           {/* o aviso vem primeiro na ordem de leitura: é o que importa */}
           {aviso && (
-            <p className="max-w-[620px] text-[13px] leading-[1.75] font-light text-pedra-claro">
+            <p className="max-w-[620px] text-[13px] leading-[1.75] font-light text-white">
               {aviso}
             </p>
           )}
 
-          <address className="mt-7 text-[13px] leading-[1.75] font-light text-pedra-claro not-italic md:mt-0 md:shrink-0 md:text-right">
+          <address className="mt-7 text-[13px] leading-[1.75] font-light text-white not-italic md:mt-0 md:shrink-0 md:text-right">
             <span className="block">{marca}</span>
             <span className="block">CNPJ {CNPJ}</span>
             <span className="block">

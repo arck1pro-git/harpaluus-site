@@ -130,7 +130,7 @@ export default function Lp1() {
             <div className="max-w-[620px]">
               <h1 className="tipo-headline text-white">{lp1.hero.titulo}</h1>
 
-              <p className="tipo-corpo mt-7 max-w-[560px] text-pedra-claro">{lp1.hero.texto}</p>
+              <p className="tipo-corpo mt-7 max-w-[560px] text-white">{lp1.hero.texto}</p>
 
               <BotaoFormulario tom="escuro" className="mt-10">
                 {lp1.cta}
@@ -227,7 +227,7 @@ export default function Lp1() {
           <div className="max-w-[720px]">
             <Titulo tom="escuro">{lp1.formulario.titulo}</Titulo>
 
-            <p className="tipo-lead mt-7 text-pedra-claro">{lp1.formulario.texto}</p>
+            <p className="tipo-lead mt-7 text-white">{lp1.formulario.texto}</p>
 
             <Reveal className="mt-11">
               <BotaoFormulario tom="escuro">{lp1.cta}</BotaoFormulario>

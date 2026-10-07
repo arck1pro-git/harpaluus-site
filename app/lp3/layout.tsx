@@ -2,7 +2,7 @@ import "./lp3.css";
 
 /**
  * Casca das duas páginas da LP03 — a landing e o obrigado. O `.lp3` é a raiz
- * de escopo de todo o `lp3.css`; as fontes (Inter e Playfair) vêm do layout
+ * de escopo de todo o `lp3.css`; a fonte (Inter, sem serifa) vem do layout
  * raiz, como nas outras LPs.
  */
 export default function Lp3Layout({ children }: { children: React.ReactNode }) {

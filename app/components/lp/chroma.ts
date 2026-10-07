@@ -162,8 +162,6 @@ type PayloadChromaLp3 = {
   onde_investe_hoje?: string;
   /** Contato · campo "pronto_para_investir" */
   em_quanto_tempo_pretende_investir?: string;
-  /** Contato · campo "profissao" */
-  profissao?: string;
 } & Utms;
 
 /** O lead da LP03 no corpo da webhook "LP3" — rótulos, como nas outras. */
@@ -175,7 +173,6 @@ export function payloadChromaLp3(lead: Lead): PayloadChromaLp3 {
     quanto_pretende_investir: rotulo(FAIXAS_CAPITAL_LP3, lead.faixaCapital),
     onde_investe_hoje: rotulo(MODALIDADES_LP3, lead.modalidade),
     em_quanto_tempo_pretende_investir: rotulo(PRAZOS_DECISAO_LP3, lead.prazoDecisao),
-    profissao: lead.profissao,
     ...lead.utm,
   };
 }

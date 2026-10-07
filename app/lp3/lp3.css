@@ -2,10 +2,15 @@
    LP03 — Captação de investidores, na identidade da Amaan.
 
    Hero, pilares, passos da participação, seletividade e formulário.
-   Paleta e tipografia são as da Amaan, as mesmas da LP01 e da
-   LP02: Playfair nos títulos e números, Inter no resto. As duas já vêm do
-   layout raiz, que as pré-carrega em toda página — uma fonte própria aqui
-   seria um terceiro arquivo disputando banda com o que pinta a tela.
+   Paleta da Amaan, a mesma da LP01 e da LP02, e Inter em tudo — títulos e
+   números inclusive, sem serifa. Ela já vem do layout raiz, que a
+   pré-carrega em toda página — uma fonte própria aqui seria mais um arquivo
+   disputando banda com o que pinta a tela.
+
+   Texto é branco no escuro e o azul-escuro da marca no claro; nada de
+   cinza. O dourado fica nos destaques, e o único tom esmaecido é o
+   placeholder dos campos — esmaecido justamente para não parecer
+   preenchido.
 
    Tudo aqui mora dentro de `.lp3` — a classe que `lp3/layout.tsx` põe em
    volta das duas páginas da rota. As regras de `section` e `footer`, soltas
@@ -16,16 +21,15 @@
 .lp3 {
   /* Os tokens da Amaan, com um degrau intermediário entre o azul-escuro e o
      azul-profundo para as seções alternadas: o azul-profundo puro dobraria o
-     contraste entre elas. `--light` é o pedra-claro, o texto das seções
-     escuras da Amaan. */
+     contraste entre elas. `--light` é o texto das seções escuras: branco,
+     não o pedra-claro da home. `--placeholder` é só para placeholder. */
   --bg: #111729;
   --surface: #172039;
   --surface-2: #1f2e50;
   --gold: #caa063;
   --gold-2: #f0c991;
-  --light: #dde3ed;
-  --light-70: rgba(221, 227, 237, 0.7);
-  --light-40: rgba(221, 227, 237, 0.4);
+  --light: #ffffff;
+  --placeholder: rgba(255, 255, 255, 0.4);
   --light-15: rgba(221, 227, 237, 0.15);
   --light-06: rgba(221, 227, 237, 0.06);
   --gold-line: rgba(202, 160, 99, 0.25);
@@ -103,7 +107,6 @@
 }
 
 .lp3 .hero-h1 {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.75rem, min(3.5vw, 5dvh), 4rem);
   font-weight: 400;
   line-height: 1.1;
@@ -206,7 +209,6 @@
 }
 
 .lp3 .section-h2 {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.9rem, 3.2vw, 2.9rem);
   font-weight: 400;
   line-height: 1.15;
@@ -220,7 +222,7 @@
 
 .lp3 .section-lead {
   font-size: clamp(1rem, 1.4vw, 1.1rem);
-  color: var(--light-70);
+  color: var(--light);
   max-width: 600px;
   line-height: 1.9;
   margin-bottom: 3rem;
@@ -238,7 +240,7 @@
   background: var(--claro);
 }
 .lp3 .scp-section .section-eyebrow {
-  color: rgba(var(--escuro-rgb), 0.45);
+  color: var(--escuro);
   justify-content: center;
 }
 .lp3 .scp-section .eyebrow-line {
@@ -252,7 +254,7 @@
   color: var(--gold-sobre-claro);
 }
 .lp3 .scp-section .section-lead {
-  color: rgba(var(--escuro-rgb), 0.6);
+  color: var(--escuro);
   margin-bottom: 2rem;
   text-align: center;
   max-width: 640px;
@@ -276,7 +278,6 @@
 
 .lp3 .scp-body-title {
   margin: 0 0 0.85rem;
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.3rem, 2vw, 1.6rem);
   font-weight: 600;
   line-height: 1.3;
@@ -286,7 +287,7 @@
 
 .lp3 .scp-body p {
   font-size: 1.05rem;
-  color: rgba(var(--escuro-rgb), 0.68);
+  color: var(--escuro);
   line-height: 1.95;
   margin: 0;
   font-weight: 300;
@@ -335,14 +336,12 @@
 }
 .lp3 .participacao-numero {
   flex-shrink: 0;
-  font-family: var(--font-playfair), serif;
   font-size: 2rem;
   line-height: 1;
   color: var(--gold);
 }
 .lp3 .participacao-passo h3 {
   margin: 0 0 0.75rem;
-  font-family: var(--font-playfair), serif;
   font-size: 1.4rem;
   font-weight: 500;
   line-height: 1.35;
@@ -367,7 +366,6 @@
   background: rgba(var(--escuro-rgb), 0.05);
 }
 .lp3 .scp-hl-number {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.8rem, 2.5vw, 2.4rem);
   font-weight: 300;
   color: var(--gold-sobre-claro);
@@ -376,7 +374,7 @@
 }
 .lp3 .scp-hl-label {
   font-size: 1rem;
-  color: rgba(var(--escuro-rgb), 0.6);
+  color: var(--escuro);
   line-height: 1.5;
   font-weight: 300;
 }
@@ -435,7 +433,6 @@
   padding-left: 1.25rem;
 }
 .lp3 .stat-number {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.6rem, 2.5vw, 2.2rem);
   font-weight: 300;
   color: var(--gold);
@@ -539,7 +536,7 @@
   padding: 0.85rem 1.1rem;
 }
 .lp3 .sim-capital-input::placeholder {
-  color: var(--light-40);
+  color: var(--placeholder);
 }
 
 .lp3 input[type="range"] {
@@ -582,7 +579,7 @@
 }
 .lp3 .sim-range-tick {
   font-size: 0.78rem;
-  color: var(--light-40);
+  color: var(--light);
 }
 
 .lp3 .sim-toggle-group {
@@ -599,7 +596,7 @@
   font-family: inherit;
   font-size: 0.88rem;
   font-weight: 500;
-  color: var(--light-40);
+  color: var(--light);
   cursor: pointer;
   transition:
     background 0.2s,
@@ -656,7 +653,7 @@
   font-weight: 600;
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--light-40);
+  color: var(--light);
 }
 .lp3 .sim-taxa-badge-value {
   font-size: 0.92rem;
@@ -680,7 +677,6 @@
   margin-bottom: 0.75rem;
 }
 .lp3 .sim-main-value {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(2.4rem, 4vw, 3.6rem);
   font-weight: 300;
   color: var(--gold);
@@ -689,7 +685,7 @@
 }
 .lp3 .sim-main-sub {
   font-size: 0.82rem;
-  color: var(--light-40);
+  color: var(--light);
   margin-top: 0.6rem;
   font-weight: 300;
 }
@@ -837,7 +833,7 @@
 
 .lp3 .cta-sub {
   font-size: 1rem;
-  color: var(--light-70);
+  color: var(--light);
   margin: 1.25rem auto 0;
   max-width: 480px;
   line-height: 1.9;
@@ -882,7 +878,7 @@
   appearance: none;
 }
 .lp3 .form-input::placeholder {
-  color: var(--light-40);
+  color: var(--placeholder);
 }
 .lp3 .form-input:focus,
 .lp3 .form-select:focus {
@@ -1018,7 +1014,7 @@
   width: 36px;
   height: 36px;
   border: 1px solid var(--gold-line);
-  color: var(--light-40);
+  color: var(--light);
   transition:
     color 0.22s,
     border-color 0.22s;
@@ -1036,9 +1032,7 @@
 
 .lp3 .footer-legal {
   font-size: 0.82rem;
-  /* 55% e não o `--light-40`: a 40% o texto ficava em 3,2:1 sobre o fundo do
-     rodapé, abaixo dos 4,5:1 que texto pequeno pede (e o Lighthouse cobra). */
-  color: rgba(221, 227, 237, 0.55);
+  color: var(--light);
   line-height: 1.75;
   max-width: 640px;
   font-weight: 300;
@@ -1074,24 +1068,23 @@
   font-size: 0.72rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  color: var(--light-70);
+  color: var(--light);
   margin-bottom: 0.35rem;
 }
 .lp3 .hero-param dd {
   margin: 0;
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.05rem, 1.35vw, 1.3rem);
   line-height: 1.25;
   color: var(--gold);
 }
 
 /* Notas das alegações de potencial: perto da alegação e legíveis, como pede
-   o roteiro — o tom do texto secundário, nunca o cinza que esconde. */
+   o roteiro — no mesmo branco do resto do texto, nunca o cinza que esconde. */
 .lp3 .nota-legal {
   font-size: 0.8rem;
   line-height: 1.65;
   font-weight: 300;
-  color: var(--light-70);
+  color: var(--light);
   max-width: 560px;
 }
 .lp3 .hero-nota {
@@ -1100,7 +1093,7 @@
   color: var(--light);
 }
 .lp3 .scp-section .nota-legal {
-  color: rgba(var(--escuro-rgb), 0.68);
+  color: var(--escuro);
   max-width: 720px;
   margin: 0.5rem auto 0;
   text-align: center;
@@ -1394,7 +1387,7 @@
 
 .lp3 .obrigado-step-text {
   font-size: 0.85rem;
-  color: var(--light-70);
+  color: var(--light);
   line-height: 1.75;
   font-weight: 300;
 }

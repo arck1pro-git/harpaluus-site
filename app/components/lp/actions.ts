@@ -1,12 +1,10 @@
 "use server";
 
-import { cookies, headers } from "next/headers";
 import { after } from "next/server";
 
 import { enviarAoChroma } from "./chroma";
 import type { EstadoLead, OrigemLead } from "./lead";
-import { enviarAoMeta, type ContextoEvento } from "./meta-capi";
-import { idDeEventoValido } from "./meta-eventos";
+import { enviarAoMeta, lerContexto } from "./meta-capi";
 import { normalizarUtms } from "./utms";
 import { validarLead } from "./validar";
 
@@ -34,40 +32,6 @@ function texto(formData: FormData, campo: string) {
 }
 
 /**
- * O que a API de Conversões do Meta usa para ligar o cadastro ao clique no
- * anúncio. Lido aqui, durante a requisição, e não dentro do `after()`.
- */
-async function contextoMeta(formData: FormData): Promise<ContextoEvento> {
-  const cabecalhos = await headers();
-  const biscoitos = await cookies();
-
-  /* A URL da LP, com o `fbclid` de quem chegou pelo anúncio. Vem do campo
-     que o navegador preenche no envio; o Referer fica de reserva, porque
-     política de referrer, proxy ou extensão de privacidade podem reduzi-lo à
-     origem — e aí o Meta registra `amaan.com.br/` sem o `/lp1` ou `/lp2`.
-     Só vale URL deste mesmo host: o campo é forjável. */
-  const host = cabecalhos.get("host");
-  const url = [texto(formData, "event_source_url"), cabecalhos.get("referer")].find(
-    (valor) => valor && URL.canParse(valor) && new URL(valor).host === host
-  ) || undefined;
-  let fbc = biscoitos.get("_fbc")?.value;
-
-  if (!fbc && url) {
-    const fbclid = URL.canParse(url) ? new URL(url).searchParams.get("fbclid") : null;
-    if (fbclid) fbc = `fb.1.${Date.now()}.${fbclid}`;
-  }
-
-  return {
-    idEvento: idDeEventoValido(texto(formData, "event_id")),
-    url,
-    ip: cabecalhos.get("x-forwarded-for")?.split(",")[0]?.trim() || undefined,
-    userAgent: cabecalhos.get("user-agent") ?? undefined,
-    fbp: biscoitos.get("_fbp")?.value,
-    fbc,
-  };
-}
-
-/**
  * Ação das duas LPs. A origem chega por `bind` (ver `formulario.tsx`), não
  * por campo oculto: assim o navegador não pode reescrevê-la, e é ela que diz
  * ao Comercial de qual página o lead veio.
@@ -85,7 +49,6 @@ export async function registrarLead(
     faixaCapital: texto(formData, "faixaCapital"),
     modalidade: texto(formData, "modalidade"),
     prazoDecisao: texto(formData, "prazoDecisao"),
-    profissao: texto(formData, "profissao"),
   };
 
   /* As UTMs chegam por campo oculto, preenchido no navegador a partir da URL
@@ -117,8 +80,12 @@ export async function registrarLead(
   after(() => enviarAoChroma(lead));
 
   /* O mesmo cadastro para o Meta, com o `event_id` que o Pixel também mandou
-     do navegador — ver `meta-capi.ts`. */
-  const contexto = await contextoMeta(formData);
+     do navegador — ver `meta-capi.ts`. O contexto é lido aqui, durante a
+     requisição, e não dentro do `after()`. */
+  const contexto = await lerContexto(
+    texto(formData, "event_id"),
+    texto(formData, "event_source_url")
+  );
   after(() => enviarAoMeta(lead, contexto));
 
   const webhook = process.env.LEAD_WEBHOOK_URL;

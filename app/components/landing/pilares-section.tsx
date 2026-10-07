@@ -144,7 +144,7 @@ export function PilaresSection() {
           <Reveal variant="linha-desenha" className="h-px w-[52px] bg-dourado" />
 
           <Reveal className="mt-10">
-            <h2 className="tipo-secao">{pilares.titulo}</h2>
+            <h2 className="tipo-secao font-[family-name:var(--font-playfair)]">{pilares.titulo}</h2>
           </Reveal>
 
           <Reveal delay={140}>

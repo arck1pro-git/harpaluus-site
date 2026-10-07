@@ -99,10 +99,9 @@ export type Lead = {
   whatsapp: string;
   experiencia?: string;
   faixaCapital?: string;
-  /** só na LP03 (SCP), como os dois de baixo */
+  /** só na LP03 (SCP), como o de baixo */
   modalidade?: string;
   prazoDecisao?: string;
-  profissao?: string;
   /** a campanha que trouxe a visita; ausente quando não veio nenhuma */
   utm?: Utms;
   enviadoEm: string;
@@ -135,7 +134,6 @@ export function validarLead(
   const faixaCapital = entrada.faixaCapital.trim();
   const modalidade = entrada.modalidade.trim();
   const prazoDecisao = entrada.prazoDecisao.trim();
-  const profissao = entrada.profissao.trim();
 
   const erros: NonNullable<EstadoLead["erros"]> = {};
 
@@ -161,10 +159,11 @@ export function validarLead(
     }
   }
 
-  /* A LP03 pede faixa, prazo e profissão como obrigatórios. As faixas são
-     outras — o aporte mínimo ali é R$ 50 mil —, então a lista conferida
-     também é outra. A modalidade saiu do formulário com o roteiro de
-     captação: não é mais exigida, mas se vier, só vale da lista. */
+  /* A LP03 pede faixa e prazo como obrigatórios. As faixas são outras — o
+     aporte mínimo ali é R$ 50 mil —, então a lista conferida também é outra.
+     A modalidade saiu do formulário com o roteiro de captação: não é mais
+     exigida, mas se vier, só vale da lista. A profissão saiu também, e o
+     lead da LP03 deixou de levá-la. */
   if (origem === "lp3-scp") {
     if (!daLista(faixaCapital, FAIXAS_CAPITAL_LP3)) {
       erros.faixaCapital = "Selecione uma faixa.";
@@ -174,9 +173,6 @@ export function validarLead(
     }
     if (!daLista(prazoDecisao, PRAZOS_DECISAO_LP3)) {
       erros.prazoDecisao = "Selecione uma opção.";
-    }
-    if (profissao.length < 2) {
-      erros.profissao = "Informe sua profissão.";
     }
   }
 
@@ -194,7 +190,7 @@ export function validarLead(
       /* só existem na LP02; ficam fora do payload da LP01 em vez de irem vazios */
       ...(origem === "lp2-interesse" ? { experiencia, faixaCapital } : {}),
       ...(origem === "lp3-scp"
-        ? { faixaCapital, modalidade, prazoDecisao, profissao: profissao.slice(0, 120) }
+        ? { faixaCapital, modalidade, prazoDecisao }
         : {}),
       /* mesma ideia da linha de cima: a chave não existe quando não há valor */
       ...(utm ? { utm } : {}),

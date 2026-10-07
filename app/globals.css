@@ -139,9 +139,10 @@
   letter-spacing: -0.005em;
 }
 
-/* títulos de seção */
+/* títulos de seção.
+   Sem família: a home a combina com a Playfair, e as LPs a usam na Inter do
+   `<main>` — as landing pages não têm serifa. */
 @utility tipo-secao {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(2.1rem, 1.15rem + 3.8vw, 3.5rem);
   line-height: 1.1;
   font-weight: 400;
@@ -153,9 +154,9 @@
    inteiras ("Antes de participar de uma SCP imobiliária, existem 7 perguntas
    que você deveria saber responder"), e no corpo de `tipo-display` uma frase
    dessas ocuparia a tela toda no celular. Daí o teto mais baixo e o
-   entreletras negativo, que fecha o texto longo sem apertar a leitura. */
+   entreletras negativo, que fecha o texto longo sem apertar a leitura.
+   Sem serifa, como tudo nas LPs: a família é a Inter herdada do `<main>`. */
 @utility tipo-headline {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.95rem, 1.1rem + 2.8vw, 3.1rem);
   line-height: 1.14;
   font-weight: 400;
@@ -169,7 +170,6 @@
    para carregar a seção inteira, pequeno o bastante para a frase não virar
    uma parede de dez linhas no celular. */
 @utility tipo-declaracao {
-  font-family: var(--font-playfair), serif;
   font-size: clamp(1.375rem, 0.95rem + 1.7vw, 2.125rem);
   line-height: 1.38;
   font-weight: 400;

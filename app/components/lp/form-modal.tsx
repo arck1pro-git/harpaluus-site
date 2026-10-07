@@ -190,8 +190,10 @@ export function FormularioProvider({
            o UA deixa `<dialog>` com `width/height: fit-content`, e `inset-0`
            sozinho não estica a caixa: ela fica do tamanho do conteúdo e
            encostada à esquerda, com a barra de rolagem do próprio diálogo.
-           `overflow-hidden` tira essa barra externa; quem rola é o painel. */
-        className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none overflow-hidden border-0 bg-transparent p-0 backdrop:bg-azul-escuro/70 backdrop:backdrop-blur-[2px]"
+           `overflow-hidden` tira essa barra externa; quem rola é o painel.
+           A Inter vem escrita aqui porque o diálogo é irmão do `<main>`, não
+           filho: sem ela, a janela herdaria a Arial do body. */
+        className="fixed inset-0 m-0 h-full max-h-none w-full max-w-none overflow-hidden border-0 bg-transparent p-0 font-[family-name:var(--font-inter)] backdrop:bg-azul-escuro/70 backdrop:backdrop-blur-[2px]"
       >
         {/* O `<dialog>` ocupa a tela inteira e centraliza o painel em
             qualquer largura; o painel é que rola, quando o formulário não
@@ -203,7 +205,7 @@ export function FormularioProvider({
               type="button"
               onClick={fechar}
               aria-label="Fechar"
-              className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center text-pedra-claro transition-colors duration-300 hover:text-white"
+              className="absolute top-5 right-5 flex h-10 w-10 items-center justify-center text-white transition-colors duration-300 hover:text-dourado-claro"
             >
               <X size={20} strokeWidth={TRACO} aria-hidden />
             </button>

@@ -81,7 +81,7 @@ function estilosCampo(tom: Tom, invalido: boolean) {
 const ROTULO_TOPO = "top-[11px] text-[10px] font-medium tracking-[0.18em] uppercase";
 
 function corRotulo(tom: Tom) {
-  return tom === "escuro" ? "text-pedra-claro/80" : "text-pedra";
+  return tom === "escuro" ? "text-white" : "text-azul-escuro";
 }
 
 /**
@@ -231,7 +231,7 @@ function Selecao({
           strokeLinecap="round"
           strokeLinejoin="round"
           className={`pointer-events-none absolute top-1/2 right-4 h-4 w-4 -translate-y-1/2 ${
-            tom === "escuro" ? "text-pedra-claro" : "text-pedra"
+            tom === "escuro" ? "text-white" : "text-azul-escuro"
           }`}
         >
           <path d="m6 9 6 6 6-6" />
@@ -268,8 +268,8 @@ function Escolha({
 
   const opcao =
     tom === "escuro"
-      ? "bg-white/[0.04] text-pedra-claro hover:border-white/30 peer-checked:border-dourado-claro peer-checked:bg-dourado-claro/10 peer-checked:text-white peer-focus-visible:ring-4 peer-focus-visible:ring-dourado-claro/20"
-      : "bg-white text-pedra hover:border-cinza peer-checked:border-dourado peer-checked:bg-dourado/10 peer-checked:text-azul-escuro peer-focus-visible:ring-4 peer-focus-visible:ring-dourado/20";
+      ? "bg-white/[0.04] text-white hover:border-white/30 peer-checked:border-dourado-claro peer-checked:bg-dourado-claro/10 peer-checked:text-white peer-focus-visible:ring-4 peer-focus-visible:ring-dourado-claro/20"
+      : "bg-white text-azul-escuro hover:border-cinza peer-checked:border-dourado peer-checked:bg-dourado/10 peer-checked:text-azul-escuro peer-focus-visible:ring-4 peer-focus-visible:ring-dourado/20";
 
   const borda = erro
     ? tom === "escuro"
@@ -372,13 +372,13 @@ function Sucesso({
         <Check size={28} strokeWidth={TRACO} />
       </span>
 
-      <p className="mt-7 font-[family-name:var(--font-playfair)] text-[30px] leading-[1.15]">
+      <p className="mt-7 text-[30px] leading-[1.15]">
         {titulo}
       </p>
 
       <div
         className={`mt-4 flex max-w-[36ch] flex-col gap-3 text-[16px] leading-[1.6] font-light ${
-          tom === "escuro" ? "text-pedra-claro" : "text-pedra"
+          tom === "escuro" ? "text-white" : "text-azul-escuro"
         }`}
       >
         {paragrafos.map((paragrafo) => (
@@ -623,7 +623,7 @@ export function Formulario({
         <div aria-hidden className="mb-8">
           <span className="block h-px w-10 bg-dourado-claro/70" />
           <p
-            className={`mt-5 font-[family-name:var(--font-playfair)] text-[26px] leading-[1.2] ${
+            className={`mt-5 text-[26px] leading-[1.2] ${
               tom === "escuro" ? "text-white" : "text-azul-escuro"
             }`}
           >
@@ -762,7 +762,7 @@ export function Formulario({
       {aviso && (
         <p
           className={`mt-5 text-center text-[12px] leading-[1.65] font-light ${
-            tom === "escuro" ? "text-pedra-claro" : "text-pedra"
+            tom === "escuro" ? "text-white" : "text-azul-escuro"
           }`}
         >
           {aviso}

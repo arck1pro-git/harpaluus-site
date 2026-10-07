@@ -349,25 +349,6 @@ export function FormularioLp3() {
         <ErroCampo id="email-erro" mensagem={erroServidor("email")} />
       </div>
 
-      <div className="form-row">
-        <label className="form-label" htmlFor="profissao">
-          Profissão
-        </label>
-        <input
-          className={`form-input${erroServidor("profissao") ? " form-input--err" : ""}`}
-          type="text"
-          id="profissao"
-          name="profissao"
-          required
-          placeholder="Ex.: empresário, médica, engenheiro"
-          autoComplete="organization-title"
-          defaultValue={estado.valores?.profissao ?? ""}
-          aria-invalid={erroServidor("profissao") ? true : undefined}
-          aria-describedby={erroServidor("profissao") ? "profissao-erro" : undefined}
-        />
-        <ErroCampo id="profissao-erro" mensagem={erroServidor("profissao")} />
-      </div>
-
       <Selecao
         nome="faixaCapital"
         id="capital-form"

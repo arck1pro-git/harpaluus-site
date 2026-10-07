@@ -31,11 +31,11 @@ export function ChecklistMockup({ className = "" }: { className?: string }) {
           <span className="tipo-label text-dourado-escuro">Amaan Incorporadora</span>
         </div>
 
-        <p className="mt-5 font-[family-name:var(--font-playfair)] text-[19px] leading-[1.25] text-azul-escuro sm:text-[22px]">
+        <p className="mt-5 text-[19px] leading-[1.25] text-azul-escuro sm:text-[22px]">
           7 perguntas antes de participar de uma SCP imobiliária
         </p>
 
-        <p className="tipo-numero mt-3 text-cinza-texto">Checklist de análise</p>
+        <p className="tipo-numero mt-3 text-azul-escuro">Checklist de análise</p>
 
         <ul className="mt-7 flex flex-col gap-0">
           {lp1.perguntas.itens.map((item, i) => (
@@ -48,7 +48,7 @@ export function ChecklistMockup({ className = "" }: { className?: string }) {
               <span className="tipo-numero text-dourado-escuro">
                 {String(i + 1).padStart(2, "0")}
               </span>
-              <span className="text-[13px] leading-[1.4] font-light text-azul">
+              <span className="text-[13px] leading-[1.4] font-light text-azul-escuro">
                 {item.curta}
               </span>
             </li>
