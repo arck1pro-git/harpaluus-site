@@ -64,10 +64,36 @@ export function pageViewDaRota(caminho: string) {
 }
 
 /**
- * O id que o navegador gera no envio e manda nos dois caminhos. É ele que faz
- * o Meta contar o cadastro uma vez só, e não uma pelo Pixel e outra pelo
- * servidor. Chega por campo oculto, então é conferido antes de ser usado.
+ * O id que o navegador gera e manda nos dois caminhos. É ele que faz o Meta
+ * contar o evento uma vez só, e não uma pelo Pixel e outra pelo servidor.
+ * Chega do navegador, então é conferido antes de ser usado.
  */
 export function idDeEventoValido(valor: string) {
   return /^[\w-]{8,64}$/.test(valor) ? valor : undefined;
 }
+
+/**
+ * A rota que repete na API de Conversões os eventos do navegador (ver
+ * `app/api/sinal/route.ts`). O nome é neutro de propósito: bloqueador de
+ * anúncio barra caminho com "pixel", "track" ou "event", e o servidor existe
+ * justamente para o evento que o bloqueador tira do Pixel.
+ */
+export const ROTA_SINAL = "/api/sinal";
+
+/**
+ * Os eventos que o navegador pode pedir para o servidor repetir, com os
+ * parâmetros de cada um. A lista é fechada porque a rota é pública: sem ela,
+ * qualquer um mandaria evento inventado para o Pixel. Os parâmetros saem
+ * daqui, e não do que o navegador manda, pelo mesmo motivo.
+ *
+ * O Lead não está aqui: o par de servidor dele sai da Server Action do
+ * formulário, que tem os dados do cadastro (ver `meta-capi.ts`).
+ */
+export const EVENTOS_DO_NAVEGADOR = new Map<string, ReturnType<typeof conteudo> | undefined>([
+  ["PageView", undefined],
+  ...(Object.keys(CONTEUDO) as OrigemLead[]).flatMap((origem) =>
+    (["PageView", "ViewContent", "AbriuFormulario"] as const).map(
+      (evento) => [nomeDoEvento(evento, origem), conteudo(origem)] as const
+    )
+  ),
+]);

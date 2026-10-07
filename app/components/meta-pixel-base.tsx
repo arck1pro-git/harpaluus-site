@@ -1,4 +1,4 @@
-import { PAGEVIEW_POR_ROTA, PIXEL_ID } from "./lp/meta-eventos";
+import { PAGEVIEW_POR_ROTA, PIXEL_ID, ROTA_SINAL } from "./lp/meta-eventos";
 
 /**
  * Código base do Meta Pixel, no `<head>` de todas as páginas — como pede a
@@ -12,7 +12,13 @@ import { PAGEVIEW_POR_ROTA, PIXEL_ID } from "./lp/meta-eventos";
  * pelo caminho da URL. Os PageViews das navegações internas saem de
  * `MetaPageViewNavegacao`, e os eventos das LPs, de `lp/meta-pixel.tsx`.
  *
- * A única diferença para o snippet oficial é QUANDO o `fbevents.js` baixa.
+ * Duas diferenças para o snippet oficial. A primeira: o PageView sai também
+ * pelo servidor, com o mesmo `eventID`. O snippet gera o id, passa ao Pixel e
+ * manda id + nomes por beacon para `ROTA_SINAL` — a mesma coisa que
+ * `emitirEvento` faz para os outros eventos, repetida aqui à mão porque este
+ * código roda antes do React. Mudar um pede mudar o outro.
+ *
+ * A segunda é QUANDO o `fbevents.js` baixa.
  * O `fbq` nasce aqui na hora, e tudo que for chamado nele — o PageView logo
  * abaixo, o Lead, os eventos das LPs — entra na fila dele. O script do Meta
  * (~240 KB somando o arquivo de configuração do Pixel) só é buscado na
@@ -26,8 +32,9 @@ import { PAGEVIEW_POR_ROTA, PIXEL_ID } from "./lp/meta-eventos";
  * diferença entre ~50 e ~85 de nota.
  *
  * O custo: quem sai antes de interagir e antes da espera não chega a enviar
- * o PageView. O Lead não corre esse risco — quem envia o formulário já
- * interagiu, e ele também vai pela API de Conversões (`meta-capi.ts`).
+ * o PageView pelo navegador. O do servidor sai mesmo assim — o beacon parte
+ * na hora, sem esperar o `fbevents.js`. E o Lead não corre esse risco: quem
+ * envia o formulário já interagiu.
  */
 const ESPERA_MS = 5000;
 
@@ -46,9 +53,15 @@ f.addEventListener('load',function(){setTimeout(carregar,${ESPERA_MS})})
 }(window, document,'script',
 'https://connect.facebook.net/en_US/fbevents.js');
 fbq('init', '${PIXEL_ID}');
-var p=${JSON.stringify(PAGEVIEW_POR_ROTA)}[location.pathname.replace(/[/]+$/,'')];
-fbq('track', 'PageView');
-if(p)fbq('trackCustom', p[0], p[1]);`;
+!function(c,n){
+var p=${JSON.stringify(PAGEVIEW_POR_ROTA)}[location.pathname.replace(/[/]+$/,'')],
+i=c&&c.randomUUID?c.randomUUID():Date.now().toString(36)+Math.random().toString(36).slice(2),
+o={eventID:i},
+d=JSON.stringify({id:i,nomes:p?['PageView',p[0]]:['PageView'],url:location.href});
+fbq('track','PageView',{},o);
+if(p)fbq('trackCustom',p[0],p[1],o);
+if(!(n.sendBeacon&&n.sendBeacon('${ROTA_SINAL}',d)))fetch('${ROTA_SINAL}',{method:'POST',body:d,keepalive:!0}).catch(function(){})
+}(window.crypto,navigator);`;
 
 export function MetaPixelBase() {
   return <script dangerouslySetInnerHTML={{ __html: SNIPPET }} />;
