@@ -45,6 +45,21 @@ next-env.d.ts
 # large video assets — serve from a CDN / Vercel Blob, not git
 /public/*.mp4
 
+# material bruto — renders, fotos originais, mockups, briefs e logos em alta.
+# Ficam no disco como fonte (vídeos, peças), fora do git e do deploy: o site
+# só usa as versões otimizadas de /public/fotos e os logos pequenos abaixo.
+/public/*.png
+!/public/logo-amaan-name-01.png
+!/public/logo-amaan-name-03.png
+!/public/logo-amaan-simbolo-dourado.png
+/public/*.jpg
+/public/*.JPG
+/public/*.jpeg
+/public/*.pdf
+/public/*.svg
+/public/essencia.txt
+/public/fabhricio.webp
+
 # lead / contact data — sensitive, must never be committed
 /public/*.xls
 /public/*.xlsx
