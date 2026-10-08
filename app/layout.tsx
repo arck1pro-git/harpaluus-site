@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Inter, Playfair_Display } from "next/font/google";
 import "./globals.css";
+import { AvisoCookies } from "./components/aviso-cookies";
 import { ScrollSuave } from "./components/landing/scroll-suave";
 import { MetaPageViewNavegacao } from "./components/meta-pageview-navegacao";
 import { MetaPixelBase, MetaPixelSemJs } from "./components/meta-pixel-base";
@@ -117,6 +118,7 @@ export default function RootLayout({
         </noscript>
         <ScrollSuave />
         {children}
+        <AvisoCookies />
       </body>
     </html>
   );

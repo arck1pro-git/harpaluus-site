@@ -1,10 +1,11 @@
+import Link from "next/link";
 import { MapPin } from "lucide-react";
 
 import { CtaLink } from "./cta-link";
 import { Dots } from "./dots";
 import { InstagramIcon, TRACO, WhatsAppIcon } from "./icones";
 import { Reveal } from "./reveal";
-import { rodape } from "./site-config";
+import { rodape, ROTA_PRIVACIDADE } from "./site-config";
 
 /** Ícones vazados ao lado dos links da coluna Contato. */
 const iconesLink = {
@@ -84,6 +85,14 @@ export function Footer() {
               {linha}
             </p>
           ))}
+          <Link
+            href={ROTA_PRIVACIDADE}
+            /* maior que as linhas de cima e com py: em 9px seria um alvo de
+               toque que ninguém acerta no celular */
+            className="self-start py-2 text-[11px] leading-[1.5] font-light tracking-[0.06em] text-white/60 underline decoration-white/25 underline-offset-[3px] transition-colors duration-500 hover:text-white"
+          >
+            Política de Privacidade
+          </Link>
         </div>
       </div>
     </footer>

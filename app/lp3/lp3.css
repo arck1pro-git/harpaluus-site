@@ -1038,6 +1038,21 @@
   font-weight: 300;
 }
 
+/* O `.lp3 a` tira o sublinhado de todo link; este é texto corrido, e sem
+   ele não se distinguiria da linha jurídica ao lado. */
+.lp3 .footer-legal-link {
+  color: rgba(255, 255, 255, 0.7);
+  text-decoration: underline;
+  text-decoration-color: rgba(255, 255, 255, 0.3);
+  text-underline-offset: 4px;
+  transition: color 0.3s ease, text-decoration-color 0.3s ease;
+}
+
+.lp3 .footer-legal-link:hover {
+  color: var(--light);
+  text-decoration-color: var(--gold);
+}
+
 /* ─── TEXTOS DO ROTEIRO DE CAPTAÇÃO ─────────────────────── */
 .lp3 .hero-sub strong {
   color: #ffffff;

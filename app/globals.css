@@ -627,3 +627,12 @@ html {
 .caret-blink {
   animation: caret-blink 0.9s steps(1) infinite;
 }
+
+/* Entrada do aviso de cookies (`aviso-cookies.tsx`): sobe e aparece depois
+   da abertura da página, para não disputar com o hero. */
+@keyframes aviso-cookies-entra {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}

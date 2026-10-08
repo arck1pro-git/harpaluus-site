@@ -475,8 +475,8 @@ export default function Lp2() {
         </Secao>
 
         {/* -------------------------------------------------------- 13 FECHAMENTO
-            Sem `aviso` e sem `tese`: o rodapé desta página fecha só com a
-            assinatura e a identificação da pessoa jurídica. */}
+            Sem `tese`: o rodapé desta página fecha só com a assinatura, a
+            identificação da pessoa jurídica e a Política de Privacidade. */}
         <LpFooter titulo={lp2.fechamento.marca} />
 
         {/* ViewContent: a pessoa chegou ao fim da página */}

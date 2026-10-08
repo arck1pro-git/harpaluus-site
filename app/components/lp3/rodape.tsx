@@ -1,6 +1,14 @@
 import Image from "next/image";
+import Link from "next/link";
 
-import { CNPJ, INSTAGRAM, logoClaro, marca, WHATSAPP } from "../landing/site-config";
+import {
+  CNPJ,
+  INSTAGRAM,
+  logoClaro,
+  marca,
+  ROTA_PRIVACIDADE,
+  WHATSAPP,
+} from "../landing/site-config";
 
 /**
  * Rodapé da LP03 e da página de obrigado dela.
@@ -75,7 +83,10 @@ export function RodapeLp3() {
 
         <p className="footer-legal">
           {marca} · CNPJ {CNPJ} <br />
-          © {new Date().getFullYear()} {marca}. Todos os direitos reservados.
+          © {new Date().getFullYear()} {marca}. Todos os direitos reservados. <br />
+          <Link href={ROTA_PRIVACIDADE} className="footer-legal-link">
+            Política de Privacidade
+          </Link>
         </p>
       </div>
     </footer>

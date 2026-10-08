@@ -33,20 +33,6 @@ export const ROTA_LP2 = "/lp2";
 /** LP03 — investimento em SCP. A copy dela mora na própria página: ver `lp3/page.tsx`. */
 export const ROTA_LP3 = "/lp3";
 
-/**
- * Aviso legal da LP01, no fecho.
- *
- * Fica visível no encerramento, não escondido em letra de 10px: o brief pede
- * transparência como construção de confiança.
- *
- * A LP02 não tem equivalente: o bloco de risco e a nota do potencial
- * projetado saíram da página a pedido do cliente, e o rodapé dela fecha sem
- * aviso jurídico.
- */
-export const AVISO_LP1 =
-  "Participações em operações de incorporação envolvem riscos. O material possui caráter educacional e não representa promessa de resultado ou oferta específica de investimento.";
-
-
 /* ========================================================================
    LP 01 — CHECKLIST
    Conversão: cadastro para receber o Checklist. Atrito mínimo, sem
@@ -173,7 +159,6 @@ export const lp1 = {
   fechamento: {
     marca: "AMAAN Incorporadora",
     tese: "Antes de procurar a maior projeção, aprenda a analisar o negócio que precisa produzi-la.",
-    aviso: AVISO_LP1,
   },
 };
 

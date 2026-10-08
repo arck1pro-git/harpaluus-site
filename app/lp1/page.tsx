@@ -236,11 +236,7 @@ export default function Lp1() {
         </Secao>
 
         {/* ------------------------------------------------------ 06 FECHAMENTO */}
-        <LpFooter
-          titulo={lp1.fechamento.marca}
-          tese={lp1.fechamento.tese}
-          aviso={lp1.fechamento.aviso}
-        />
+        <LpFooter titulo={lp1.fechamento.marca} tese={lp1.fechamento.tese} />
 
         {/* ViewContent: a pessoa chegou ao fim da página */}
         <MetaViuConteudo origem="lp1-checklist" />

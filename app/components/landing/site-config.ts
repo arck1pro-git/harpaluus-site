@@ -63,14 +63,22 @@ export const endereco = {
 };
 
 /**
- * Conversa já aberta com a mensagem de origem preenchida. É o único link de
- * WhatsApp do site: header, rodapé da home e rodapé da LP03 apontam todos
- * para cá, então trocar o texto aqui troca em todas as CTAs.
+ * Conversa já aberta com a mensagem de origem preenchida. É o link de
+ * WhatsApp de todas as CTAs: header, rodapé da home e rodapé da LP03 apontam
+ * para cá, então trocar o texto aqui troca em todas elas.
  */
 const MENSAGEM_WHATSAPP =
   "Olá! Vim pelo site da AMAAN Incorporadora e gostaria de mais informações sobre os empreendimentos.";
 
-export const WHATSAPP = `https://wa.me/5547992864926?text=${encodeURIComponent(MENSAGEM_WHATSAPP)}`;
+const NUMERO_WHATSAPP = "5547992864926";
+
+export const WHATSAPP = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(MENSAGEM_WHATSAPP)}`;
+
+/** O mesmo número, como canal do titular na Política de Privacidade. */
+export const WHATSAPP_PRIVACIDADE = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(
+  "Olá! Quero fazer uma solicitação sobre os meus dados pessoais."
+)}`;
+export const WHATSAPP_EXIBICAO = "(47) 99286-4926";
 /** Portal onde o investidor da SCP acompanha o próprio capital. */
 export const PORTAL = "https://meuari.vercel.app";
 /**
@@ -79,6 +87,12 @@ export const PORTAL = "https://meuari.vercel.app";
  * são a mesma empresa.
  */
 export const INSTAGRAM = "https://www.instagram.com/amaanincorporadora/";
+
+/**
+ * Política de Privacidade. O rodapé da home, o das LPs e o aviso de cookies
+ * apontam todos para cá; é também o endereço que se informa ao Meta.
+ */
+export const ROTA_PRIVACIDADE = "/politica-de-privacidade";
 
 /**
  * Lettering da Amaan, nas duas versões, já sem as margens vazias do arquivo

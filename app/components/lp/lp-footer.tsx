@@ -1,6 +1,8 @@
+import Link from "next/link";
+
 import { Dots } from "../landing/dots";
 import { Reveal } from "../landing/reveal";
-import { CNPJ, endereco, marca } from "../landing/site-config";
+import { CNPJ, endereco, marca, ROTA_PRIVACIDADE } from "../landing/site-config";
 
 /**
  * Fechamento das duas LPs — os blocos "06. FECHAMENTO" e "12. FECHAMENTO"
@@ -12,10 +14,10 @@ import { CNPJ, endereco, marca } from "../landing/site-config";
  *   uma só, e ela ficou no formulário logo acima.
  * - "Rodapé institucional e jurídico discreto": sem colunas de navegação,
  *   sem redes sociais, sem WhatsApp, nada que tire o visitante do funil.
+ *   O único link é o da Política de Privacidade, que a página deve a quem
+ *   deixa os dados no formulário.
  * - A tese de fecho é opcional: a LP02 perdeu a dela e fecha só na
  *   assinatura, então a marca não pode depender de ter uma frase embaixo.
- * - Quando existe aviso de risco, ele fica legível e não em letra de 10px:
- *   transparência é argumento de confiança, então é lida, não escondida.
  *
  * CNPJ e endereço fecham a identificação de quem fala: a mesma pergunta que
  * a marca no topo responde, agora com a pessoa jurídica por extenso.
@@ -23,14 +25,11 @@ import { CNPJ, endereco, marca } from "../landing/site-config";
 export function LpFooter({
   titulo,
   tese,
-  aviso,
 }: {
   /** assinatura da marca, como o brief da página escreveu */
   titulo: string;
   /** a tese central do funil. A LP02 fecha sem nenhuma. */
   tese?: string;
-  /** aviso de risco da página. A LP02 fecha sem nenhum. */
-  aviso?: string;
 }) {
   return (
     <footer className="relative overflow-clip bg-azul-escuro text-white">
@@ -57,21 +56,12 @@ export function LpFooter({
 
         <Reveal
           delay={140}
-          /* sem aviso, o endereço fica sozinho na linha: `justify-end` o
-             mantém encostado à direita, onde ele já estava — `between` com
-             um filho só o jogaria para a esquerda, embaixo da assinatura */
-          className={`mt-12 border-t border-white/10 pt-9 md:mt-16 md:flex md:items-start md:gap-12 ${
-            aviso ? "md:justify-between" : "md:justify-end"
-          }`}
+          className="mt-12 flex flex-col gap-7 border-t border-white/10 pt-9 md:mt-16 md:flex-row md:items-start md:justify-between md:gap-12"
         >
-          {/* o aviso vem primeiro na ordem de leitura: é o que importa */}
-          {aviso && (
-            <p className="max-w-[620px] text-[13px] leading-[1.75] font-light text-white">
-              {aviso}
-            </p>
-          )}
-
-          <address className="mt-7 text-[13px] leading-[1.75] font-light text-white not-italic md:mt-0 md:shrink-0 md:text-right">
+          {/* no celular o endereço vem antes, fechando a identificação; da
+              tela média em diante o link vai para a esquerda e o endereço
+              fica encostado à direita, onde sempre esteve */}
+          <address className="text-[13px] leading-[1.75] font-light text-white not-italic md:shrink-0 md:text-right">
             <span className="block">{marca}</span>
             <span className="block">CNPJ {CNPJ}</span>
             <span className="block">
@@ -81,6 +71,13 @@ export function LpFooter({
               {endereco.cidade}/{endereco.uf}
             </span>
           </address>
+
+          <Link
+            href={ROTA_PRIVACIDADE}
+            className="self-start text-[13px] leading-[1.75] font-light text-white/70 underline decoration-white/30 underline-offset-4 transition-colors duration-300 hover:text-white hover:decoration-dourado md:order-first"
+          >
+            Política de Privacidade
+          </Link>
         </Reveal>
       </div>
     </footer>
