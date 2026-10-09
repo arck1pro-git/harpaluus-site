@@ -158,7 +158,7 @@ export default function Lp3() {
               ))}
             </dl>
 
-            <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
+            <CtaLp3>Quero saber mais sobre uma oportunidade</CtaLp3>
           </div>
 
           {/* Coluna direita — o empreendimento, e a LCP do desktop: por isso
@@ -227,7 +227,7 @@ export default function Lp3() {
             </div>
 
             <div className="scp-cta">
-              <CtaLp3>Quero conhecer uma oportunidade</CtaLp3>
+              <CtaLp3>Quero saber mais sobre uma oportunidade</CtaLp3>
             </div>
           </div>
         </section>
