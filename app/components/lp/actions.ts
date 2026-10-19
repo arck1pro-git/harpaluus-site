@@ -52,7 +52,8 @@ export async function registrarLead(
   };
 
   /* As UTMs chegam por campo oculto, preenchido no navegador a partir da URL
-     do anúncio (ver `utms.ts`). Diferente da origem, que viaja por `bind`
+     do anúncio ou, sem UTM nela, da origem que o navegador deduz (ver
+     `utms.ts` e `origem.ts`). Diferente da origem, que viaja por `bind`
      justamente para o navegador não poder reescrevê-la: a campanha só existe
      do lado de lá, então não há de onde tirá-la aqui. É metadado forjável por
      natureza, e por isso passa pela limpeza de `normalizarUtms` antes de

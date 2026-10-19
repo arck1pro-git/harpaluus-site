@@ -131,9 +131,10 @@ export function payloadChroma(lead: Lead): PayloadChroma {
     valor: rotulo(FAIXAS_CAPITAL, lead.faixaCapital),
     scp: rotulo(PARTICIPOU_SCP, lead.experiencia),
     pixel_id: PIXEL_ID,
-    /* Uma chave por parâmetro, com o nome padrão da UTM. `lead.utm` só
-       carrega as que existem, então a visita orgânica não escreve nenhuma —
-       nem vazia, que é o que apagaria a campanha de um contato reenviado. */
+    /* Uma chave por parâmetro, com o nome padrão da UTM. Visita sem UTM no
+       link chega com a origem deduzida no navegador (`utm_campaign` igual a
+       "(sem utm)", ver `origem.ts`) — e, como a de campanha, sobrescreve a
+       origem de um contato que volta: vale a da última conversão. */
     ...lead.utm,
   };
 }

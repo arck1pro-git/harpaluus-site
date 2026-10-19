@@ -23,7 +23,7 @@ import {
  * página e a data de `ATUALIZADA_EM`.
  */
 
-const ATUALIZADA_EM = { iso: "2026-10-08", texto: "8 de outubro de 2026" };
+const ATUALIZADA_EM = { iso: "2026-10-19", texto: "19 de outubro de 2026" };
 
 export const metadata: Metadata = {
   title: "Política de Privacidade",
@@ -50,7 +50,8 @@ const COOKIES = [
   {
     nome: "amaan:utm",
     tipo: "Armazenamento da sessão · Amaan",
-    finalidade: "Lembra de qual campanha veio a visita, para associá-la ao cadastro.",
+    finalidade:
+      "Lembra de qual campanha ou de qual site ou aplicativo veio a visita, para associá-la ao cadastro.",
     duracao: "Até a aba ser fechada",
   },
   {
@@ -186,7 +187,9 @@ export default function PoliticaDePrivacidade() {
               visitadas e algumas ações dentro delas, como chegar ao fim da página, abrir o
               formulário ou enviá-lo. Quando a visita vem de um anúncio, registramos também
               os parâmetros da campanha no endereço da página (como as UTMs e o
-              identificador de clique do Meta).
+              identificador de clique do Meta). Quando não há esses parâmetros,
+              registramos o site ou aplicativo de onde você chegou (por exemplo, Instagram
+              ou Google), como o seu navegador o informa.
             </p>
             <p>
               <Forte>Cookies e armazenamento no navegador.</Forte> Explicamos cada um na

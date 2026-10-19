@@ -13,10 +13,16 @@
  * que é um valor aceitável — manter as listas em arquivos separados é como
  * elas divergem, e a divergência aqui não dá erro: dá campo vazio na ficha.
  *
+ * Visita sem UTM na URL não sai mais em branco: o navegador deduz de onde ela
+ * veio (Instagram, Google, outro site, direto) e preenche as mesmas cinco
+ * chaves — ver `origem.ts`. A UTM de verdade sempre ganha da dedução.
+ *
  * Nada neste arquivo pode reprovar um lead. UTM é metadado de marketing: valor
  * ausente, torto ou forjado vira campo vazio, nunca uma recusa na cara de quem
  * acabou de preencher o formulário.
  */
+
+import { deduzirOrigem } from "./origem";
 
 export const CAMPOS_UTM = [
   "utm_source",
@@ -131,12 +137,32 @@ function guardar(utms: Utms) {
 }
 
 /**
- * As UTMs desta visita.
+ * A origem deduzida, passada pela mesma limpeza das UTMs de verdade: um dos
+ * valores é o host da página anterior, que vem de fora como qualquer outro.
+ */
+function deduzida(): Utms {
+  const origem = deduzirOrigem({
+    referencia: document.referrer,
+    host: window.location.host,
+    parametros: new URLSearchParams(window.location.search),
+    agente: navigator.userAgent,
+  });
+  return normalizarUtms((campo) => origem[campo]) ?? {};
+}
+
+/**
+ * As UTMs desta visita: as da URL, senão as da sessão, senão a origem
+ * deduzida.
  *
  * A URL ganha da sessão, e substitui o conjunto inteiro em vez de se misturar
  * a ele: um segundo clique, em outro anúncio, é outra campanha — mesclar os
  * dois produziria uma linha que nunca existiu, com o `utm_source` de um e o
  * `utm_campaign` do outro.
+ *
+ * A dedução também vai para a sessão, e pelo mesmo motivo que a URL: ela é
+ * feita na página de entrada, onde a página anterior ainda é a de fora. Numa
+ * segunda página do site a anterior seria a primeira, e a visita do Instagram
+ * passaria a parecer direta.
  *
  * Só faz sentido no navegador; no servidor devolve vazio.
  */
@@ -150,7 +176,12 @@ function capturarUtms(): Utms {
     return daPagina;
   }
 
-  return daSessao() ?? {};
+  const guardadas = daSessao();
+  if (guardadas) return guardadas;
+
+  const origem = deduzida();
+  guardar(origem);
+  return origem;
 }
 
 /**
