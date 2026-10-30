@@ -9,7 +9,7 @@ import {
   PRAZOS_DECISAO_LP3,
 } from "./lp-config";
 import { PIXEL_ID } from "./meta-eventos";
-import type { Utms } from "./utms";
+import { CAMPOS_UTM, type Utms } from "./utms";
 import type { Lead } from "./validar";
 
 /**
@@ -178,6 +178,19 @@ export function payloadChromaLp3(lead: Lead): PayloadChromaLp3 {
   };
 }
 
+/**
+ * As UTMs que foram no corpo, numa linha, para o log de cada envio.
+ *
+ * É o que responde "o site mandou a campanha?" sem depender da ficha do CRM:
+ * se a linha mostra a UTM e a ficha não, quem a perdeu foi a webhook. UTM não
+ * é dado pessoal, então pode ir para o log do envio que deu certo — o lead
+ * inteiro só vai para lá quando falha.
+ */
+function resumoUtm(utm?: Utms) {
+  if (!utm) return "nenhuma";
+  return CAMPOS_UTM.map((campo) => `${campo.slice(4)}=${utm[campo] ?? "-"}`).join(" ");
+}
+
 /** Para onde vai o lead, e em que formato: a LP03 tem corpo próprio. */
 function destino(lead: Lead) {
   return {
@@ -236,7 +249,7 @@ export async function enviarAoChroma(lead: Lead) {
         } | null;
 
         console.info(
-          `[chroma] ${lead.origem}: lead registrado (contato ${dados?.contato_id ?? "sem id"})`
+          `[chroma] ${lead.origem}: lead registrado (contato ${dados?.contato_id ?? "sem id"}) · utm ${resumoUtm(lead.utm)}`
         );
         return;
       }
