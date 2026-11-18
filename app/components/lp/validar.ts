@@ -6,6 +6,7 @@ import {
   PARTICIPOU_SCP,
   PRAZOS_DECISAO_LP3,
 } from "./lp-config";
+import type { Localizacao } from "./localizacao";
 import type { Utms } from "./utms";
 
 /**
@@ -104,6 +105,8 @@ export type Lead = {
   prazoDecisao?: string;
   /** a campanha que trouxe a visita; ausente quando não veio nenhuma */
   utm?: Utms;
+  /** cidade, estado e país deduzidos do IP; ausente fora da Vercel */
+  localizacao?: Localizacao;
   enviadoEm: string;
 };
 
@@ -121,12 +124,14 @@ export type Resultado =
  *
  * As UTMs não são validadas, são anexadas: chegam já limpas de `utms.ts` e
  * não entram em nenhuma das recusas abaixo. Campanha faltando é um dado a
- * menos para o Comercial, nunca um motivo para perder o cadastro.
+ * menos para o Comercial, nunca um motivo para perder o cadastro. A
+ * localização pelo IP segue a mesma regra (ver `localizacao.ts`).
  */
 export function validarLead(
   origem: OrigemLead,
   entrada: Record<CampoLead, string>,
-  utm?: Utms
+  utm?: Utms,
+  localizacao?: Localizacao
 ): Resultado {
   const nome = entrada.nome.trim();
   const email = entrada.email.trim().toLowerCase();
@@ -194,6 +199,7 @@ export function validarLead(
         : {}),
       /* mesma ideia da linha de cima: a chave não existe quando não há valor */
       ...(utm ? { utm } : {}),
+      ...(localizacao ? { localizacao } : {}),
       enviadoEm: new Date().toISOString(),
     },
   };

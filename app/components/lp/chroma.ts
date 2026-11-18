@@ -1,6 +1,7 @@
 import "server-only";
 
 import type { OrigemLead } from "./lead";
+import { resumoLocalizacao, type Localizacao } from "./localizacao";
 import {
   FAIXAS_CAPITAL,
   FAIXAS_CAPITAL_LP3,
@@ -55,6 +56,25 @@ const WEBHOOKS: Record<OrigemLead, string | undefined> = {
 };
 
 /**
+ * Cidade e UF da visita, deduzidas do IP (ver `localizacao.ts`), nas chaves
+ * em que a ficha do contato as guarda. Vão nas três webhooks: chave que uma
+ * delas não conheça o CRM descarta em silêncio, sem recusar o lead.
+ *
+ * O país não viaja: as LPs só aceitam WhatsApp brasileiro, e a ficha não tem
+ * campo para ele. Ele fica no lead interno e no log.
+ */
+type LocalChroma = {
+  /** Contato · Cidade */
+  cidade?: string;
+  /** Contato · Estado (UF) */
+  estado?: string;
+};
+
+function localChroma(localizacao?: Localizacao): LocalChroma {
+  return { cidade: localizacao?.cidade, estado: localizacao?.estado };
+}
+
+/**
  * As chaves que a webhook lê.
  *
  * Tipo fechado de propósito: chave fora desta lista o CRM descarta em
@@ -79,7 +99,8 @@ type PayloadChroma = {
   scp?: string;
   /** Id do Pixel do Meta que disparou o Lead na LP — o mesmo nas duas. */
   pixel_id?: string;
-} & Utms;
+} & LocalChroma &
+  Utms;
 
 /** Quantas vezes tentar no total (a primeira mais duas retentativas). */
 const TENTATIVAS = 3;
@@ -131,6 +152,7 @@ export function payloadChroma(lead: Lead): PayloadChroma {
     valor: rotulo(FAIXAS_CAPITAL, lead.faixaCapital),
     scp: rotulo(PARTICIPOU_SCP, lead.experiencia),
     pixel_id: PIXEL_ID,
+    ...localChroma(lead.localizacao),
     /* Uma chave por parâmetro, com o nome padrão da UTM. Visita sem UTM no
        link chega com a origem deduzida no navegador (`utm_campaign` igual a
        "(sem utm)", ver `origem.ts`) — e, como a de campanha, sobrescreve a
@@ -163,7 +185,8 @@ type PayloadChromaLp3 = {
   onde_investe_hoje?: string;
   /** Contato · campo "pronto_para_investir" */
   em_quanto_tempo_pretende_investir?: string;
-} & Utms;
+} & LocalChroma &
+  Utms;
 
 /** O lead da LP03 no corpo da webhook "LP3" — rótulos, como nas outras. */
 export function payloadChromaLp3(lead: Lead): PayloadChromaLp3 {
@@ -174,6 +197,7 @@ export function payloadChromaLp3(lead: Lead): PayloadChromaLp3 {
     quanto_pretende_investir: rotulo(FAIXAS_CAPITAL_LP3, lead.faixaCapital),
     onde_investe_hoje: rotulo(MODALIDADES_LP3, lead.modalidade),
     em_quanto_tempo_pretende_investir: rotulo(PRAZOS_DECISAO_LP3, lead.prazoDecisao),
+    ...localChroma(lead.localizacao),
     ...lead.utm,
   };
 }
@@ -249,7 +273,7 @@ export async function enviarAoChroma(lead: Lead) {
         } | null;
 
         console.info(
-          `[chroma] ${lead.origem}: lead registrado (contato ${dados?.contato_id ?? "sem id"}) · utm ${resumoUtm(lead.utm)}`
+          `[chroma] ${lead.origem}: lead registrado (contato ${dados?.contato_id ?? "sem id"}) · utm ${resumoUtm(lead.utm)} · local ${resumoLocalizacao(lead.localizacao)}`
         );
         return;
       }

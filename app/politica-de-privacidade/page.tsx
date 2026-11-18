@@ -23,7 +23,7 @@ import {
  * página e a data de `ATUALIZADA_EM`.
  */
 
-const ATUALIZADA_EM = { iso: "2026-10-19", texto: "19 de outubro de 2026" };
+const ATUALIZADA_EM = { iso: "2026-11-18", texto: "18 de novembro de 2026" };
 
 export const metadata: Metadata = {
   title: "Política de Privacidade",
@@ -185,8 +185,10 @@ export default function PoliticaDePrivacidade() {
               <Forte>Dados da navegação.</Forte> Enquanto você navega, registramos
               automaticamente o endereço IP, o tipo de navegador e de dispositivo, as páginas
               visitadas e algumas ações dentro delas, como chegar ao fim da página, abrir o
-              formulário ou enviá-lo. Quando a visita vem de um anúncio, registramos também
-              os parâmetros da campanha no endereço da página (como as UTMs e o
+              formulário ou enviá-lo. A partir do endereço IP, obtemos a cidade, o estado e o
+              país aproximados de onde você acessa, e eles seguem junto com o seu cadastro.
+              Não usamos a localização do seu aparelho. Quando a visita vem de um anúncio,
+              registramos também os parâmetros da campanha no endereço da página (como as UTMs e o
               identificador de clique do Meta). Quando não há esses parâmetros,
               registramos o site ou aplicativo de onde você chegou (por exemplo, Instagram
               ou Google), como o seu navegador o informa.

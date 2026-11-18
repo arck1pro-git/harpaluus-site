@@ -1,9 +1,11 @@
 "use server";
 
+import { headers } from "next/headers";
 import { after } from "next/server";
 
 import { enviarAoChroma } from "./chroma";
 import type { EstadoLead, OrigemLead } from "./lead";
+import { localizacaoDosCabecalhos } from "./localizacao";
 import { enviarAoMeta, lerContexto } from "./meta-capi";
 import { normalizarUtms } from "./utms";
 import { validarLead } from "./validar";
@@ -60,7 +62,14 @@ export async function registrarLead(
      entrar no lead e nos logs — mas nunca reprova o cadastro. */
   const utms = normalizarUtms((campo) => texto(formData, campo));
 
-  const resultado = validarLead(origem, entrada, utms);
+  /* A cidade, o estado e o país vêm do IP, pelos cabeçalhos que a Vercel
+     põe em toda requisição (ver `localizacao.ts`). Ao contrário das UTMs,
+     não passam pelo navegador: o formulário não tem campo para eles, e
+     quem preenche não consegue trocá-los. Fora da Vercel não vêm, e o lead
+     sai sem a chave. */
+  const localizacao = localizacaoDosCabecalhos(await headers());
+
+  const resultado = validarLead(origem, entrada, utms, localizacao);
 
   if (!resultado.ok) {
     /* `valores` devolve o que foi digitado: sem isso, um erro de validação

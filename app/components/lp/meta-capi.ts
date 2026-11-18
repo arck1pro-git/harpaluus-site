@@ -3,6 +3,7 @@ import "server-only";
 import { createHash } from "node:crypto";
 import { cookies, headers } from "next/headers";
 
+import { localizacaoDosCabecalhos, type Localizacao } from "./localizacao";
 import { conteudo, EVENTOS_DO_NAVEGADOR, idDeEventoValido, nomeDoEvento, PIXEL_ID } from "./meta-eventos";
 import type { Lead } from "./validar";
 
@@ -42,6 +43,8 @@ export type ContextoEvento = {
   fbp?: string;
   /** cookie `_fbc`, ou montado a partir do `fbclid` do anúncio */
   fbc?: string;
+  /** cidade, UF e país pelo IP — ver `localizacao.ts` */
+  localizacao?: Localizacao;
 };
 
 /**
@@ -77,6 +80,7 @@ export async function lerContexto(idEvento: string, urlInformada: string): Promi
     userAgent: cabecalhos.get("user-agent") ?? undefined,
     fbp: biscoitos.get("_fbp")?.value,
     fbc,
+    localizacao: localizacaoDosCabecalhos(cabecalhos),
   };
 }
 
@@ -84,13 +88,50 @@ function hash(valor: string) {
   return createHash("sha256").update(valor.trim().toLowerCase()).digest("hex");
 }
 
-/** O navegador, sem dado pessoal: é o que todo evento leva em `user_data`. */
+/**
+ * Cidade, UF e país no formato que o Meta pede antes do hash: minúsculas,
+ * sem acento, sem espaço e sem pontuação — "Balneário Camboriú" vira
+ * `balneariocamboriu`, e "SC", `sc`. Fora desse formato o hash não bate com
+ * o que o Meta calculou do perfil, e o campo não ajuda em nada.
+ */
+function local(valor: string) {
+  return valor
+    .normalize("NFD")
+    .replace(/\p{M}/gu, "")
+    .toLowerCase()
+    .replace(/[^a-z]/g, "");
+}
+
+/** `ct`, `st` e `country` da visita, em hash; vazio quando o IP não contou. */
+function dadosDeLocal(localizacao?: Localizacao) {
+  const campo = (valor?: string) => {
+    const normal = valor && local(valor);
+    return normal ? [hash(normal)] : undefined;
+  };
+
+  const ct = campo(localizacao?.cidade);
+  const st = campo(localizacao?.estado);
+  const country = campo(localizacao?.pais);
+
+  return {
+    ...(ct && { ct }),
+    ...(st && { st }),
+    ...(country && { country }),
+  };
+}
+
+/**
+ * O navegador, sem dado pessoal: é o que todo evento leva em `user_data`.
+ * A localização entra aqui, e não só no Lead, porque vale para a visita
+ * inteira — e o Meta pareia melhor o PageView que a traz.
+ */
 function dadosDoNavegador(contexto: ContextoEvento) {
   return {
     ...(contexto.ip && { client_ip_address: contexto.ip }),
     ...(contexto.userAgent && { client_user_agent: contexto.userAgent }),
     ...(contexto.fbp && { fbp: contexto.fbp }),
     ...(contexto.fbc && { fbc: contexto.fbc }),
+    ...dadosDeLocal(contexto.localizacao),
   };
 }
 
@@ -155,8 +196,11 @@ export async function enviarAoMeta(lead: Lead, contexto: ContextoEvento) {
     ph: [hash(lead.whatsapp)],
     fn: [hash(primeiro)],
     ...(sobrenome && { ln: [hash(sobrenome)] }),
-    country: [hash("br")],
     ...dadosDoNavegador(contexto),
+    /* Depois do navegador de propósito: o WhatsApp do cadastro é sempre
+       brasileiro, e isso vale mais que o país do IP, que numa viagem ou
+       numa VPN aponta outro. */
+    country: [hash("br")],
   };
 
   const dadosCustom = {
