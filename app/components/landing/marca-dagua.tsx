@@ -1,9 +1,11 @@
 import Image from "next/image";
 
-/* O símbolo circular oficial, na versão dourada (`public/LOGO AMAAN-01.png`).
-   Importado em vez de apontado por caminho: o nome do arquivo tem espaço, e o
-   import dá ao `next/image` largura e altura sem precisar escrevê-las. */
-import simbolo from "../../../public/LOGO AMAAN-01.png";
+/* O símbolo circular oficial, na versão dourada, reduzido a 960px em WebP a
+   partir de `public/LOGO AMAAN-01.png` — o original de 1500px fica fora do
+   git, como todo material em alta de /public (ver .gitignore). Importado em
+   vez de apontado por caminho: o import dá ao `next/image` largura e altura
+   sem precisar escrevê-las. */
+import simbolo from "../../../public/logo-amaan-simbolo-marca-dagua.webp";
 
 type Canto = "superior-direito" | "superior-esquerdo" | "inferior-direito" | "inferior-esquerdo";
 
