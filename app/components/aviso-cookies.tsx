@@ -19,7 +19,7 @@ const TEXTOS = {
   de: {
     rotulo: "Cookie-Hinweis",
     texto:
-      "Wir verwenden Cookies, um Besuche und Anzeigen zu messen. Mehr dazu in unserer",
+      "Wir setzen Cookies ein, um Seitenbesuche und Anzeigen auszuwerten. Mehr dazu in unserer",
     politica: "Datenschutzerklärung (auf Portugiesisch)",
     entendi: "Verstanden",
   },

@@ -34,7 +34,7 @@ import { SobreSection } from "../components/landing/sobre-section";
 
 const TITULO = `${marca} · Lebendige Immobilien in Santa Catarina`;
 const DESCRICAO =
-  "Amaan konzipiert, entwickelt und betreibt Lebendige Immobilien in Santa Catarina, Brasilien: Gebäude, die sich weiterentwickeln und auch nach der Fertigstellung Wert schaffen.";
+  "Amaan konzipiert, entwickelt und betreibt „Lebendige Immobilien“ in Santa Catarina, Brasilien: Gebäude, die mitwachsen und auch nach der Fertigstellung Werte schaffen.";
 
 export const metadata: Metadata = {
   title: { absolute: TITULO },

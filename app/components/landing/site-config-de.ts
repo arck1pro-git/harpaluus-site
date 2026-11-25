@@ -21,13 +21,20 @@ import {
  * português), então os componentes da home recebem estes por prop sem mudar
  * nada no desenho. As fotos são as mesmas; só os textos alternativos mudam.
  *
- * Escolhas de tradução:
- * - "Empreendimentos Vivos", o conceito da marca, vira "Lebendige
- *   Immobilien", com maiúscula, como nome próprio do conceito.
- * - "Incorporadora" vira "Projektentwickler"; "Amaan Incorporadora" fica como
- *   está, por ser a razão social.
- * - SCP fica como sigla: é a forma jurídica brasileira do investimento, e o
- *   portal e os contratos usam o nome em português.
+ * Escrito para soar como texto alemão, não como tradução palavra por palavra:
+ * - "Empreendimentos Vivos", o conceito da marca, vira „Lebendige
+ *   Immobilien“. No meio da frase vai entre aspas alemãs, que é como o
+ *   alemão marca um termo cunhado (o adjetivo em maiúscula sem aspas parece
+ *   erro de digitação); em títulos e rótulos, que já são caixa alta, sem aspas.
+ * - "Alto padrão" vira "Premiumsegment", o termo do mercado imobiliário
+ *   alemão; "incorporadora" vira "Projektentwickler". "Amaan Incorporadora"
+ *   fica como está, por ser a razão social.
+ * - SCP fica como sigla, mas o cartão do AMAAN Invest explica numa frase que
+ *   é uma participação silenciosa ("stille Beteiligung") pelo direito
+ *   brasileiro — a figura alemã equivalente à SCP. O leitor alemão não
+ *   conhece a sigla.
+ * - Tratamento formal (Sie) do começo ao fim; números em algarismos;
+ *   travessão (–) onde o alemão usa travessão.
  * - Os trechos entre « » (dourado no corpo) e o `tituloDestaque` (dourado
  *   itálico no título) seguem a mesma lógica do português, cada um num
  *   pedaço equivalente da frase.
@@ -38,7 +45,7 @@ import {
 
 /** Conversa no WhatsApp já aberta em alemão; a equipe vê de onde a pessoa veio. */
 const WHATSAPP_DE = linkWhatsapp(
-  "Hallo! Ich komme von der deutschen Website der AMAAN Incorporadora und hätte gern mehr Informationen über die Projekte."
+  "Hallo! Ich komme über die deutsche Website der AMAAN Incorporadora und hätte gern weitere Informationen zu Ihren Projekten."
 );
 
 /* As âncoras ficam sem a barra: o header e o rodapé desta versão só existem
@@ -54,9 +61,9 @@ export const textosDe: Textos = {
   inicio: ROTA_ALEMAO,
   abrirMenu: "Menü öffnen",
   fecharMenu: "Menü schließen",
-  irParaConteudo: "Zum Inhalt",
+  irParaConteudo: "Weiter zum Inhalt",
   novaAba: "(öffnet in neuem Tab)",
-  whatsappFlutuante: "Mit Amaan per WhatsApp sprechen (öffnet in neuem Tab)",
+  whatsappFlutuante: "Amaan per WhatsApp kontaktieren (öffnet in neuem Tab)",
   privacidade: "Datenschutzerklärung (auf Portugiesisch)",
   whatsapp: WHATSAPP_DE,
 };
@@ -66,24 +73,24 @@ export const textosDe: Textos = {
 export const heroDe: typeof hero = {
   image: {
     ...hero.image,
-    alt: "Dachterrasse eines Amaan-Projekts bei Sonnenuntergang, mit der Stadt und dem Meer im Hintergrund",
+    alt: "Dachterrasse eines Amaan-Projekts bei Sonnenuntergang, im Hintergrund die Stadt und das Meer",
   },
-  titulo: "Vertrauen, um zu bauen, was bleibt.",
+  titulo: "Mit Vertrauen bauen, was bleibt.",
   tituloDestaque: "was bleibt.",
   texto:
-    "Wir schaffen Lebendige Immobilien: Ökosysteme, die sich weiterentwickeln, das Leben leichter machen und noch lange nach der Übergabe Wert schaffen.",
-  cta: { label: "Wie wir ein Gebäude denken", href: "#sobre" },
+    "Wir entwickeln „Lebendige Immobilien“: Ökosysteme, die mitwachsen, den Alltag erleichtern und noch lange nach der Übergabe Werte schaffen.",
+  cta: { label: "Wie wir Gebäude neu denken", href: "#sobre" },
 };
 
 /* ------------------------------------------------------------------ SOBRE */
 
 export const sobreDe: typeof sobre = {
-  titulo: "DER GEHOBENE STANDARD IST GEALTERT.",
-  tituloDestaque: "GEALTERT.",
-  lead: "Ausstattung, Design und Freizeitangebote bleiben wichtig. Was den gehobenen Standard von morgen ausmacht, ist «das, was das Gebäude für seine Bewohner leistet».",
+  titulo: "DAS PREMIUMSEGMENT IST IN DIE JAHRE GEKOMMEN.",
+  tituloDestaque: "IN DIE JAHRE GEKOMMEN.",
+  lead: "Ausstattung, Design und Freizeitangebote bleiben wichtig. Doch was das Premiumsegment von morgen ausmacht, ist «das, was ein Gebäude für seine Bewohner leistet».",
   paragrafos: [
-    "Dafür braucht es «ein System»: Architektur, Technologie, Nachhaltigkeit, Services, Erlebnisse und Management, von der Planung an miteinander verbunden, jede Ebene trägt die nächste.",
-    "Amaan ist ein Projektentwickler aus Santa Catarina, der seine Projekte selbst «konzipiert, entwickelt und betreibt». Die Schlüsselübergabe eröffnet den längsten Zyklus: Dann beginnt das Leben des Gebäudes, und sein Betrieb wird messbar.",
+    "Dafür braucht es «ein System»: Architektur, Technologie, Nachhaltigkeit, Services, Erlebnisse und Management, von der Planung an miteinander verzahnt, wobei jede Ebene die nächste trägt.",
+    "Amaan ist ein Projektentwickler aus Santa Catarina, der seine Immobilien selbst «konzipiert, entwickelt und betreibt». Mit der Schlüsselübergabe beginnt der längste Abschnitt: Jetzt fängt das Leben des Gebäudes an, und sein Betrieb wird messbar.",
   ],
 };
 
@@ -93,43 +100,43 @@ export const pilaresDe: typeof pilares = {
   titulo: "LEBENDIGE IMMOBILIEN.",
   tituloDestaque: "LEBENDIGE",
   texto:
-    "Sechs Ebenen, festgelegt vor der ersten Wand und gepflegt bis lange nach dem letzten Schlüssel. Keine davon funktioniert allein.",
+    "Sechs Ebenen, festgelegt, bevor die erste Wand steht, und gepflegt bis lange nach der Übergabe des letzten Schlüssels. Keine davon funktioniert für sich allein.",
   itens: [
     {
       icone: "arquitetura",
       titulo: "Architektur",
       descricao:
-        "Wo der Turm steht, wohin die Fenster blicken, wo sich die Wege der Menschen kreuzen. Die einzige Ebene, die niemand mehr ändern kann, sobald der Bau steht.",
+        "Wo der Turm platziert wird, wohin die Fenster blicken, wo sich die Wege der Menschen kreuzen. Die einzige Ebene, die niemand mehr ändert, wenn der Bau erst einmal in die Höhe wächst.",
     },
     {
       icone: "tecnologia",
       titulo: "Technologie",
       descricao:
-        "Der physische Schlüssel hat ausgedient: Biometrie am Eingang, QR-Code für Besucher, Aufzug und Wohnung per Smartphone. Die Bewohner merken es an der Zeit, die sie nicht mehr verlieren.",
+        "Der klassische Schlüssel hat ausgedient: Biometrie am Eingang, QR-Code für Besucher, Aufzug und Wohnung per Smartphone. Die Bewohner merken es an der Zeit, die sie nicht mehr verlieren.",
     },
     {
       icone: "sustentabilidade",
       titulo: "Nachhaltigkeit",
       descricao:
-        "Jede Wohnung misst ihren eigenen Wasser-, Gas- und Stromverbrauch. Am Monatsende zahlen Sie, was Sie verbraucht haben, und nicht mehr.",
+        "Jede Wohnung erfasst ihren eigenen Wasser-, Gas- und Stromverbrauch. Am Monatsende zahlen Sie genau das, was Sie verbraucht haben – nicht mehr.",
     },
     {
       icone: "servicos",
       titulo: "Services",
       descricao:
-        "Wäscherei, Minimarkt und Coworking im Gebäude. Die Wohnung ist darauf vorbereitet, an den Tagen, an denen sie leer steht, Einnahmen zu erzielen.",
+        "Wäscherei, Minimarkt und Coworking direkt im Haus. Die Wohnung ist darauf ausgelegt, auch an den Tagen Einnahmen zu erzielen, an denen sie leer steht.",
     },
     {
       icone: "experiencias",
       titulo: "Erlebnisse",
       descricao:
-        "Dachterrasse, Gourmet-Lounge und Außenbereich mit Kamin, ausgelegt auf die Nutzung an einem ganz gewöhnlichen Dienstag.",
+        "Dachterrasse, Gourmet-Lounge und Außenbereich mit Feuerstelle, gedacht für die Nutzung an einem ganz normalen Dienstag.",
     },
     {
       icone: "gestao",
       titulo: "Management",
       descricao:
-        "Das Gebäude meldet einen drohenden Systemausfall, bevor er eintritt, und die Bewohner verfolgen die Reparatur in der App. Wer vermietet, übergibt den Betrieb an die Verwaltung.",
+        "Das Gebäude meldet einen drohenden Systemausfall, bevor er eintritt, und die Bewohner verfolgen die Reparatur in der App. Wer vermietet, überlässt den Betrieb der Hausverwaltung.",
     },
   ],
 };
@@ -142,28 +149,29 @@ export const empreendimentosDe: typeof empreendimentos = {
   titulo: "PROJEKTE",
   destaque: {
     nome: "Tourmaline Tower",
-    meta: "Porto Belo / SC · Kommendes Projekt",
+    meta: "Porto Belo / SC · In Planung",
     texto:
-      "Einunddreißig Stockwerke im Viertel Vila Nova in Porto Belo (SC), mit einer Dachterrasse am höchsten Punkt der Region.",
+      "31 Stockwerke im Viertel Vila Nova in Porto Belo (SC), mit einer Dachterrasse am höchsten Punkt der Region.",
   },
   imagens: [
-    { ...imagemLounge, alt: "Gourmet-Lounge des Tourmaline Tower mit Panoramablick auf das Meer" },
-    { ...imagemTorre, alt: "Beleuchteter Turm in der Abenddämmerung" },
+    { ...imagemLounge, alt: "Gourmet-Lounge des Tourmaline Tower mit Panoramablick aufs Meer" },
+    { ...imagemTorre, alt: "Der beleuchtete Turm in der Abenddämmerung" },
   ],
 };
 
 /* ----------------------------------------------------------------- INVEST */
 
-/* Mesmo cuidado do português: nada aqui descreve rentabilidade. */
+/* Mesmo cuidado do português: nada aqui descreve rentabilidade. A primeira
+   frase do texto só diz o que é a SCP, para o leitor alemão. */
 export const investDe: typeof invest = {
-  titulo: "Verfolgen Sie den Stand Ihrer SCP-Investition mit",
+  titulo: "Verfolgen Sie Ihre SCP-Beteiligung mit",
   produto: "AMAAN INVEST",
   texto:
-    "Einlagen, Ausschüttungen und Ihre Beteiligung am Ergebnis, Monat für Monat, am selben Ort, an dem Sie den Baufortschritt verfolgen.",
+    "Die SCP ist eine stille Beteiligung nach brasilianischem Recht. Einlagen, Ausschüttungen und Ihren Anteil am Ergebnis sehen Sie Monat für Monat dort, wo Sie auch den Baufortschritt verfolgen.",
   cta: { label: "Amaan Invest öffnen", href: PORTAL },
   mockup: {
     ...invest.mockup,
-    alt: "Die App Amaan Invest auf einem Smartphone mit eingezahltem Kapital, erhaltenen Beträgen und der Entwicklung der SCP-Ausschüttungen",
+    alt: "Die App Amaan Invest auf einem Smartphone: eingezahltes Kapital, erhaltene Ausschüttungen und deren Entwicklung",
   },
 };
 
@@ -172,13 +180,13 @@ export const investDe: typeof invest = {
 export const rodapeDe: typeof rodape = {
   titulo: "AMAAN",
   assinatura: "Lebendige Immobilien",
-  frase: "Vertrauen, um zu bauen, was bleibt.",
+  frase: "Mit Vertrauen bauen, was bleibt.",
   cta: { label: "Sprechen Sie mit unserem Team", href: WHATSAPP_DE },
   colunas: [
     {
       titulo: "Unternehmen",
       links: [
-        { label: "Die Vision", href: "#sobre" },
+        { label: "Unsere Vision", href: "#sobre" },
         { label: "Lebendige Immobilien", href: "#pilares" },
       ],
     },
@@ -198,6 +206,6 @@ export const rodapeDe: typeof rodape = {
   legais: [
     "Amaan Incorporadora · CNPJ 50.550.515/0001-33",
     "R. Dorvalino Voltolini, 179 · Perequê, Porto Belo/SC",
-    "2026. Alle Rechte vorbehalten.",
+    "© 2026. Alle Rechte vorbehalten.",
   ],
 };
