@@ -25,9 +25,8 @@ import type { Lead } from "./validar";
  * outra família, com chaves próprias — ver `PayloadChromaLp3`.
  *
  * O segredo de cada webhook viaja na query string, então a URL inteira é o
- * segredo. As da LP01 e da LP02 vêm do ambiente (`CHROMA_WEBHOOK_LP1` e
- * `CHROMA_WEBHOOK_LP2`, no `.env.local` e na Vercel); a da LP03 fica fixa
- * aqui (ver `WEBHOOK_LP3`). Trocar qualquer uma é publicar de novo.
+ * segredo. As três ficam fixas aqui, e não no ambiente (`.env.local` e
+ * Vercel): trocar qualquer uma é editar este arquivo e publicar de novo.
  *
  * O `import "server-only"` da primeira linha é o que segura esses segredos no
  * servidor: importar este módulo de um componente cliente quebra o build, em
@@ -38,21 +37,20 @@ import type { Lead } from "./validar";
  * CRM, e as retentativas cabem sem segurar o formulário.
  */
 /**
- * Webhook "LP3" do Chroma (formulário de investimento), com o segredo na
- * query string. Fica no código, e não no ambiente, por causa de um problema
- * do lado do CRM com a configuração por variável. Não importe esta constante
- * fora deste módulo.
+ * As webhooks do CRM (AmaanOffice, em amaanoffice.amaan.com.br), cada uma com
+ * o segredo na query string. Nenhuma sai deste módulo.
  */
-const WEBHOOK_LP3 =
-  "https://chromacrm.vercel.app/api/webhooks/formulario-de-investimento-8356a3?secret=2e5b804403e5558e717cddf83db5f12ac8b559baa92d1c831f6c2a8b64ca108b";
-
-const WEBHOOKS: Record<OrigemLead, string | undefined> = {
+const WEBHOOKS: Record<OrigemLead, string> = {
   /* Webhook "LPs amaan" — o contato entra na etapa novo contato. */
-  "lp1-checklist": process.env.CHROMA_WEBHOOK_LP1,
+  "lp1-checklist":
+    "https://amaanoffice.amaan.com.br/api/webhooks/nova-captacao-515314?secret=0bfc50194e3224c2822387d1d75856630f637044fcd6360856c28f37190ba3c5",
   /* Webhook "LPs amaan - sem doc" — cópia da de cima, com uma etapa própria:
      novo contato - sem doc. */
-  "lp2-interesse": process.env.CHROMA_WEBHOOK_LP2,
-  "lp3-scp": WEBHOOK_LP3,
+  "lp2-interesse":
+    "https://amaanoffice.amaan.com.br/api/webhooks/lps-amaan-sem-doc-381d95?secret=faf4c41f566b07d963e26c08b5d43ddeaa25ae4bd0d4fe777765289369c7635d",
+  /* Webhook "LP3" (formulário de investimento). */
+  "lp3-scp":
+    "https://amaanoffice.amaan.com.br/api/webhooks/formulario-de-investimento-8356a3?secret=2e5b804403e5558e717cddf83db5f12ac8b559baa92d1c831f6c2a8b64ca108b",
 };
 
 /**
@@ -242,16 +240,6 @@ function destino(lead: Lead) {
 export async function enviarAoChroma(lead: Lead) {
   const { webhook, corpo: payload } = destino(lead);
   const corpo = JSON.stringify(payload);
-
-  /* Variável faltando é erro de configuração, não motivo para perder o
-     cadastro: o lead vai para o log, como em qualquer outra falha. */
-  if (!webhook) {
-    console.error(
-      `[chroma] ${lead.origem}: webhook não configurada no ambiente — lead para reenvio manual:`,
-      lead
-    );
-    return;
-  }
 
   for (let tentativa = 1; tentativa <= TENTATIVAS; tentativa++) {
     try {
