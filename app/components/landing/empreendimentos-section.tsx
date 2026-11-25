@@ -2,12 +2,10 @@ import Image from "next/image";
 import { MapPin } from "lucide-react";
 
 import { TRACO } from "./icones";
-import { Listras } from "./listras";
+import { MarcaDagua } from "./marca-dagua";
 import { Reveal } from "./reveal";
-import { empreendimentos, type SiteImage } from "./site-config";
-
-const { destaque, imagens, titulo } = empreendimentos;
-const [principal, lado] = imagens;
+import { empreendimentos as empreendimentosPt, type SiteImage } from "./site-config";
+import { CORPO, TITULO_ITEM, TITULO_SECAO } from "./tipografia";
 
 /** Tile da galeria: recorte fixo e zoom discreto no hover. */
 function Tile({
@@ -37,63 +35,73 @@ function Tile({
   );
 }
 
-/** Empreendimento em destaque da incorporadora, em duas imagens. */
-export function EmpreendimentosSection() {
+/**
+ * Empreendimento em destaque da incorporadora, em duas imagens.
+ *
+ * Na mesma margem (`faixa`) e no mesmo grid de 12 colunas das outras seções:
+ * título na largura inteira; nome e localização nas colunas 1 a 5, o texto
+ * a partir da coluna 7; e as duas imagens dividindo as colunas em 7 + 5, de
+ * margem a margem.
+ */
+export function EmpreendimentosSection({
+  conteudo = empreendimentosPt,
+}: {
+  /** o texto da seção; o padrão é o português, e `/alemao` passa o seu */
+  conteudo?: typeof empreendimentosPt;
+} = {}) {
+  const { destaque, imagens, titulo } = conteudo;
+  const [principal, lado] = imagens;
+
   return (
-    <section
-      id="empreendimentos"
-      className="relative overflow-hidden bg-fundo px-6 py-[120px] md:px-10 md:py-[160px]"
-    >
-      <Listras lado="esquerda" />
-      <Listras lado="direita" />
+    <section id="empreendimentos" className="ritmo-secao relative overflow-hidden bg-fundo">
+      {/* no canto de cima, à esquerda: embaixo as fotos vão de margem a
+          margem e o cobririam */}
+      <MarcaDagua canto="superior-esquerdo" />
 
-      <div className="relative mx-auto max-w-[1080px]">
-        <Reveal variant="linha-desenha" className="h-px w-[52px] bg-dourado" />
-
-        {/* "EMPREENDIMENTOS" é uma palavra só e não cabe em meia coluna a 60px:
-            o título ocupa a linha inteira e o destaque vem abaixo, em duas colunas.
-            No mobile a mesma palavra estoura a largura da tela a 36px — daí o
-            passo menor até sm */}
-        <Reveal className="mt-9">
-          <h2 className="font-[family-name:var(--font-playfair)] text-[27px] leading-[1.08] font-normal tracking-[0.04em] text-grafite sm:text-4xl md:text-6xl">
-            {titulo}
-          </h2>
+      <div className="faixa relative">
+        {/* "EMPREENDIMENTOS" é uma palavra só: o título ocupa a linha inteira
+            e o destaque vem abaixo, em duas colunas. O piso da escala (26px)
+            é o que a faz caber numa tela de 320px. */}
+        <Reveal>
+          <h2 className={`${TITULO_SECAO} text-grafite`}>{titulo}</h2>
         </Reveal>
 
-        <div className="mt-14 grid gap-x-16 gap-y-8 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
-          <Reveal>
-            <p className="text-[21px] leading-[1.35] font-normal tracking-[-0.01em] text-grafite md:text-[24px]">
+        <div className="mt-10 grid gap-y-8 md:mt-14 lg:grid-cols-12 lg:gap-x-6">
+          <Reveal className="lg:col-span-5">
+            {/* o nome é o título do empreendimento: h3 na Playfair, abaixo do
+                h2 da seção */}
+            <h3 translate="no" className={`${TITULO_ITEM} text-grafite`}>
               {destaque.nome}
-            </p>
-            <p className="mt-3 flex items-center gap-2.5 text-[10px] font-medium tracking-[0.18em] text-dourado uppercase">
-              <MapPin size={14} strokeWidth={TRACO} aria-hidden />
+            </h3>
+            <p className="tipo-label mt-4 flex items-center gap-2.5 leading-[1.5] text-dourado-escuro">
+              <MapPin size={14} strokeWidth={TRACO} aria-hidden className="shrink-0" />
               {destaque.meta}
             </p>
           </Reveal>
 
-          <Reveal delay={120}>
+          <Reveal delay={120} className="lg:col-span-6 lg:col-start-7">
             {/* no mobile o tile fica no nome e na localização */}
-            <p className="hidden max-w-[500px] text-base leading-[1.85] font-light text-pedra md:block">
+            <p className={`${CORPO} hidden max-w-[52ch] text-pedra md:block lg:pt-[0.35rem]`}>
               {destaque.texto}
             </p>
           </Reveal>
         </div>
 
-        {/* duas imagens: a principal manda na largura, a torre acompanha ao
-            lado na mesma altura */}
+        {/* duas imagens na mesma altura: a principal nas colunas 1 a 7, a
+            torre nas colunas 8 a 12 */}
         <Reveal
           delay={80}
-          className="mt-[72px] grid gap-4 md:h-[680px] md:grid-cols-[minmax(0,1.55fr)_minmax(0,1fr)]"
+          className="mt-14 grid gap-4 md:mt-[72px] md:h-[30rem] md:grid-cols-12 md:gap-6 lg:h-[42.5rem]"
         >
           <Tile
             imagem={principal}
-            className="h-[420px] md:h-full"
-            sizes="(max-width: 768px) 100vw, 660px"
+            className="h-[420px] md:col-span-7 md:h-full"
+            sizes="(max-width: 768px) 100vw, 680px"
           />
           <Tile
             imagem={lado}
-            className="h-[280px] md:h-full"
-            sizes="(max-width: 768px) 100vw, 420px"
+            className="h-[280px] md:col-span-5 md:h-full"
+            sizes="(max-width: 768px) 100vw, 480px"
           />
         </Reveal>
       </div>

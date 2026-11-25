@@ -7,6 +7,7 @@ import { Header } from "./components/landing/header";
 import { Hero } from "./components/landing/hero";
 import { InvestSection } from "./components/landing/invest-section";
 import { PilaresSection } from "./components/landing/pilares-section";
+import { ROTA_ALEMAO } from "./components/landing/site-config";
 import { SobreSection } from "./components/landing/sobre-section";
 
 /**
@@ -18,7 +19,12 @@ import { SobreSection } from "./components/landing/sobre-section";
  * mais histórico — a do nome antigo.
  */
 export const metadata: Metadata = {
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    /* hreflang: liga esta home à versão em alemão, que declara o par ao
+       contrário (`app/alemao/page.tsx`) */
+    languages: { "pt-BR": "/", de: ROTA_ALEMAO },
+  },
 };
 
 /**
@@ -41,10 +47,10 @@ export default function Home() {
       <Header />
 
       <Hero />
-      <InvestSection />
       <SobreSection />
       <PilaresSection />
       <EmpreendimentosSection />
+      <InvestSection />
       <Footer />
     </main>
   );

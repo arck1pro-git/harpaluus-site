@@ -8,16 +8,18 @@ import { MetaPixelBase, MetaPixelSemJs } from "./components/meta-pixel-base";
 import { descricao, marca, SITE_URL } from "./components/landing/site-config";
 
 /**
- * Só o corte normal.
+ * Corte normal e itálico.
  *
- * O itálico estava declarado aqui e não era usado por nenhuma rota pública —
- * o único lugar que combinava Playfair com itálico era `hero-headline.tsx`,
- * que não é importado por página nenhuma. Enquanto esteve declarado, o
- * `next/font` fazia o preload dos arquivos dos dois cortes em toda navegação.
+ * O itálico voltou com o destaque dos títulos (`TituloComDestaque`, em
+ * `com-destaque.tsx`): o trecho em dourado de cada título sai em Playfair
+ * itálica, a começar pelo h1 do hero, na primeira tela. Por isso os dois
+ * cortes ficam no preload. Sem o arquivo itálico, o navegador inclinaria a
+ * Playfair normal à força, e o desenho do itálico de verdade é outro.
  */
 const playfair = Playfair_Display({
   variable: "--font-playfair",
   subsets: ["latin"],
+  style: ["normal", "italic"],
 });
 
 // Fonte única da landing institucional (títulos e informações).

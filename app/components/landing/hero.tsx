@@ -3,8 +3,10 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
+import { TituloComDestaque } from "./com-destaque";
 import { CtaLink } from "./cta-link";
-import { hero } from "./site-config";
+import { hero as heroPt, textos, type Textos } from "./site-config";
+import { ABERTURA, TITULO_HERO } from "./tipografia";
 
 /** Fator do parallax: quanto a imagem desloca em relação à rolagem. */
 const PARALLAX = 0.18;
@@ -16,7 +18,14 @@ const PARALLAX = 0.18;
  * headline, texto e CTA sobem em cascata. Nada acontece em menos de 1s: a
  * sensação de calma vem da duração, não do movimento.
  */
-export function Hero() {
+export function Hero({
+  conteudo: hero = heroPt,
+  textos: t = textos,
+}: {
+  /** o texto do hero; o padrão é o português, e `/alemao` passa o seu */
+  conteudo?: typeof heroPt;
+  textos?: Textos;
+} = {}) {
   const imagem = useRef<HTMLDivElement>(null);
   const indicador = useRef<HTMLAnchorElement>(null);
   const [emCena, setEmCena] = useState(false);
@@ -67,7 +76,9 @@ export function Hero() {
     <section
       id="hero"
       data-cena={emCena}
-      className="relative h-screen w-full overflow-hidden rounded-b-4xl bg-azul-escuro"
+      // `svh`, não `vh`: no celular o `100vh` conta a tela sem a barra de
+      // endereço, e o botão do hero caía para baixo dela
+      className="relative h-svh w-full overflow-hidden rounded-b-4xl bg-azul-escuro"
     >
       <div ref={imagem} className="absolute inset-0 will-change-transform">
         <div className="cena-imagem h-full w-full">
@@ -91,18 +102,23 @@ export function Hero() {
       <div className="absolute inset-0 bg-linear-to-t from-azul-escuro/80 via-azul-escuro/20 to-azul-escuro/35" />
 
       <div className="faixa relative z-10 flex h-full flex-col justify-end pb-[clamp(168px,24vh,240px)]">
-        <div className="max-w-[640px]">
-          <span className="cena-filete block h-px w-[52px] bg-dourado/70" />
-
+        {/* o h1 maior pede uma coluna mais larga: em 640px ele quebrava em
+            três linhas; em 46rem fecha em duas */}
+        <div className="max-w-[46rem]">
           <h1
-            className="cena tipo-display mt-8 text-white"
+            className={`cena ${TITULO_HERO} text-white`}
             style={{ "--cena-delay": "220ms" } as React.CSSProperties}
           >
-            {hero.titulo}
+            <TituloComDestaque
+              texto={hero.titulo}
+              destaque={hero.tituloDestaque}
+              fundo="escuro"
+              brilho
+            />
           </h1>
 
           <p
-            className="cena tipo-corpo mt-7 max-w-[480px] text-white"
+            className={`cena ${ABERTURA} mt-7 max-w-[34rem] text-white`}
             style={{ "--cena-delay": "480ms" } as React.CSSProperties}
           >
             {hero.texto}
@@ -130,7 +146,7 @@ export function Hero() {
         <a
           ref={indicador}
           href={hero.cta.href}
-          aria-label="Ir para o conteúdo"
+          aria-label={t.irParaConteudo}
           className="group flex flex-col items-center pb-[52px] transition-opacity duration-700 ease-out"
         >
           <span className="filete-rolagem relative h-[64px] w-px overflow-hidden bg-white/20 text-white/90 transition-colors duration-500 group-hover:bg-white/35" />

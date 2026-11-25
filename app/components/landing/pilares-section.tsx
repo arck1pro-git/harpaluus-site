@@ -10,10 +10,12 @@ import {
   Sunset,
 } from "lucide-react";
 
+import { TituloComDestaque } from "./com-destaque";
 import { Dots } from "./dots";
 import { TRACO } from "./icones";
-import { pilares, type PilarIcone } from "./site-config";
+import { pilares as pilaresPt, type PilarIcone } from "./site-config";
 import { Reveal } from "./reveal";
+import { CORPO, TITULO_SECAO } from "./tipografia";
 
 /**
  * O ícone de cada camada sai da própria descrição, não do rótulo: biometria
@@ -46,7 +48,12 @@ const LINHA = 16;
  * técnica aparece no fundo da linha — e o scroll do mouse passa a comandar a
  * volta, para frente e para trás, no ritmo de quem está lendo.
  */
-export function PilaresSection() {
+export function PilaresSection({
+  conteudo: pilares = pilaresPt,
+}: {
+  /** o texto da seção; o padrão é o português, e `/alemao` passa o seu */
+  conteudo?: typeof pilaresPt;
+} = {}) {
   const janela = useRef<HTMLDivElement>(null);
   const trilho = useRef<HTMLDivElement>(null);
 
@@ -139,23 +146,29 @@ export function PilaresSection() {
         tamanho="h-[560px] w-[560px] md:h-[1040px] md:w-[1040px]"
       />
 
-      <div className="faixa relative grid gap-x-20 gap-y-16 md:grid-cols-[minmax(0,0.85fr)_minmax(0,1fr)]">
-        <div className="md:self-start">
-          <Reveal variant="linha-desenha" className="h-px w-[52px] bg-dourado" />
-
-          <Reveal className="mt-10">
-            <h2 className="tipo-secao font-[family-name:var(--font-playfair)]">{pilares.titulo}</h2>
+      {/* Grid de 12 colunas: título e texto nas colunas 1 a 6, a lista a
+          partir da coluna 7, a mesma linha de divisão de "Sobre" e
+          "Empreendimentos". Abaixo de `lg` as duas partes empilham — em
+          768px a lista ao lado do título ficava com 300px de largura. */}
+      <div className="faixa relative grid gap-y-16 lg:grid-cols-12 lg:gap-x-6">
+        <div className="lg:col-span-6 lg:self-start">
+          <Reveal>
+            <h2 className={TITULO_SECAO}>
+              <TituloComDestaque
+                texto={pilares.titulo}
+                destaque={pilares.tituloDestaque}
+                fundo="escuro"
+              />
+            </h2>
           </Reveal>
 
           <Reveal delay={140}>
-            <p className="tipo-corpo mt-9 max-w-[420px] text-pedra-claro/90">
-              {pilares.texto}
-            </p>
+            <p className={`${CORPO} mt-9 max-w-[42ch] text-pedra-claro/90`}>{pilares.texto}</p>
           </Reveal>
         </div>
 
         {/* a janela recorta o loop; as bordas somem em vez de cortar o texto */}
-        <Reveal delay={120}>
+        <Reveal delay={120} className="lg:col-span-6 lg:col-start-7">
           <div
             ref={janela}
             className="janela-pilares relative h-[clamp(26rem,62vh,38rem)] overflow-hidden"
@@ -198,7 +211,11 @@ export function PilaresSection() {
                             </span>
 
                             <div>
-                              <p className="flex items-center gap-3 text-[clamp(1.125rem,1rem+0.5vw,1.375rem)] leading-[1.25] font-normal tracking-[-0.015em] text-white/85 transition-colors duration-500 ease-out group-hover:text-white">
+                              {/* o nome da camada é título de item: na
+                                  Playfair dos títulos, no corte normal (sem
+                                  itálico), e um pouco maior que a descrição
+                                  na Inter logo abaixo */}
+                              <p className="flex items-center gap-3 font-[family-name:var(--font-playfair)] text-[length:clamp(1.25rem,1.1rem+0.5vw,1.5rem)] leading-[1.25] font-normal tracking-[-0.01em] text-white/85 transition-colors duration-500 ease-out group-hover:text-white">
                                 {/* decorativo: o nome da camada vem logo em
                                     seguida, então o leitor de tela pula */}
                                 <Icone
@@ -209,7 +226,7 @@ export function PilaresSection() {
                                 />
                                 {item.titulo}
                               </p>
-                              <p className="tipo-corpo-curto mt-3 max-w-[380px] text-pedra-claro/80 transition-colors duration-500 ease-out group-hover:text-pedra-claro">
+                              <p className="mt-3 max-w-[46ch] text-base leading-[1.7] font-normal text-pretty text-pedra-claro/80 transition-colors duration-500 ease-out group-hover:text-pedra-claro max-md:justificado">
                                 {item.descricao}
                               </p>
                             </div>

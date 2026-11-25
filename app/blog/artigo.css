@@ -1,0 +1,244 @@
+/* ═══════════════════════════════════════════════════════════
+   Corpo dos artigos do blog.
+
+   O HTML chega pronto do CRM (`artigo.html`): parágrafos, h2/h3 com id,
+   listas, tabelas, citações e links, sem classe nenhuma. Por isso o estilo
+   aqui é por elemento — e tudo mora dentro de `.artigo-corpo`, para nenhuma
+   regra de `p`, `table` ou `blockquote` vazar para o resto do site.
+
+   Cada família tem um trabalho, o mesmo do resto do blog
+   (`components/blog/tipografia.ts`): a Playfair nos títulos (h2 e h3, no
+   corte normal) e nas citações, a Inter no corpo, nas listas e nas
+   tabelas. Títulos em azul-escuro, sem filete em cima; dourado só nos
+   detalhes (marcadores, sublinhado dos links, a borda da citação).
+
+   O corpo é Inter 400, não light: num texto de sete minutos o corte fino
+   cansa a leitura. A linha para em 62 caracteres, a medida em que o olho
+   ainda acha o começo da linha seguinte sem esforço.
+═══════════════════════════════════════════════════════════ */
+
+.artigo-corpo {
+  max-width: 62ch;
+  color: color-mix(in oklab, var(--color-grafite) 82%, transparent);
+  font-size: 1.0625rem;
+  line-height: 1.75;
+  font-weight: 400;
+  /* link e termo longo não podem abrir rolagem lateral no celular */
+  overflow-wrap: break-word;
+}
+
+.artigo-corpo p,
+.artigo-corpo li {
+  text-wrap: pretty;
+}
+
+/* A API descreve o `html` como "o <article> inteiro", mas hoje ele chega sem
+   o invólucro, direto nos parágrafos. As duas formas ganham o mesmo ritmo. */
+.artigo-corpo > * + *,
+.artigo-corpo > article > * + * {
+  margin-top: 1.5rem;
+}
+
+/* ---------------------------------------------------------------- títulos */
+
+.artigo-corpo h2 {
+  margin-top: 4.5rem;
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(1.625rem, 1.3rem + 1vw, 2.125rem);
+  line-height: 1.2;
+  font-weight: 400;
+  letter-spacing: -0.015em;
+  text-wrap: balance;
+  color: var(--color-azul-escuro);
+}
+
+/* h3 também na Playfair, como todo título do site, no corte normal: abaixo
+   do h2, ele se distingue pelo tamanho (22px contra 34px) */
+.artigo-corpo h3 {
+  margin-top: 3rem;
+  font-family: var(--font-playfair), serif;
+  font-size: 1.375rem;
+  line-height: 1.3;
+  font-weight: 400;
+  font-style: normal;
+  letter-spacing: -0.01em;
+  text-wrap: balance;
+  color: var(--color-azul-escuro);
+}
+
+.artigo-corpo h2 + * {
+  margin-top: 1.25rem;
+}
+
+.artigo-corpo h3 + * {
+  margin-top: 0.75rem;
+}
+
+/* ------------------------------------------------------------------ texto */
+
+.artigo-corpo strong,
+.artigo-corpo b {
+  font-weight: 500;
+  color: var(--color-azul-escuro);
+}
+
+.artigo-corpo a {
+  font-weight: 400;
+  color: var(--color-azul-escuro);
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, var(--color-dourado) 60%, transparent);
+  text-underline-offset: 4px;
+  transition: text-decoration-color 0.3s ease-out;
+}
+
+.artigo-corpo a:hover {
+  text-decoration-color: var(--color-dourado);
+}
+
+/* ----------------------------------------------------------------- listas */
+
+.artigo-corpo ul,
+.artigo-corpo ol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-left: 1.25rem;
+}
+
+.artigo-corpo ul {
+  list-style: disc;
+}
+
+.artigo-corpo ol {
+  list-style: decimal;
+}
+
+.artigo-corpo li {
+  padding-left: 0.375rem;
+}
+
+.artigo-corpo ul > li::marker {
+  color: var(--color-dourado);
+}
+
+/* número carrega informação: vai no bronze, o único dourado com contraste AA */
+.artigo-corpo ol > li::marker {
+  color: var(--color-dourado-escuro);
+  font-weight: 500;
+}
+
+/* --------------------------------------------------------------- citações */
+
+/* a citação é o único trecho do corpo na Playfair: é ela que interrompe o
+   texto corrido, e a troca de família é o que a destaca */
+.artigo-corpo blockquote {
+  margin-block: 3rem;
+  border-left: 1px solid var(--color-dourado);
+  padding-left: clamp(1.25rem, 3vw, 2rem);
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(1.25rem, 1.05rem + 0.65vw, 1.5rem);
+  line-height: 1.45;
+  font-weight: 400;
+  letter-spacing: -0.012em;
+  text-wrap: pretty;
+  color: var(--color-azul-escuro);
+}
+
+/* um negrito dentro da citação segue o peso dela: a Playfair só está
+   carregada no 400 que o resto do site usa */
+.artigo-corpo blockquote strong,
+.artigo-corpo blockquote b {
+  font-weight: inherit;
+}
+
+.artigo-corpo blockquote > * + * {
+  margin-top: 1rem;
+}
+
+/* ---------------------------------------------------------------- tabelas */
+
+.artigo-corpo table {
+  width: 100%;
+  margin-block: 2.5rem;
+  border-collapse: collapse;
+  font-size: 0.9375rem;
+  line-height: 1.5;
+  /* números alinhados de linha para linha, para a comparação ler na vertical */
+  font-variant-numeric: tabular-nums;
+}
+
+.artigo-corpo th,
+.artigo-corpo td {
+  padding: 0.875rem 1.25rem 0.875rem 0;
+  border-bottom: 1px solid var(--color-linha);
+  text-align: left;
+  vertical-align: top;
+}
+
+.artigo-corpo th:last-child,
+.artigo-corpo td:last-child {
+  padding-right: 0;
+}
+
+.artigo-corpo th {
+  border-bottom-color: var(--color-dourado);
+  font-weight: 500;
+  color: var(--color-azul-escuro);
+}
+
+/* ---------------------------------------------------------- outros blocos */
+
+.artigo-corpo img {
+  max-width: 100%;
+  height: auto;
+}
+
+.artigo-corpo hr {
+  margin-block: 3rem;
+  border: 0;
+  border-top: 1px solid var(--color-linha);
+}
+
+.artigo-corpo code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.9em;
+}
+
+/* ---------------------------------------------------------------- celular */
+
+@media (width < 48rem) {
+  .artigo-corpo {
+    font-size: 1rem;
+  }
+
+  /* justificado como o corpo do resto do site no celular (ver `justificado`
+     em globals.css): a hifenização é o que impede os rios de espaço */
+  .artigo-corpo p,
+  .artigo-corpo li {
+    text-align: justify;
+    text-justify: inter-word;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+    hyphenate-limit-chars: 6 3 3;
+  }
+
+  /* Tabela de quatro colunas mal cabe em 390px, e a coluna que importa (a do
+     investimento em SCP) é sempre a última. Fonte e respiro menores e as
+     palavras hifenizadas fazem as quatro caberem num celular comum; se ainda
+     faltar espaço, a tabela rola sozinha, de lado, em vez de empurrar a
+     página inteira. Como bloco, ela ainda encolhe até o mínimo do conteúdo
+     antes de rolar. */
+  .artigo-corpo table {
+    display: block;
+    max-width: 100%;
+    overflow-x: auto;
+    font-size: 0.8125rem;
+  }
+
+  .artigo-corpo th,
+  .artigo-corpo td {
+    padding: 0.75rem 0.625rem 0.75rem 0;
+    -webkit-hyphens: auto;
+    hyphens: auto;
+  }
+}

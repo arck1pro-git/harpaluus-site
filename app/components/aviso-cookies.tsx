@@ -1,9 +1,29 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useSyncExternalStore } from "react";
 
-import { ROTA_PRIVACIDADE } from "./landing/site-config";
+import { ROTA_ALEMAO, ROTA_PRIVACIDADE } from "./landing/site-config";
+
+/* O aviso mora no layout raiz, então escolhe o idioma pela rota: em
+   `/alemao` ele fala alemão. A política em si só existe em português, e o
+   link diz isso. */
+const TEXTOS = {
+  pt: {
+    rotulo: "Aviso de cookies",
+    texto: "Usamos cookies para medir visitas e anúncios. Saiba mais na nossa",
+    politica: "Política de Privacidade",
+    entendi: "Entendi",
+  },
+  de: {
+    rotulo: "Cookie-Hinweis",
+    texto:
+      "Wir verwenden Cookies, um Besuche und Anzeigen zu messen. Mehr dazu in unserer",
+    politica: "Datenschutzerklärung (auf Portugiesisch)",
+    entendi: "Verstanden",
+  },
+};
 
 /**
  * Aviso de cookies, no layout raiz: aparece na primeira visita a qualquer
@@ -57,12 +77,16 @@ function inscrever(avisar: () => void) {
 
 export function AvisoCookies() {
   const fechado = useSyncExternalStore(inscrever, jaFechou, () => true);
+  const rota = usePathname();
+  const idioma = rota === ROTA_ALEMAO || rota.startsWith(`${ROTA_ALEMAO}/`) ? "de" : "pt";
+  const t = TEXTOS[idioma];
 
   if (fechado) return null;
 
   return (
     <section
-      aria-label="Aviso de cookies"
+      aria-label={t.rotulo}
+      lang={idioma === "de" ? "de" : undefined}
       /* Faixa fina no pé da tela, e não um cartão: nas LPs um cartão cobria o
          CTA do hero. Acima do header (z-50); o formulário das LPs abre num
          <dialog>, na camada de topo do navegador, e cobre o aviso sem
@@ -71,12 +95,12 @@ export function AvisoCookies() {
     >
       <div className="faixa flex items-center gap-5 pt-3 pb-[max(0.75rem,env(safe-area-inset-bottom))] md:gap-8">
         <p className="flex-1 text-[12px] leading-[1.55] font-light text-white/85 md:text-[13px]">
-          Usamos cookies para medir visitas e anúncios. Saiba mais na nossa{" "}
+          {t.texto}{" "}
           <Link
             href={ROTA_PRIVACIDADE}
             className="text-white underline decoration-dourado/70 underline-offset-4 transition-colors duration-300 hover:decoration-dourado"
           >
-            Política de Privacidade
+            {t.politica}
           </Link>
           .
         </p>
@@ -85,7 +109,7 @@ export function AvisoCookies() {
           onClick={fechar}
           className="tipo-label inline-flex h-10 shrink-0 items-center border border-dourado/60 bg-dourado/15 px-5 text-white transition-colors duration-300 ease-out hover:border-dourado hover:bg-dourado/30 md:px-7"
         >
-          Entendi
+          {t.entendi}
         </button>
       </div>
     </section>

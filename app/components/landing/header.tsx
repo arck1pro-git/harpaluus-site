@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -12,18 +12,13 @@ import {
   logo,
   logoClaro,
   nav,
-  WHATSAPP,
+  textos,
   type NavItem,
+  type Textos,
 } from "./site-config";
 
 /** Rolagem (px) a partir da qual o header troca de estado. */
 const LIMITE_SCROLL = 24;
-
-/** Atalhos diretos, fixos no canto direito da barra. */
-const atalhos = [
-  { href: WHATSAPP, label: "WhatsApp", Icon: WhatsAppIcon },
-  { href: INSTAGRAM, label: "Instagram", Icon: InstagramIcon },
-];
 
 /**
  * Link de menu no elemento certo para cada destino: `next/link` nas rotas
@@ -85,11 +80,6 @@ function ancoraDe(href: string) {
   return null;
 }
 
-/** Seções observadas para marcar o item de menu correspondente. */
-const ancoras = nav
-  .map((item) => ancoraDe(item.href))
-  .filter((id): id is string => id !== null);
-
 /**
  * Header fixo, de altura única.
  * A barra não muda de tamanho ao rolar — o que muda é a superfície. No topo
@@ -97,18 +87,39 @@ const ancoras = nav
  * ícones vão para o claro; a partir de 24px de rolagem ela fica branca, ganha
  * um divisor de 1px e tudo volta para o azul-escuro. O menu aberto conta como
  * rolado: precisa de fundo próprio para o conteúdo ser legível.
+ *
+ * Menu e rótulos vêm por prop, com o português como padrão: a versão em
+ * alemão (`/alemao`) passa os seus.
  */
-export function Header() {
+export function Header({
+  itens = nav,
+  textos: t = textos,
+}: {
+  itens?: NavItem[];
+  textos?: Textos;
+} = {}) {
   const [aberto, setAberto] = useState(false);
   const [rolou, setRolou] = useState(false);
   const [secao, setSecao] = useState<string | null>(null);
   const rota = usePathname();
 
-  /** Um item está ativo por rota (/empreendimentos) ou pela seção em tela. */
+  /** Atalhos diretos, fixos no canto direito da barra. */
+  const atalhos = [
+    { href: t.whatsapp, label: "WhatsApp", Icon: WhatsAppIcon },
+    { href: INSTAGRAM, label: "Instagram", Icon: InstagramIcon },
+  ];
+
+  /** Seções observadas para marcar o item de menu correspondente. */
+  const ancoras = useMemo(
+    () => itens.map((item) => ancoraDe(item.href)).filter((id): id is string => id !== null),
+    [itens]
+  );
+
+  /** Um item está ativo por rota (/blog e /blog/um-artigo) ou pela seção em tela. */
   function ativo(href: string) {
     const ancora = ancoraDe(href);
     if (ancora) return secao === ancora;
-    return href === rota;
+    return href === rota || rota.startsWith(`${href}/`);
   }
 
   useEffect(() => {
@@ -156,7 +167,7 @@ export function Header() {
 
     for (const alvo of alvos) observer.observe(alvo);
     return () => observer.disconnect();
-  }, []);
+  }, [ancoras]);
 
   // Fecha o menu no Esc: sai do estado aberto sem precisar mirar o botão.
   useEffect(() => {
@@ -190,7 +201,7 @@ export function Header() {
         {/* as duas versões empilhadas: trocar o src faria a marca piscar,
             então elas se cruzam por opacidade no mesmo tempo da barra */}
         <Link
-          href="/"
+          href={t.inicio}
           className="relative block shrink-0 no-underline"
           aria-label={logo.alt}
         >
@@ -223,9 +234,13 @@ export function Header() {
 
         {/* -mr compensa o padding dos ícones: eles ficam alinhados à borda do
             conteúdo, mas cada um mantém 36px de alvo de toque */}
-        <div className="-mr-2 flex items-center gap-1 md:gap-8">
-          <nav className="hidden items-center gap-8 md:flex">
-            {nav.map((item) => (
+        {/* O menu em linha começa em `lg`, não em `md`: com cinco itens
+            (o Blog entrou depois), em 768px ele encostava no logo, quebrava
+            "Portal do investidor" em duas linhas e cortava o Instagram. Até
+            1024px vale o menu recolhido. */}
+        <div className="-mr-2 flex items-center gap-1 lg:gap-8">
+          <nav className="hidden items-center gap-8 lg:flex">
+            {itens.map((item) => (
               <LinkNav
                 key={item.label}
                 item={item}
@@ -241,7 +256,7 @@ export function Header() {
             ))}
           </nav>
 
-          <ul className="flex items-center md:border-l md:border-grafite/15 md:pl-5">
+          <ul className="flex items-center lg:border-l lg:border-grafite/15 lg:pl-5">
             {atalhos.map(({ href, label, Icon }) => (
               <li key={label}>
                 <a
@@ -268,8 +283,8 @@ export function Header() {
             onClick={() => setAberto((v) => !v)}
             aria-expanded={aberto}
             aria-controls="menu-mobile"
-            aria-label={aberto ? "Fechar menu" : "Abrir menu"}
-            className={`flex h-9 w-9 items-center justify-center transition-colors duration-500 md:hidden ${
+            aria-label={aberto ? t.fecharMenu : t.abrirMenu}
+            className={`flex h-9 w-9 items-center justify-center transition-colors duration-500 lg:hidden ${
               sobreFoto ? "text-white" : "text-grafite"
             }`}
           >
@@ -283,9 +298,9 @@ export function Header() {
       </div>
 
       {aberto ? (
-        <nav id="menu-mobile" className="faixa pb-9 md:hidden">
+        <nav id="menu-mobile" className="faixa pb-9 lg:hidden">
           <ul className="flex flex-col border-t border-grafite/10">
-            {nav.map((item) => (
+            {itens.map((item) => (
               <li key={item.label} className="border-b border-grafite/[0.07]">
                 <LinkNav
                   item={item}

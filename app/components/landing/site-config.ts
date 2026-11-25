@@ -72,7 +72,12 @@ const MENSAGEM_WHATSAPP =
 
 const NUMERO_WHATSAPP = "5547992864926";
 
-export const WHATSAPP = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(MENSAGEM_WHATSAPP)}`;
+/** Conversa no WhatsApp da Amaan com a mensagem de origem já escrita. */
+export function linkWhatsapp(mensagem: string) {
+  return `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(mensagem)}`;
+}
+
+export const WHATSAPP = linkWhatsapp(MENSAGEM_WHATSAPP);
 
 /** O mesmo número, como canal do titular na Política de Privacidade. */
 export const WHATSAPP_PRIVACIDADE = `https://wa.me/${NUMERO_WHATSAPP}?text=${encodeURIComponent(
@@ -88,11 +93,30 @@ export const PORTAL = "https://meuari.vercel.app";
  */
 export const INSTAGRAM = "https://www.instagram.com/amaanincorporadora/";
 
+/** O endereço da sede no Google Maps (rodapé, coluna Contato). */
+export const LOCALIZACAO =
+  "https://www.google.com/maps/search/?api=1&query=R.+Dorvalino+Voltolini,+179+-+Perequ%C3%AA,+Porto+Belo+-+SC";
+
 /**
  * Política de Privacidade. O rodapé da home, o das LPs e o aviso de cookies
  * apontam todos para cá; é também o endereço que se informa ao Meta.
  */
 export const ROTA_PRIVACIDADE = "/politica-de-privacidade";
+
+/**
+ * Blog, com os artigos que vêm do CRM (ver `components/blog/api.ts`).
+ *
+ * Precisa bater com o `url_base` do blog no CRM, hoje
+ * `https://amaan.com.br/blog`: é de lá que saem o canonical de cada artigo e
+ * as URLs do sitemap. Mudar o caminho aqui é mudar o endereço lá também.
+ */
+export const ROTA_BLOG = "/blog";
+
+/**
+ * A home em alemão, com o texto de `site-config-de.ts`. O aviso de cookies,
+ * que mora no layout raiz, usa este caminho para saber quando falar alemão.
+ */
+export const ROTA_ALEMAO = "/alemao";
 
 /**
  * Lettering da Amaan, nas duas versões, já sem as margens vazias do arquivo
@@ -125,6 +149,7 @@ export const logoClaro = {
 export const nav: NavItem[] = [
   { label: "Sobre", href: "/#sobre" },
   { label: "Empreendimentos", href: "/#empreendimentos" },
+  { label: "Blog", href: ROTA_BLOG },
   { label: "Contato", href: "#contato" },
   {
     label: "Portal do Investidor",
@@ -142,6 +167,9 @@ export const hero = {
     position: "center 55%",
   } satisfies SiteImage,
   titulo: "Confiança para construir o que permanece.",
+  /* trecho do título que sai em dourado itálico (`TituloComDestaque`, em
+     com-destaque.tsx); precisa ser cópia exata de um pedaço do título */
+  tituloDestaque: "o que permanece.",
   texto:
     "Criamos Empreendimentos Vivos: ecossistemas imobiliários que continuam evoluindo, facilitando a vida e produzindo valor muito depois da entrega.",
   cta: { label: "Como pensamos um prédio", href: "#sobre" },
@@ -155,6 +183,7 @@ export const hero = {
  */
 export const sobre = {
   titulo: "O ALTO PADRÃO ENVELHECEU.",
+  tituloDestaque: "ENVELHECEU.",
   /* O que vier entre « » sai em dourado (ver `ComDestaque`, em
      sobre-section.tsx). Um trecho por parágrafo: o dourado marca a virada de
      cada um, e deixa de marcar se estiver em toda linha. */
@@ -180,6 +209,7 @@ export const sobre = {
  */
 export const pilares = {
   titulo: "EMPREENDIMENTOS VIVOS.",
+  tituloDestaque: "VIVOS.",
   texto:
     "Seis camadas decididas antes da primeira parede e mantidas muito depois da última chave. Nenhuma delas funciona sozinha.",
   itens: [
@@ -282,6 +312,7 @@ export const rodape = {
       links: [
         { label: "A visão", href: "/#sobre" },
         { label: "Empreendimentos Vivos", href: "/#pilares" },
+        { label: "Blog", href: ROTA_BLOG },
       ],
     },
     {
@@ -294,11 +325,7 @@ export const rodape = {
       links: [
         { label: "WhatsApp", href: WHATSAPP, icone: "whatsapp" },
         { label: "Instagram", href: INSTAGRAM, icone: "instagram" },
-        {
-          label: "Localização",
-          href: "https://www.google.com/maps/search/?api=1&query=R.+Dorvalino+Voltolini,+179+-+Perequ%C3%AA,+Porto+Belo+-+SC",
-          icone: "local",
-        },
+        { label: "Localização", href: LOCALIZACAO, icone: "local" },
       ],
     },
   ],
@@ -308,3 +335,28 @@ export const rodape = {
     "2026. Todos os direitos reservados.",
   ],
 };
+
+/* ------------------------------------------------------ TEXTOS DE INTERFACE */
+
+/**
+ * O que não é texto de seção: rótulos de leitor de tela, do menu e do botão
+ * do WhatsApp, o endereço da home e a conversa de WhatsApp de cada idioma.
+ *
+ * Os componentes da home recebem o conteúdo por prop, com estes objetos do
+ * português como padrão; a versão em alemão (`/alemao`) passa os de
+ * `site-config-de.ts`, que têm a mesma forma.
+ */
+export const textos = {
+  /** para onde a marca no header leva */
+  inicio: "/",
+  abrirMenu: "Abrir menu",
+  fecharMenu: "Fechar menu",
+  irParaConteudo: "Ir para o conteúdo",
+  /** completa o nome de links que abrem em nova aba, só para o leitor de tela */
+  novaAba: "(abre em nova aba)",
+  whatsappFlutuante: "Conversar com a Amaan pelo WhatsApp (abre em nova aba)",
+  privacidade: "Política de Privacidade",
+  whatsapp: WHATSAPP,
+};
+
+export type Textos = typeof textos;

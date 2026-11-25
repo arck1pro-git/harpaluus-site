@@ -5,7 +5,8 @@ import { CtaLink } from "./cta-link";
 import { Dots } from "./dots";
 import { InstagramIcon, TRACO, WhatsAppIcon } from "./icones";
 import { Reveal } from "./reveal";
-import { rodape, ROTA_PRIVACIDADE } from "./site-config";
+import { rodape as rodapePt, ROTA_PRIVACIDADE, textos, type Textos } from "./site-config";
+import { WhatsAppFlutuante } from "./whatsapp-flutuante";
 
 /** Ícones vazados ao lado dos links da coluna Contato. */
 const iconesLink = {
@@ -14,8 +15,19 @@ const iconesLink = {
   local: () => <MapPin size={18} strokeWidth={TRACO} aria-hidden />,
 } as const;
 
-export function Footer() {
+/**
+ * Rodapé institucional. O texto vem por prop, com o português como padrão:
+ * a versão em alemão (`/alemao`) passa o seu.
+ */
+export function Footer({
+  conteudo: rodape = rodapePt,
+  textos: t = textos,
+}: {
+  conteudo?: typeof rodapePt;
+  textos?: Textos;
+} = {}) {
   return (
+    <>
     <footer
       id="contato"
       className="relative overflow-hidden bg-linear-to-b from-azul-escuro to-zinc-950 text-white"
@@ -29,8 +41,7 @@ export function Footer() {
       <div className="relative mx-auto max-w-[1080px] px-6 pt-[110px] pb-[36px] md:px-10 md:pt-[150px]">
         {/* encerramento */}
         <Reveal className="flex flex-col items-start">
-          <span className="h-px w-[44px] bg-dourado" />
-          <h2 className="mt-6 font-[family-name:var(--font-playfair)] text-3xl leading-[1.1] font-normal tracking-[0.06em] md:text-[42px]">
+          <h2 className="font-[family-name:var(--font-playfair)] text-3xl leading-[1.1] font-normal tracking-[0.06em] md:text-[42px]">
             {rodape.titulo}
           </h2>
           <p className="tipo-label mt-4 text-dourado">{rodape.assinatura}</p>
@@ -91,10 +102,15 @@ export function Footer() {
                toque que ninguém acerta no celular */
             className="self-start py-2 text-[11px] leading-[1.5] font-light tracking-[0.06em] text-white/60 underline decoration-white/25 underline-offset-[3px] transition-colors duration-500 hover:text-white"
           >
-            Política de Privacidade
+            {t.privacidade}
           </Link>
         </div>
       </div>
     </footer>
+
+    {/* fixo na tela, não no rodapé: vem daqui só para entrar em toda
+        página que usa o rodapé institucional */}
+    <WhatsAppFlutuante href={t.whatsapp} rotulo={t.whatsappFlutuante} />
+    </>
   );
 }

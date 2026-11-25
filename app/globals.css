@@ -636,3 +636,93 @@ html {
     transform: translateY(16px);
   }
 }
+
+/* Pulso do botão flutuante do WhatsApp (`whatsapp-flutuante.tsx`): um anel
+   dourado que cresce a partir do botão e some. Só transform e opacity. */
+@keyframes pulso-whatsapp {
+  0% {
+    opacity: 0.55;
+    transform: scale(1);
+  }
+  70%,
+  100% {
+    opacity: 0;
+    transform: scale(1.7);
+  }
+}
+
+/* Balanço da mão com o celular no cartão do AMAAN Invest
+   (`invest-section.tsx`): gira 2,5 graus para cada lado em torno do pulso, na
+   base do cartão, e sobe 14px, como quem segura o aparelho e o mostra.
+   5,5s para cada lado: o movimento se vê, mas sem puxar o olho do texto.
+   Só transform, e parado para quem pede menos movimento.
+   É classe aqui, e não `motion-safe:animate-[…]` no componente: com a única
+   referência dentro do variante, o Tailwind descartava o `@keyframes` como se
+   ninguém o usasse, e a mão ficava parada. */
+.balanco-mao {
+  transform-origin: 50% 100%;
+  animation: balanco-mao 5.5s ease-in-out infinite alternate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .balanco-mao {
+    animation: none;
+  }
+}
+
+/* Brilho que atravessa o trecho dourado do h1 do hero ("o que permanece.",
+   `TituloComDestaque` com `brilho`). A mesma técnica do `.shine-text`: uma
+   faixa clara, inclinada, corre por cima da rampa dourada, e as duas camadas
+   ficam recortadas pelo texto (o `background-clip: text` vem da classe
+   `text-gradiente-dourado`, que esta substitui só no desenho do fundo).
+   Só para fundo escuro: a rampa de baixo é a clara da marca.
+   A varredura leva 1,7s e descansa 4,3s; começa quando o h1 já terminou de
+   entrar (220ms de atraso + 1,2s de transição, em `.cena`). Quem pede menos
+   movimento vê o dourado parado. */
+.brilho-dourado {
+  background-image:
+    linear-gradient(
+      105deg,
+      transparent 40%,
+      rgb(255 250 238 / 0.95) 50%,
+      transparent 60%
+    ),
+    var(--gradiente-dourado);
+  background-size:
+    250% 100%,
+    100% 100%;
+  background-repeat: no-repeat;
+  background-position:
+    120% 0,
+    0 0;
+  animation: brilho-dourado 6s ease-in-out 1.6s infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .brilho-dourado {
+    animation: none;
+  }
+}
+
+@keyframes brilho-dourado {
+  0% {
+    background-position:
+      120% 0,
+      0 0;
+  }
+  28%,
+  100% {
+    background-position:
+      -20% 0,
+      0 0;
+  }
+}
+
+@keyframes balanco-mao {
+  from {
+    transform: rotate(-2.5deg) translateY(0);
+  }
+  to {
+    transform: rotate(2.5deg) translateY(-14px);
+  }
+}
